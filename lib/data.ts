@@ -16,7 +16,8 @@ export const featuredProjects = [
     name: "Quran Companion",
     tagline: "A beautifully-crafted Quran app trusted by 100k+ daily readers.",
     tags: ["React Native", "TypeScript", "SQLite", "Reanimated"],
-    href: "/projects",
+    slug: "quran-companion",
+    href: "/projects/quran-companion",
     type: "Mobile",
     year: "2025",
     tone: "from-primary/30",
@@ -25,7 +26,8 @@ export const featuredProjects = [
     name: "FleetPulse Dashboard",
     tagline: "Real-time logistics tracking that cut dispatch errors by 60%.",
     tags: ["Next.js", "PostgreSQL", "WebSockets", "Redis"],
-    href: "/projects",
+    slug: "fleetpulse-dashboard",
+    href: "/projects/fleetpulse-dashboard",
     type: "Web",
     year: "2025",
     tone: "from-accent/20",
@@ -34,7 +36,8 @@ export const featuredProjects = [
     name: "Ledgerly",
     tagline: "Accounting automation for freelancers — invoices to taxes in one flow.",
     tags: ["Next.js", "tRPC", "Stripe", "Prisma"],
-    href: "/projects",
+    slug: "ledgerly",
+    href: "/projects/ledgerly",
     type: "Web",
     year: "2024",
     tone: "from-secondary",
@@ -174,30 +177,6 @@ export const testimonials = [
   },
 ];
 
-export const posts = [
-  {
-    category: "Technical",
-    title: "Profiling React Native cold starts: a field guide",
-    excerpt: "Where those two seconds actually go, and how to claw them back.",
-    date: "Jul 2026",
-    readingTime: "9 min",
-  },
-  {
-    category: "Case Study",
-    title: "Shipping a Quran app to 100k daily readers",
-    excerpt: "Offline-first architecture decisions that made it possible.",
-    date: "Jun 2026",
-    readingTime: "12 min",
-  },
-  {
-    category: "Notes",
-    title: "Why I stopped estimating in hours",
-    excerpt: "Scope-based pricing changed my client relationships entirely.",
-    date: "May 2026",
-    readingTime: "5 min",
-  },
-];
-
 export const services = [
   {
     name: "Mobile App Development",
@@ -225,6 +204,7 @@ export const services = [
 
 /** Full project list for /projects (flagship spans two columns when unfiltered). */
 export const allProjects: {
+  slug: string;
   name: string;
   type: string;
   year: string;
@@ -234,10 +214,10 @@ export const allProjects: {
   tone: string;
   flagship?: boolean;
 }[] = [
-  { name: "Quran Companion", type: "Mobile", year: "2025", role: "Solo build", tagline: "Offline-first Quran app with 100k+ daily readers.", tags: ["React Native", "SQLite", "Reanimated"], tone: "from-primary/30", flagship: true },
-  { name: "FleetPulse Dashboard", type: "Web", year: "2025", role: "Lead engineer", tagline: "Real-time logistics tracking that cut dispatch errors by 60%.", tags: ["Next.js", "WebSockets", "Redis"], tone: "from-accent/20" },
-  { name: "Ledgerly", type: "Web", year: "2024", role: "Full-stack", tagline: "Accounting automation for freelancers.", tags: ["Next.js", "tRPC", "Stripe"], tone: "from-secondary" },
-  { name: "BankLite", type: "Mobile", year: "2023", role: "Team lead", tagline: "Fintech app serving 250k customers at 0.3% crash rate.", tags: ["React Native", "Kotlin", "GraphQL"], tone: "from-primary/20" },
-  { name: "OrderFlow API", type: "Backend", year: "2023", role: "Architect", tagline: "Order-processing backbone handling 2M requests a day.", tags: ["NestJS", "PostgreSQL", "Docker"], tone: "from-accent/15" },
-  { name: "StudioSite CMS", type: "Client work", year: "2022", role: "Full-stack", tagline: "Custom CMS powering 12 agency client sites.", tags: ["React", "Node.js", "PostgreSQL"], tone: "from-secondary" },
+  { slug: "quran-companion", name: "Quran Companion", type: "Mobile", year: "2025", role: "Solo build", tagline: "Offline-first Quran app with 100k+ daily readers.", tags: ["React Native", "SQLite", "Reanimated"], tone: "from-primary/30", flagship: true },
+  { slug: "fleetpulse-dashboard", name: "FleetPulse Dashboard", type: "Web", year: "2025", role: "Lead engineer", tagline: "Real-time logistics tracking that cut dispatch errors by 60%.", tags: ["Next.js", "WebSockets", "Redis"], tone: "from-accent/20" },
+  { slug: "ledgerly", name: "Ledgerly", type: "Web", year: "2024", role: "Full-stack", tagline: "Accounting automation for freelancers.", tags: ["Next.js", "tRPC", "Stripe"], tone: "from-secondary" },
+  { slug: "banklite", name: "BankLite", type: "Mobile", year: "2023", role: "Team lead", tagline: "Fintech app serving 250k customers at 0.3% crash rate.", tags: ["React Native", "Kotlin", "GraphQL"], tone: "from-primary/20" },
+  { slug: "orderflow-api", name: "OrderFlow API", type: "Backend", year: "2023", role: "Architect", tagline: "Order-processing backbone handling 2M requests a day.", tags: ["NestJS", "PostgreSQL", "Docker"], tone: "from-accent/15" },
+  { slug: "studiosite-cms", name: "StudioSite CMS", type: "Client work", year: "2022", role: "Full-stack", tagline: "Custom CMS powering 12 agency client sites.", tags: ["React", "Node.js", "PostgreSQL"], tone: "from-secondary" },
 ];

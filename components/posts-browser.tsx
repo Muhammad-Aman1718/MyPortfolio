@@ -1,29 +1,32 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import FilterPills from "./filter-pills";
+import { ArrowIcon, ArrowUpRight } from "./icons";
+import { forward } from "./route-transition";
 import { useIndicator } from "@/lib/use-indicator";
-
-const blogPosts = [
-  { category: "Technical", title: "Profiling React Native cold starts: a field guide", excerpt: "Where those two seconds actually go, and how to claw them back.", date: "Jul 2026", readingTime: "9 min", featured: true },
-  { category: "Case Study", title: "Shipping a Quran app to 100k daily readers", excerpt: "Offline-first architecture decisions that made it possible.", date: "Jun 2026", readingTime: "12 min" },
-  { category: "Notes", title: "Why I stopped estimating in hours", excerpt: "Scope-based pricing changed my client relationships entirely.", date: "May 2026", readingTime: "5 min" },
-  { category: "Tutorials", title: "GSAP ScrollTrigger in Next.js App Router, properly", excerpt: "Cleanup, hydration, and reduced-motion — the parts tutorials skip.", date: "Apr 2026", readingTime: "11 min" },
-  { category: "Technical", title: "SQLite in production mobile apps", excerpt: "Migrations, sync, and the WAL settings nobody documents.", date: "Mar 2026", readingTime: "8 min" },
-];
-
-const research = [
-  { title: "Offline-first data synchronization patterns in low-connectivity regions", authors: "H. Ahmed · 2026", abstract: "A comparative study of CRDT and operational-transform approaches for mobile applications operating under intermittent connectivity, with benchmarks from a production deployment serving 100k daily active users across South Asia.", tags: ["distributed systems", "mobile", "CRDTs"] },
-  { title: "Perceived performance budgets for mobile onboarding flows", authors: "H. Ahmed · 2025", abstract: "User-study data on abandonment thresholds during first-launch experiences, proposing a 1.8-second perceived-readiness budget derived from 4,000 session recordings.", tags: ["UX research", "performance"] },
-];
+import { blogPosts } from "@/lib/content/posts";
+import { research } from "@/lib/content/research";
 
 const blogFilters = ["All", "Technical", "Tutorials", "Case Study", "Notes"];
 
 const idx = (i: number) => ({ "--i": i }) as React.CSSProperties;
 
-/** Blog / research switcher. Tabs slide an underline; panels and filtered lists re-stagger in CSS. */
+type Tab = "blog" | "research";
+
+/**
+ * Blog / research switcher. Tabs slide an underline; panels and filtered lists
+ * re-stagger in CSS. The tab lives in `?tab=` so it can be linked and restored.
+ */
 export default function PostsBrowser() {
-  const [tab, setTab] = useState<"blog" | "research">("blog");
+  const params = useSearchParams();
+  const [tab, setTabState] = useState<Tab>(params.get("tab") === "research" ? "research" : "blog");
+  const setTab = (t: Tab) => {
+    setTabState(t);
+    window.history.replaceState(null, "", t === "research" ? "?tab=research" : window.location.pathname);
+  };
   const [filter, setFilter] = useState("All");
   const { ref: tabsRef } = useIndicator<HTMLDivElement>(tab);
 
@@ -70,7 +73,12 @@ export default function PostsBrowser() {
 
           <div key={filter} className="stagger-in mt-8 grid gap-4 md:grid-cols-2">
             {featured && (
-              <article style={idx(0)} className="card ring-gradient relative overflow-hidden p-7 md:col-span-2 md:p-10">
+              <Link
+                href={`/posts/${featured.slug}`}
+                transitionTypes={forward}
+                style={idx(0)}
+                className="card card-hover ring-gradient group relative overflow-hidden p-7 md:col-span-2 md:p-10"
+              >
                 <div className="bg-grid pointer-events-none absolute inset-0 opacity-50" aria-hidden="true" />
                 <div className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-primary/20 blur-[80px]" aria-hidden="true" />
                 <div className="relative grid gap-6 md:grid-cols-12 md:items-end">
@@ -88,24 +96,36 @@ export default function PostsBrowser() {
                     <p className="font-[family-name:var(--font-jetbrains)] text-xs text-muted">
                       {featured.date} · {featured.readingTime} read
                     </p>
+                    <span className="flex h-11 w-11 items-center justify-center rounded-full border border-line text-muted transition-all duration-300 group-hover:rotate-45 group-hover:border-accent group-hover:text-accent">
+                      <ArrowUpRight />
+                    </span>
                   </div>
                 </div>
-              </article>
+              </Link>
             )}
 
             {rest.map((p, i) => (
-              <article key={p.title} style={idx(i + 1)} className="card spotlight flex flex-col p-6 transition-colors duration-300 hover:border-accent/40">
+              <Link
+                key={p.slug}
+                href={`/posts/${p.slug}`}
+                transitionTypes={forward}
+                style={idx(i + 1)}
+                className="card card-hover spotlight group flex flex-col p-6"
+              >
                 <div className="flex items-center justify-between">
                   <span className="pill">{p.category}</span>
+                  <span className="text-muted transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent">
+                    <ArrowUpRight />
+                  </span>
                 </div>
-                <h2 className="mt-4 font-[family-name:var(--font-space)] text-xl font-medium leading-snug">
+                <h2 className="mt-4 font-[family-name:var(--font-space)] text-xl font-medium leading-snug transition-colors duration-200 group-hover:text-accent">
                   {p.title}
                 </h2>
                 <p className="mt-2 text-sm text-muted">{p.excerpt}</p>
                 <p className="mt-auto pt-5 font-[family-name:var(--font-jetbrains)] text-xs text-muted">
                   {p.date} · {p.readingTime} read
                 </p>
-              </article>
+              </Link>
             ))}
 
             {!visible.length && (
@@ -116,13 +136,21 @@ export default function PostsBrowser() {
       ) : (
         <div key="research" id="panel-research" role="tabpanel" aria-labelledby="tab-research" className="stagger-in mt-8 flex flex-col gap-4">
           {research.map((r, i) => (
-            <article key={r.title} style={idx(i)} className="card grid gap-6 overflow-hidden p-7 md:grid-cols-12 md:p-10">
+            <Link
+              key={r.slug}
+              href={`/posts/research/${r.slug}`}
+              transitionTypes={forward}
+              style={idx(i)}
+              className="card card-hover group grid gap-6 overflow-hidden p-7 md:grid-cols-12 md:p-10"
+            >
               <div className="md:col-span-4 md:border-r md:border-line md:pr-8">
                 <p className="font-[family-name:var(--font-jetbrains)] text-xs text-accent">paper {String(i + 1).padStart(2, "0")}</p>
                 <h2 className="mt-3 font-[family-name:var(--font-space)] text-xl font-semibold leading-snug tracking-tight md:text-2xl">
                   {r.title}
                 </h2>
-                <p className="mt-3 font-[family-name:var(--font-jetbrains)] text-[13px] text-muted">{r.authors}</p>
+                <p className="mt-3 font-[family-name:var(--font-jetbrains)] text-[13px] text-muted">
+                  {r.authors} · {r.year}
+                </p>
               </div>
               <div className="flex flex-col md:col-span-8">
                 <p className="max-w-[75ch] text-sm leading-relaxed text-muted">
@@ -133,12 +161,10 @@ export default function PostsBrowser() {
                   {r.tags.map((t) => (
                     <span key={t} className="pill">{t}</span>
                   ))}
-                  <span className="font-[family-name:var(--font-jetbrains)] text-[13px] text-accent sm:ml-auto">
-                    Read online · PDF (1.2 MB)
-                  </span>
+                  <span className="arrow-link text-sm sm:ml-auto">Read paper {ArrowIcon}</span>
                 </div>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
       )}

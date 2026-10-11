@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ViewTransition } from "react";
 import Reveal from "@/components/reveal";
 import CountUp from "@/components/count-up";
 import SectionHeader from "@/components/section-header";
@@ -9,12 +10,13 @@ import ScrollLine from "@/components/scroll-line";
 import ProjectPreview from "@/components/project-preview";
 import { Magnetic, Tilt } from "@/components/pointer-fx";
 import { ArrowIcon, ArrowUpRight, DownloadIcon } from "@/components/icons";
+import { forward } from "@/components/route-transition";
+import { blogPosts } from "@/lib/content/posts";
 import {
   stats,
   featuredProjects,
   skillsBento,
   experience,
-  posts,
   testimonials,
   allProjects,
 } from "@/lib/data";
@@ -189,11 +191,14 @@ export default function Home() {
                 <Link
                   key={p.name}
                   href={p.href}
+                  transitionTypes={forward}
                   className="card card-hover group relative flex flex-col overflow-hidden sm:col-span-2 sm:min-h-[380px] lg:row-span-2 lg:min-h-0"
                 >
-                  <div className="relative h-52 sm:absolute sm:inset-y-0 sm:right-0 sm:h-auto sm:w-[48%] sm:[mask-image:linear-gradient(90deg,transparent,#000_22%)]">
-                    <ProjectPreview name={p.name} type={p.type} tone={p.tone} className="relative h-full w-full" />
-                  </div>
+                  <ViewTransition name={`project-${p.slug}`} share={{ "nav-forward": "morph", default: "none" }} default="none">
+                    <div className="relative h-52 sm:absolute sm:inset-y-0 sm:right-0 sm:h-auto sm:w-[48%] sm:[mask-image:linear-gradient(90deg,transparent,#000_22%)]">
+                      <ProjectPreview name={p.name} type={p.type} tone={p.tone} className="relative h-full w-full" />
+                    </div>
+                  </ViewTransition>
                   <span className="pill absolute left-5 top-5">flagship</span>
                   <div className="relative mt-auto flex flex-col gap-3 p-6 sm:w-[58%] md:p-7">
                     {meta}
@@ -211,11 +216,14 @@ export default function Home() {
                 <Link
                   key={p.name}
                   href={p.href}
+                  transitionTypes={forward}
                   className="card card-hover group relative flex flex-col overflow-hidden sm:col-span-2 sm:min-h-[230px] lg:min-h-0"
                 >
-                  <div className="relative h-36 sm:absolute sm:inset-y-0 sm:left-0 sm:h-auto sm:w-[54%] sm:[mask-image:linear-gradient(270deg,transparent,#000_28%)]">
-                    <ProjectPreview name={p.name} type={p.type} tone={p.tone} className="relative h-full w-full" />
-                  </div>
+                  <ViewTransition name={`project-${p.slug}`} share={{ "nav-forward": "morph", default: "none" }} default="none">
+                    <div className="relative h-36 sm:absolute sm:inset-y-0 sm:left-0 sm:h-auto sm:w-[54%] sm:[mask-image:linear-gradient(270deg,transparent,#000_28%)]">
+                      <ProjectPreview name={p.name} type={p.type} tone={p.tone} className="relative h-full w-full" />
+                    </div>
+                  </ViewTransition>
                   <div className="relative flex flex-1 flex-col justify-center gap-2.5 p-6 sm:ml-auto sm:w-[50%]">
                     {meta}
                     <h3 className="font-[family-name:var(--font-space)] text-xl font-semibold tracking-tight">{p.name}</h3>
@@ -230,6 +238,7 @@ export default function Home() {
               <Link
                 key={p.name}
                 href={p.href}
+                transitionTypes={forward}
                 className={`card card-hover group relative flex min-h-[180px] flex-col justify-between overflow-hidden bg-gradient-to-br ${p.tone} to-surface p-6 lg:min-h-0`}
               >
                 <span
@@ -366,10 +375,11 @@ export default function Home() {
             </div>
           </div>
           <Reveal as="ol" variant="clip-up" stagger each={0.08} className="flex flex-col md:col-span-8">
-            {posts.map((p, i) => (
-              <li key={p.title}>
+            {blogPosts.slice(0, 3).map((p, i) => (
+              <li key={p.slug}>
                 <Link
-                  href="/posts"
+                  href={`/posts/${p.slug}`}
+                  transitionTypes={forward}
                   className={`group grid grid-cols-[auto_1fr_auto] items-start gap-4 border-line px-2 py-6 transition-colors duration-200 hover:bg-surface md:gap-6 md:px-4 ${
                     i === 0 ? "border-y" : "border-b"
                   }`}
