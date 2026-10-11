@@ -352,9 +352,62 @@ body {
 }
 .mask-line > span { display: inline-block; }
 
-/* Route change: a short fade so pages don't hard-cut */
+/* ─── Route transitions (React <ViewTransition>, see components/route-transition.tsx) ───
+   motion-designer vocabulary: depart fast (ease-in), arrive gentler (ease-out),
+   direction encodes hierarchy, the shared preview morphs instead of crossfading. */
 @keyframes page-in { from { opacity: 0; transform: translateY(6px); } }
-.page-enter { animation: page-in 0.45s var(--ease-soft) both; }
+@supports not (view-transition-name: none) {
+  .page-enter { animation: page-in 0.45s var(--ease-soft) both; }
+}
+
+::view-transition { pointer-events: none; }
+::view-transition-old(root),
+::view-transition-new(root) { animation: none; }
+
+/* The navbar is the fixed anchor: it never moves with the page */
+::view-transition-group(site-header) { animation: none; z-index: 100; }
+::view-transition-old(site-header) { display: none; }
+::view-transition-new(site-header) { animation: none; }
+
+@keyframes vt-fade-in { from { opacity: 0; } }
+@keyframes vt-fade-out { to { opacity: 0; } }
+@keyframes vt-rise { from { transform: translateY(14px); } }
+@keyframes vt-slide { from { translate: var(--vt-offset) 0; } }
+@keyframes vt-slide-out { to { translate: var(--vt-offset) 0; } }
+
+/* Untagged navigation: depart 150ms, arrive 260ms after it */
+::view-transition-old(.page-fade) { animation: 150ms cubic-bezier(0.32, 0, 0.67, 0) both vt-fade-out; }
+::view-transition-new(.page-fade) {
+  animation:
+    260ms var(--ease-out) 120ms both vt-fade-in,
+    420ms var(--ease-out) 120ms both vt-rise;
+}
+
+/* Into a detail page: old content leaves left, new arrives from the right */
+::view-transition-old(.nav-forward) {
+  --vt-offset: -48px;
+  animation: 150ms ease-in both vt-fade-out, 380ms cubic-bezier(0.65, 0, 0.35, 1) both vt-slide-out;
+}
+::view-transition-new(.nav-forward) {
+  --vt-offset: 48px;
+  animation: 240ms ease-out 140ms both vt-fade-in, 420ms cubic-bezier(0.65, 0, 0.35, 1) both vt-slide;
+}
+/* Back to a list: mirrored */
+::view-transition-old(.nav-back) {
+  --vt-offset: 48px;
+  animation: 150ms ease-in both vt-fade-out, 380ms cubic-bezier(0.65, 0, 0.35, 1) both vt-slide-out;
+}
+::view-transition-new(.nav-back) {
+  --vt-offset: -48px;
+  animation: 240ms ease-out 140ms both vt-fade-in, 420ms cubic-bezier(0.65, 0, 0.35, 1) both vt-slide;
+}
+
+/* Shared project preview: the card lifts into the case-study hero */
+::view-transition-group(.morph) { animation-duration: 480ms; animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); }
+/* contain (not cover): card and hero have different aspect ratios but the device sits centred in
+   both, so the phone/browser keeps its size instead of zooming mid-flight */
+::view-transition-old(.morph),
+::view-transition-new(.morph) { width: 100%; height: 100%; object-fit: contain; }
 
 /* ─── Scroll reveals ─── */
 /* JS hides [data-reveal] until GSAP owns it; failsafe un-hides if scripts never run */
@@ -419,6 +472,9 @@ html.js [data-reveal] {
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) { animation-duration: 0s !important; animation-delay: 0s !important; }
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-delay: 0ms !important;

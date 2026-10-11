@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import PostsBrowser from "@/components/posts-browser";
 
 export const metadata: Metadata = { title: "Posts — Hafiz" };
@@ -18,7 +19,9 @@ export default function Posts() {
       </header>
 
       <div data-enter="rise" style={{ "--d": 500 } as React.CSSProperties}>
-        <PostsBrowser />
+        <Suspense>
+          <PostsBrowser />
+        </Suspense>
       </div>
     </div>
   );

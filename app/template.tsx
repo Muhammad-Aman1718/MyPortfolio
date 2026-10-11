@@ -1,4 +1,6 @@
-/** Remounts per route, so each navigation gets a short fade-in instead of a hard cut. */
+import RouteTransition from "@/components/route-transition";
+
+/** Remounts per top-level route, so each navigation plays its page transition. */
 export default function Template({ children }: { children: React.ReactNode }) {
-  return <div className="page-enter">{children}</div>;
+  return <RouteTransition>{children}</RouteTransition>;
 }
