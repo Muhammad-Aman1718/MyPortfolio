@@ -43,7 +43,9 @@ export function ContactForm() {
     <form onSubmit={onSubmit} className="card flex flex-col gap-5 p-6 md:p-8">
       <div className="flex items-center justify-between border-b border-line pb-5">
         <p className="font-[family-name:var(--font-space)] text-lg font-medium">Project brief</p>
-        <p className="font-[family-name:var(--font-jetbrains)] text-xs text-muted">~2 min</p>
+        <p className="font-[family-name:var(--font-jetbrains)] text-xs text-muted">
+          <span className="text-accent">*</span> required · ~2 min
+        </p>
       </div>
 
       {/* Honeypot */}
@@ -51,11 +53,11 @@ export function ContactForm() {
 
       <div className="grid gap-5 sm:grid-cols-2">
         <label className={labelCls}>
-          Name
+          <span>Name<span className="text-accent" aria-hidden="true"> *</span></span>
           <input required name="name" autoComplete="name" className={inputCls} placeholder="Your name" />
         </label>
         <label className={labelCls}>
-          Email
+          <span>Email<span className="text-accent" aria-hidden="true"> *</span></span>
           <input required type="email" name="email" autoComplete="email" className={inputCls} placeholder="you@company.com" />
         </label>
       </div>
@@ -86,7 +88,7 @@ export function ContactForm() {
       </div>
 
       <label className={labelCls}>
-        Message
+        <span>Message<span className="text-accent" aria-hidden="true"> *</span></span>
         <textarea required name="message" rows={5} className="field resize-y p-4" placeholder="What are you building?" />
       </label>
 

@@ -1,6 +1,7 @@
 /**
  * Motion presets for scroll reveals. Each section picks the preset that fits
  * its content instead of every block sharing the same rise-and-blur.
+ * Staggers follow ui-ux-pro-max `stagger-sequence` (30–80ms per item).
  */
 
 export type RevealVariant =
@@ -27,52 +28,53 @@ type Preset = {
 const SHOWN = { autoAlpha: 1, x: 0, y: 0 };
 
 export const revealPresets: Record<RevealVariant, Preset> = {
-  "fade-up": { from: { autoAlpha: 0, y: 24 }, to: SHOWN, duration: 0.8, ease: "power3.out", stagger: 0.08 },
-  fade: { from: { autoAlpha: 0 }, to: { autoAlpha: 1 }, duration: 0.9, ease: "power1.out", stagger: 0.1 },
-  "slide-left": { from: { autoAlpha: 0, x: -36 }, to: SHOWN, duration: 0.85, ease: "power3.out", stagger: 0.08 },
-  "slide-right": { from: { autoAlpha: 0, x: 36 }, to: SHOWN, duration: 0.85, ease: "power3.out", stagger: 0.08 },
+  "fade-up": { from: { autoAlpha: 0, y: 24 }, to: SHOWN, duration: 0.7, ease: "power3.out", stagger: 0.05 },
+  fade: { from: { autoAlpha: 0 }, to: { autoAlpha: 1 }, duration: 0.8, ease: "power1.out", stagger: 0.05 },
+  "slide-left": { from: { autoAlpha: 0, x: -36 }, to: SHOWN, duration: 0.75, ease: "power3.out", stagger: 0.05 },
+  "slide-right": { from: { autoAlpha: 0, x: 36 }, to: SHOWN, duration: 0.75, ease: "power3.out", stagger: 0.05 },
   scale: {
-    from: { autoAlpha: 0, scale: 0.9, y: 10 },
+    // ui-ux-pro-max "Stagger List" preset (bento / tiles)
+    from: { autoAlpha: 0, scale: 0.92, y: 16 },
     to: { ...SHOWN, scale: 1 },
-    duration: 0.7,
-    ease: "back.out(1.5)",
+    duration: 0.45,
+    ease: "back.out(1.4)",
     stagger: 0.06,
   },
   "clip-up": {
     from: { autoAlpha: 1, clipPath: "inset(100% 0% 0% 0% round 16px)", y: 30 },
     to: { autoAlpha: 1, clipPath: "inset(0% 0% 0% 0% round 16px)", y: 0 },
-    duration: 1.1,
+    duration: 1,
     ease: "expo.out",
-    stagger: 0.12,
+    stagger: 0.08,
   },
   "clip-left": {
     from: { autoAlpha: 1, clipPath: "inset(0% 100% 0% 0% round 16px)" },
     to: { autoAlpha: 1, clipPath: "inset(0% 0% 0% 0% round 16px)" },
-    duration: 1.1,
+    duration: 1,
     ease: "expo.inOut",
-    stagger: 0.12,
+    stagger: 0.08,
   },
   "clip-right": {
     from: { autoAlpha: 1, clipPath: "inset(0% 0% 0% 100% round 16px)" },
     to: { autoAlpha: 1, clipPath: "inset(0% 0% 0% 0% round 16px)" },
-    duration: 1.1,
+    duration: 1,
     ease: "expo.inOut",
-    stagger: 0.12,
+    stagger: 0.08,
   },
   tilt: {
     from: { autoAlpha: 0, y: 40, rotateX: -16, transformPerspective: 1000, transformOrigin: "50% 0%" },
     to: { ...SHOWN, rotateX: 0 },
-    duration: 1,
+    duration: 0.9,
     ease: "power3.out",
-    stagger: 0.1,
+    stagger: 0.06,
   },
-  mask: { from: { yPercent: 110 }, to: { yPercent: 0 }, duration: 0.9, ease: "power4.out", stagger: 0.05 },
+  mask: { from: { yPercent: 110 }, to: { yPercent: 0 }, duration: 0.9, ease: "power4.out", stagger: 0.04 },
   blur: {
     from: { autoAlpha: 0, y: 24, filter: "blur(10px)" },
     to: { ...SHOWN, filter: "blur(0px)" },
-    duration: 1,
+    duration: 0.9,
     ease: "power3.out",
-    stagger: 0.1,
+    stagger: 0.06,
   },
 };
 

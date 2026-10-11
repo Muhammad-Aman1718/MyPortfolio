@@ -41,7 +41,7 @@ export default function Experience() {
               <div className="md:sticky md:top-28">
                 <div className="flex flex-wrap items-center gap-3">
                   <p className="font-[family-name:var(--font-jetbrains)] text-[13px] text-accent">{e.years}</p>
-                  {e.current && <span className="pill !text-[11px]">current</span>}
+                  {e.current && <span className="pill !text-xs">current</span>}
                 </div>
                 <p className="mt-2 font-medium">{e.company}</p>
                 <p className="mt-0.5 text-sm text-muted">{e.location}</p>
@@ -53,7 +53,7 @@ export default function Experience() {
                   {e.role}
                 </h2>
               </Reveal>
-              <Reveal as="ul" variant="fade-up" stagger each={0.1} delay={0.15} className="mt-5 flex flex-col gap-3">
+              <Reveal as="ul" variant="fade-up" stagger each={0.08} delay={0.15} className="mt-5 flex flex-col gap-3">
                 {e.bullets.map((b) => (
                   <li key={b} className="card flex max-w-[68ch] gap-3 p-4 text-fg/85">
                     <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" aria-hidden="true" />

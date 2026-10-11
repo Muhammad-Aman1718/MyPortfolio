@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import FilterPills from "./filter-pills";
-import { ArrowUpRight } from "./icons";
 import { useIndicator } from "@/lib/use-indicator";
 
 const blogPosts = [
@@ -71,7 +70,7 @@ export default function PostsBrowser() {
 
           <div key={filter} className="stagger-in mt-8 grid gap-4 md:grid-cols-2">
             {featured && (
-              <article style={idx(0)} className="card card-hover ring-gradient group relative cursor-pointer overflow-hidden p-7 md:col-span-2 md:p-10">
+              <article style={idx(0)} className="card ring-gradient relative overflow-hidden p-7 md:col-span-2 md:p-10">
                 <div className="bg-grid pointer-events-none absolute inset-0 opacity-50" aria-hidden="true" />
                 <div className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-primary/20 blur-[80px]" aria-hidden="true" />
                 <div className="relative grid gap-6 md:grid-cols-12 md:items-end">
@@ -89,23 +88,17 @@ export default function PostsBrowser() {
                     <p className="font-[family-name:var(--font-jetbrains)] text-xs text-muted">
                       {featured.date} · {featured.readingTime} read
                     </p>
-                    <span className="flex h-11 w-11 items-center justify-center rounded-full border border-line text-muted transition-all duration-300 group-hover:rotate-45 group-hover:border-accent group-hover:text-accent">
-                      <ArrowUpRight />
-                    </span>
                   </div>
                 </div>
               </article>
             )}
 
             {rest.map((p, i) => (
-              <article key={p.title} style={idx(i + 1)} className="card card-hover spotlight group flex cursor-pointer flex-col p-6">
+              <article key={p.title} style={idx(i + 1)} className="card spotlight flex flex-col p-6 transition-colors duration-300 hover:border-accent/40">
                 <div className="flex items-center justify-between">
                   <span className="pill">{p.category}</span>
-                  <span className="text-muted transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent">
-                    <ArrowUpRight />
-                  </span>
                 </div>
-                <h2 className="mt-4 font-[family-name:var(--font-space)] text-xl font-medium leading-snug transition-colors duration-200 group-hover:text-accent">
+                <h2 className="mt-4 font-[family-name:var(--font-space)] text-xl font-medium leading-snug">
                   {p.title}
                 </h2>
                 <p className="mt-2 text-sm text-muted">{p.excerpt}</p>

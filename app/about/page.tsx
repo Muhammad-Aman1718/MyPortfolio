@@ -19,12 +19,13 @@ const education = [
   { degree: "Certified Hifz Program", school: "Jamia Institute", years: "2008 — 2012", note: "Quranic scholarship foundation" },
 ];
 
+// SVG icons (ui-ux-pro-max: no emoji as icons) — one stroke style site-wide
 const interests = [
-  { label: "Quranic scholarship", icon: "📖", span: "md:col-span-2" },
-  { label: "Travel — Morocco next", icon: "🌍", span: "" },
-  { label: "Architecture", icon: "🏛", span: "" },
-  { label: "Real-estate design", icon: "📐", span: "" },
-  { label: "Reading", icon: "📚", span: "md:col-span-2" },
+  { label: "Quranic scholarship", span: "md:col-span-2", icon: "M2 4h6a4 4 0 0 1 4 4v12a3 3 0 0 0-3-3H2zM22 4h-6a4 4 0 0 0-4 4v12a3 3 0 0 1 3-3h7z" },
+  { label: "Travel — Morocco next", span: "", icon: "M12 2a10 10 0 1 0 0 20a10 10 0 1 0 0-20M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20" },
+  { label: "Architecture", span: "", icon: "M3 22h18M6 18v-7M10 18v-7M14 18v-7M18 18v-7M12 2l8 5H4z" },
+  { label: "Real-estate design", span: "md:col-span-2", icon: "M3 21V3l18 18zM7 17v-4l4 4zM3 8h2M3 13h2" },
+  { label: "Reading", span: "md:col-span-2", icon: "M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5zM4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5" },
 ];
 
 const facts = [
@@ -52,7 +53,7 @@ export default function About() {
               <dl className="grid grid-cols-2 gap-px bg-line">
                 {facts.map((f) => (
                   <div key={f.k} className="bg-surface p-4">
-                    <dt className="font-[family-name:var(--font-jetbrains)] text-[11px] text-muted">{f.k}</dt>
+                    <dt className="font-[family-name:var(--font-jetbrains)] text-xs text-muted">{f.k}</dt>
                     <dd className="mt-1 text-sm">{f.v}</dd>
                   </div>
                 ))}
@@ -71,7 +72,7 @@ export default function About() {
             cheap software costs more. I&apos;ve spent eight years learning exactly where products break —
             and building them so they don&apos;t.
           </p>
-          <Reveal variant="fade" stagger each={0.2} start="top 95%">
+          <Reveal variant="fade" stagger each={0.08} start="top 95%">
             <p className="mt-6 max-w-[64ch] leading-relaxed text-muted">
               My path started in Karachi, building web apps for local businesses. Mobile pulled me in
               when I realized the apps people rely on daily are the ones held to the highest standard —
@@ -101,7 +102,7 @@ export default function About() {
                   start="top 82%"
                   className={right ? "md:col-start-2" : "md:text-right"}
                 >
-                  <p className="font-[family-name:var(--font-space)] text-3xl font-semibold tracking-tight text-fg/15 md:text-4xl">{j.year}</p>
+                  <p className="font-[family-name:var(--font-space)] text-3xl font-semibold tracking-tight text-fg/45 md:text-4xl">{j.year}</p>
                   <h3 className="mt-1 font-[family-name:var(--font-space)] text-lg font-medium">{j.title}</h3>
                   <p className={`mt-1 max-w-[42ch] text-muted ${right ? "" : "md:ml-auto"}`}>{j.text}</p>
                 </Reveal>
@@ -114,7 +115,7 @@ export default function About() {
       {/* Education — ledger rows with an oversized date column */}
       <section className="container-site section">
         <SectionHeader eyebrow="education" title="Education" motion="fade" />
-        <Reveal variant="clip-left" stagger each={0.15} className="mt-10 flex flex-col">
+        <Reveal variant="clip-left" stagger each={0.08} className="mt-10 flex flex-col">
           {education.map((e) => (
             <div key={e.degree} className="grid gap-2 border-t border-line py-6 last:border-b md:grid-cols-12 md:items-baseline md:gap-6">
               <p className="font-[family-name:var(--font-jetbrains)] text-sm text-accent md:col-span-3">{e.years}</p>
@@ -136,11 +137,10 @@ export default function About() {
         <Reveal variant="scale" stagger from="edges" className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
           {interests.map((i) => (
             <div key={i.label} className={`card spotlight group flex items-center gap-4 p-5 md:p-6 ${i.span}`}>
-              <span
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[12px] bg-background text-2xl transition-transform duration-300 group-hover:-rotate-12 group-hover:scale-110"
-                aria-hidden
-              >
-                {i.icon}
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[12px] border border-line bg-background text-accent transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-105">
+                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d={i.icon} />
+                </svg>
               </span>
               <span className="font-[family-name:var(--font-space)] font-medium">{i.label}</span>
             </div>

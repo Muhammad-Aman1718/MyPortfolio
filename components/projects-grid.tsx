@@ -6,7 +6,6 @@ import { Flip } from "gsap/Flip";
 import Reveal from "./reveal";
 import FilterPills from "./filter-pills";
 import ProjectPreview from "./project-preview";
-import { ArrowUpRight } from "./icons";
 import { allProjects } from "@/lib/data";
 import { prefersReducedMotion } from "@/lib/motion";
 
@@ -56,20 +55,17 @@ export default function ProjectsGrid() {
       </div>
 
       <div ref={gridRef}>
-        <Reveal variant="clip-up" stagger each={0.1} start="top 92%" className="mt-8 grid gap-5 md:grid-cols-2">
+        <Reveal variant="clip-up" stagger each={0.08} start="top 92%" className="mt-8 grid gap-5 md:grid-cols-2">
           {visible.map((p) => {
             const wide = p.flagship && filter === "All";
             return (
               <article
                 key={p.name}
                 data-flip-id={p.name}
-                className={`card card-hover group cursor-pointer overflow-hidden ${wide ? "md:col-span-2 md:grid md:grid-cols-12" : ""}`}
+                className={`card spotlight group overflow-hidden transition-colors duration-300 hover:border-accent/40 ${wide ? "md:col-span-2 md:grid md:grid-cols-12" : ""}`}
               >
                 <div className={`relative overflow-hidden border-b border-line ${wide ? "aspect-[16/10] md:col-span-7 md:aspect-auto md:min-h-[340px] md:border-b-0 md:border-r" : "aspect-[16/9]"}`}>
                   <ProjectPreview name={p.name} type={p.type} tone={p.tone} className="absolute inset-0" />
-                  <span className="absolute right-4 top-4 flex h-9 w-9 translate-y-1 items-center justify-center rounded-full border border-line bg-surface/80 text-accent opacity-0 backdrop-blur transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-                    <ArrowUpRight />
-                  </span>
                   {p.flagship && (
                     <span className="pill absolute left-4 top-4">flagship</span>
                   )}
@@ -81,7 +77,7 @@ export default function ProjectsGrid() {
                       {p.year} · {p.role}
                     </span>
                   </div>
-                  <h2 className={`mt-4 font-[family-name:var(--font-space)] font-semibold tracking-tight transition-colors duration-200 group-hover:text-accent ${wide ? "text-2xl md:text-3xl" : "text-xl"}`}>
+                  <h2 className={`mt-4 font-[family-name:var(--font-space)] font-semibold tracking-tight transition-colors duration-200 ${wide ? "text-2xl md:text-3xl" : "text-xl"}`}>
                     {p.name}
                   </h2>
                   <p className="mt-2 text-muted">{p.tagline}</p>

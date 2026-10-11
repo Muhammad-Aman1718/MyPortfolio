@@ -13,7 +13,7 @@ export default function CertificatesSection() {
         description="Credentials that back the work — every one links to its verification page."
         motion="wipe"
       />
-      <Reveal variant="slide-left" stagger each={0.1} className="mt-10 grid gap-3 md:grid-cols-2 md:gap-4">
+      <Reveal variant="slide-left" stagger each={0.08} className="mt-10 grid gap-3 md:grid-cols-2 md:gap-4">
         {certificates.map((c) => (
           <a
             key={c.id}

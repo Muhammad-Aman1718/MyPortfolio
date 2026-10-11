@@ -33,7 +33,7 @@ export default function Services() {
         </h1>
 
         {/* Engagements — cards flip up in sequence; the featured one carries a gradient edge */}
-        <Reveal variant="tilt" stagger each={0.12} start="top 95%" className="mt-12 grid gap-4 lg:grid-cols-3 lg:gap-5">
+        <Reveal variant="tilt" stagger each={0.08} start="top 95%" className="mt-12 grid gap-4 lg:grid-cols-3 lg:gap-5">
           {services.map((s) => (
             <div
               key={s.name}
@@ -75,7 +75,7 @@ export default function Services() {
         <div className="relative mt-10">
           <ScrollLine axis="x" scrub={false} className="left-6 right-6 top-6 hidden h-px md:block" />
           <ScrollLine className="bottom-6 left-6 top-6 w-px md:hidden" />
-          <Reveal as="ol" variant="scale" stagger each={0.18} delay={0.2} className="grid gap-8 md:grid-cols-4 md:gap-6">
+          <Reveal as="ol" variant="scale" stagger each={0.08} delay={0.2} className="grid gap-8 md:grid-cols-4 md:gap-6">
             {steps.map((s) => (
               <li key={s.n} className="relative flex gap-5 md:flex-col md:gap-0">
                 <span className="relative z-[1] flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-accent/50 bg-background font-[family-name:var(--font-jetbrains)] text-sm text-accent shadow-[0_0_0_6px_var(--background)]">

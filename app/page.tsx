@@ -6,7 +6,6 @@ import CertificatesSection from "@/components/certificates-section";
 import CtaPanel from "@/components/cta-panel";
 import Marquee from "@/components/marquee";
 import ScrollLine from "@/components/scroll-line";
-import Parallax from "@/components/parallax";
 import ProjectPreview from "@/components/project-preview";
 import { Magnetic, Tilt } from "@/components/pointer-fx";
 import { ArrowIcon, ArrowUpRight, DownloadIcon } from "@/components/icons";
@@ -17,6 +16,7 @@ import {
   experience,
   posts,
   testimonials,
+  allProjects,
 } from "@/lib/data";
 
 const enter = (name: string, d: number) => ({ "data-enter": name, style: { "--d": d } as React.CSSProperties });
@@ -57,7 +57,7 @@ export default function Home() {
               <span className="pulse-dot inline-block h-2 w-2 rounded-full bg-primary" />
               Karachi, Pakistan — available for projects
             </p>
-            <p {...enter("wipe", 150)} className="eyebrow mt-6">
+            <p {...enter("rise", 100)} className="eyebrow mt-6">
               {"// software engineer — mobile & web"}
             </p>
             <h1 className="h-display mt-4 text-[44px] sm:text-[56px] md:text-[68px] lg:text-[76px]">
@@ -99,7 +99,7 @@ export default function Home() {
                 <pre className="overflow-hidden px-5 py-5 font-[family-name:var(--font-jetbrains)] text-[13px] leading-[1.9] text-muted">
                   {codeLines.map((line, i) => (
                     <span key={i} className="flex">
-                      <span className="mr-5 w-4 select-none text-right text-fg/20">{i + 1}</span>
+                      <span className="mr-5 w-4 select-none text-right text-fg/20" aria-hidden="true">{i + 1}</span>
                       <span {...enter("wipe", 900 + i * 140)} className="whitespace-pre">
                         {line}
                       </span>
@@ -124,9 +124,9 @@ export default function Home() {
         <Marquee items={tools} label="Technologies I work with" />
       </div>
 
-      {/* ─── Trust stats — tiles pop in from the centre ─── */}
+      {/* ─── Trust stats — quiet rise; the count-up is the motion here ─── */}
       <section className="container-site section">
-        <Reveal variant="scale" stagger from="center" className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+        <Reveal variant="fade-up" stagger className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
           {stats.map((s) => (
             <div
               key={s.label}
@@ -153,57 +153,125 @@ export default function Home() {
         </Reveal>
       </section>
 
-      {/* ─── Featured projects — previews wipe open, copy slides in from the opposite side ─── */}
+      {/* ─── Featured projects — bento: 2×2 flagship, 2×1 wide, 1×1 + "all work" tile; tiles pop in as a wave from the centre ─── */}
       <section className="container-site section">
         <SectionHeader
           eyebrow="projects"
           title="Selected work"
           description="Three projects that show how I think, build, and ship."
-          action={
-            <Link href="/projects" className="arrow-link text-sm">
-              All projects {ArrowIcon}
-            </Link>
-          }
         />
-        <div className="mt-10 flex flex-col gap-6 md:gap-8">
+        <Reveal
+          variant="scale"
+          stagger
+          grid
+          from="center"
+          className="mt-10 grid gap-3 sm:grid-cols-2 md:gap-4 lg:auto-rows-[212px] lg:grid-cols-4"
+        >
           {featuredProjects.map((p, i) => {
-            const flip = i % 2 === 1;
-            return (
-              <Link key={p.name} href={p.href} className="card card-hover group grid overflow-hidden md:grid-cols-12">
-                <Reveal
-                  variant={flip ? "clip-right" : "clip-left"}
-                  className={`relative min-h-[240px] overflow-hidden md:col-span-7 md:min-h-[340px] ${flip ? "md:order-2" : ""}`}
+            const meta = (
+              <p className="flex items-center gap-2 font-[family-name:var(--font-jetbrains)] text-xs text-muted">
+                <span className="text-accent">{String(i + 1).padStart(2, "0")}</span>
+                <span className="h-px w-5 bg-line" aria-hidden="true" />
+                {p.type} · {p.year}
+              </p>
+            );
+            const tags = (n: number) => (
+              <ul className="flex flex-wrap gap-1.5" aria-label="Tech stack">
+                {p.tags.slice(0, n).map((t) => (
+                  <li key={t} className="pill">{t}</li>
+                ))}
+              </ul>
+            );
+
+            // 2×2 flagship — story bottom-left, phone standing in the right half
+            if (i === 0)
+              return (
+                <Link
+                  key={p.name}
+                  href={p.href}
+                  className="card card-hover group relative flex flex-col overflow-hidden sm:col-span-2 sm:min-h-[380px] lg:row-span-2 lg:min-h-0"
                 >
-                  <Parallax amount={5} className="absolute inset-[-8%_0]">
+                  <div className="relative h-52 sm:absolute sm:inset-y-0 sm:right-0 sm:h-auto sm:w-[48%] sm:[mask-image:linear-gradient(90deg,transparent,#000_22%)]">
                     <ProjectPreview name={p.name} type={p.type} tone={p.tone} className="relative h-full w-full" />
-                  </Parallax>
-                </Reveal>
-                <Reveal
-                  variant={flip ? "slide-left" : "slide-right"}
-                  stagger
-                  delay={0.2}
-                  className="flex flex-col justify-center gap-4 p-6 md:col-span-5 md:p-10"
-                >
-                  <p className="flex items-center gap-3 font-[family-name:var(--font-jetbrains)] text-xs text-muted">
-                    <span className="text-accent">{String(i + 1).padStart(2, "0")}</span>
-                    <span className="h-px w-8 bg-line" />
-                    {p.type} · {p.year}
-                  </p>
-                  <h3 className="font-[family-name:var(--font-space)] text-2xl font-semibold tracking-tight md:text-[28px]">
-                    {p.name}
-                  </h3>
-                  <p className="text-muted">{p.tagline}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {p.tags.map((t) => (
-                      <span key={t} className="pill">{t}</span>
-                    ))}
                   </div>
-                  <span className="arrow-link mt-1 text-sm">Read case study {ArrowIcon}</span>
-                </Reveal>
+                  <span className="pill absolute left-5 top-5">flagship</span>
+                  <div className="relative mt-auto flex flex-col gap-3 p-6 sm:w-[58%] md:p-7">
+                    {meta}
+                    <h3 className="font-[family-name:var(--font-space)] text-2xl font-semibold tracking-tight md:text-[30px]">{p.name}</h3>
+                    <p className="text-muted">{p.tagline}</p>
+                    {tags(4)}
+                    <span className="arrow-link mt-1 text-sm">Read case study {ArrowIcon}</span>
+                  </div>
+                </Link>
+              );
+
+            // 2×1 wide — mirrors the flagship: product bleeds off the left edge, copy right
+            if (i === 1)
+              return (
+                <Link
+                  key={p.name}
+                  href={p.href}
+                  className="card card-hover group relative flex flex-col overflow-hidden sm:col-span-2 sm:min-h-[230px] lg:min-h-0"
+                >
+                  <div className="relative h-36 sm:absolute sm:inset-y-0 sm:left-0 sm:h-auto sm:w-[54%] sm:[mask-image:linear-gradient(270deg,transparent,#000_28%)]">
+                    <ProjectPreview name={p.name} type={p.type} tone={p.tone} className="relative h-full w-full" />
+                  </div>
+                  <div className="relative flex flex-1 flex-col justify-center gap-2.5 p-6 sm:ml-auto sm:w-[50%]">
+                    {meta}
+                    <h3 className="font-[family-name:var(--font-space)] text-xl font-semibold tracking-tight">{p.name}</h3>
+                    <p className="text-sm text-muted">{p.tagline}</p>
+                    {tags(2)}
+                  </div>
+                </Link>
+              );
+
+            // 1×1 — compact tile: tone wash + oversized ghost index
+            return (
+              <Link
+                key={p.name}
+                href={p.href}
+                className={`card card-hover group relative flex min-h-[180px] flex-col justify-between overflow-hidden bg-gradient-to-br ${p.tone} to-surface p-6 lg:min-h-0`}
+              >
+                <span
+                  className="pointer-events-none absolute -bottom-6 -right-2 select-none font-[family-name:var(--font-space)] text-[120px] font-semibold leading-none tracking-tighter text-fg/[0.04] transition-transform duration-500 group-hover:-translate-y-1"
+                  aria-hidden="true"
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <div className="relative flex items-start justify-between gap-3">
+                  {meta}
+                  <span className="text-muted transition-colors duration-200 group-hover:text-accent">
+                    <ArrowUpRight />
+                  </span>
+                </div>
+                <div className="relative">
+                  <h3 className="font-[family-name:var(--font-space)] text-lg font-semibold tracking-tight">{p.name}</h3>
+                  <p className="mt-1 text-sm text-muted">{p.tagline}</p>
+                </div>
               </Link>
             );
           })}
-        </div>
+
+          {/* 1×1 — entry point to the full archive */}
+          <Link
+            href="/projects"
+            className="card card-hover ring-gradient group relative flex min-h-[150px] flex-col justify-between overflow-hidden bg-gradient-to-br from-secondary to-surface p-6 lg:min-h-0"
+          >
+            <div className="pointer-events-none absolute -bottom-16 -right-16 h-48 w-48 rounded-full bg-primary/25 blur-[60px]" aria-hidden="true" />
+            <p className="relative font-[family-name:var(--font-jetbrains)] text-xs text-muted">archive</p>
+            <div className="relative flex items-end justify-between gap-4">
+              <p>
+                <span className="block font-[family-name:var(--font-space)] text-5xl font-semibold leading-none tracking-tight text-primary">
+                  {String(allProjects.length).padStart(2, "0")}
+                </span>
+                <span className="mt-2 block font-medium">All projects</span>
+              </p>
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary text-on-primary transition-transform duration-300 group-hover:-rotate-45">
+                {ArrowIcon}
+              </span>
+            </div>
+          </Link>
+        </Reveal>
       </section>
 
       {/* ─── Skills snapshot — bento with cursor spotlight ─── */}
@@ -219,7 +287,7 @@ export default function Home() {
             </Link>
           }
         />
-        <Reveal variant="tilt" stagger each={0.07} className="mt-10 grid gap-3 sm:grid-cols-2 md:grid-cols-4 md:gap-4">
+        <Reveal variant="tilt" stagger each={0.06} className="mt-10 grid gap-3 sm:grid-cols-2 md:grid-cols-4 md:gap-4">
           {skillsBento.map((s) => (
             <Link key={s.name} href="/skills" className={`card card-hover spotlight group flex flex-col p-6 ${s.span}`}>
               <div className="flex items-center justify-between">
@@ -235,7 +303,7 @@ export default function Home() {
               <h3 className="mt-5 font-[family-name:var(--font-space)] text-lg font-medium">{s.name}</h3>
               <ul className="mt-3 flex flex-wrap gap-1.5">
                 {s.items.map((it) => (
-                  <li key={it} className="pill-ghost !text-[11px]">{it}</li>
+                  <li key={it} className="pill-ghost !text-xs">{it}</li>
                 ))}
               </ul>
             </Link>
@@ -258,7 +326,7 @@ export default function Home() {
         <div className="relative mt-10">
           <ScrollLine axis="x" scrub={false} className="left-0 right-0 top-[6px] hidden h-px md:block" />
           <ScrollLine axis="y" className="bottom-2 left-[6px] top-2 w-px md:hidden" />
-          <Reveal variant="fade-up" stagger each={0.15} delay={0.3} className="grid gap-8 md:grid-cols-3 md:gap-6">
+          <Reveal variant="fade-up" stagger each={0.08} delay={0.3} className="grid gap-8 md:grid-cols-3 md:gap-6">
             {experience.map((e) => (
               <div key={e.company} className="relative pl-8 md:pl-0 md:pt-9">
                 <span
@@ -297,7 +365,7 @@ export default function Home() {
               </Reveal>
             </div>
           </div>
-          <Reveal as="ol" variant="clip-up" stagger each={0.12} className="flex flex-col md:col-span-8">
+          <Reveal as="ol" variant="clip-up" stagger each={0.08} className="flex flex-col md:col-span-8">
             {posts.map((p, i) => (
               <li key={p.title}>
                 <Link
@@ -355,7 +423,7 @@ export default function Home() {
               </figcaption>
             </figure>
           </Reveal>
-          <Reveal variant="slide-right" stagger each={0.12} delay={0.15} className="flex flex-col gap-4 md:col-span-5">
+          <Reveal variant="slide-right" stagger each={0.08} delay={0.15} className="flex flex-col gap-4 md:col-span-5">
             {otherQuotes.map((t) => (
               <figure key={t.name} className="card p-6">
                 <blockquote className="leading-relaxed text-fg/90">&ldquo;{t.quote}&rdquo;</blockquote>

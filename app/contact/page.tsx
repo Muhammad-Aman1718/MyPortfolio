@@ -26,7 +26,7 @@ export default function Contact() {
           <div data-enter="left" style={d(550)} className="card mt-8 divide-y divide-line">
             <a href="mailto:admin@behafiz.com" className="group flex items-center justify-between gap-4 p-5 transition-colors duration-150 hover:bg-surface-hi">
               <span>
-                <span className="block font-[family-name:var(--font-jetbrains)] text-[11px] text-muted">email</span>
+                <span className="block font-[family-name:var(--font-jetbrains)] text-xs text-muted">email</span>
                 <span className="mt-1 block font-[family-name:var(--font-jetbrains)] text-sm text-accent">admin@behafiz.com</span>
               </span>
               <span className="text-xs text-muted">Replies within 24–48h</span>

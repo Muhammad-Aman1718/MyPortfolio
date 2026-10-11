@@ -20,6 +20,8 @@ type RevealProps = {
   each?: number;
   /** Where the stagger starts from */
   from?: "start" | "center" | "end" | "edges";
+  /** Stagger as a 2D wave across a CSS grid (GSAP infers rows/columns) */
+  grid?: boolean;
   delay?: number;
   duration?: number;
   /** ScrollTrigger start position */
@@ -37,6 +39,7 @@ export default function Reveal({
   targets,
   each,
   from = "start",
+  grid = false,
   delay = 0,
   duration,
   start = "top 88%",
@@ -71,7 +74,7 @@ export default function Reveal({
         duration: duration ?? preset.duration,
         ease: preset.ease,
         delay,
-        stagger: { each: each ?? preset.stagger, from },
+        stagger: { each: each ?? preset.stagger, from, ...(grid ? { grid: "auto" as const } : {}) },
         clearProps: "transform,filter,clipPath",
         scrollTrigger: { trigger: el, start, once: true },
       });
@@ -80,7 +83,7 @@ export default function Reveal({
     }, el);
 
     return () => ctx.revert();
-  }, [variant, stagger, targets, each, from, delay, duration, start]);
+  }, [variant, stagger, targets, each, from, grid, delay, duration, start]);
 
   return (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

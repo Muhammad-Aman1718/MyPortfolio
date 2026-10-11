@@ -39,6 +39,14 @@
 
 html {
   scroll-behavior: smooth;
+  /* Anchors & keyboard focus land below the fixed navbar (ui-ux-pro-max: fixed-element-offset, focus-not-obscured) */
+  scroll-padding-top: 6rem;
+}
+
+@layer base {
+  /* Tailwind v4 resets buttons to the default cursor; every clickable gets a pointer */
+  button:not(:disabled), [role="button"], [role="tab"], select, summary { cursor: pointer; }
+  button:disabled { cursor: not-allowed; }
 }
 
 body {
@@ -92,6 +100,7 @@ body {
     font-weight: 600;
     letter-spacing: -0.025em;
     line-height: 1.05;
+    text-wrap: balance;
   }
   .h-section {
     font-family: var(--font-space), ui-sans-serif, system-ui, sans-serif;
@@ -99,6 +108,7 @@ body {
     letter-spacing: -0.02em;
     line-height: 1.1;
     font-size: clamp(1.75rem, 1.2rem + 1.6vw, 2.375rem);
+    text-wrap: balance;
   }
 
   /* Subtle dotted grid used behind hero areas */
@@ -147,6 +157,8 @@ body {
     transform: translateY(-4px);
     box-shadow: 0 14px 40px -12px color-mix(in srgb, var(--primary) 30%, transparent);
   }
+  /* Press feedback (ui-ux-pro-max: scale-feedback) — after :hover so it wins while pressed */
+  .card-hover:active { transform: translateY(-2px) scale(0.99); }
 
   /* Cursor-following spotlight (coords set by <Spotlight>) */
   .spotlight { isolation: isolate; }
@@ -290,7 +302,7 @@ body {
   .field:hover { border-color: color-mix(in srgb, var(--muted) 40%, var(--line)); }
   .field:focus {
     border-color: color-mix(in srgb, var(--accent) 70%, transparent);
-    box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 16%, transparent);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 28%, transparent);
     background: var(--surface);
   }
 }
@@ -373,7 +385,9 @@ html.js [data-reveal] {
   width: max-content;
   animation: marquee 40s linear infinite;
 }
-.marquee:hover .marquee-track { animation-play-state: paused; }
+.marquee:hover .marquee-track,
+.marquee:focus-within .marquee-track,
+.marquee[data-paused="true"] .marquee-track { animation-play-state: paused; }
 
 /* ─── Accordion (animates height without measuring) ─── */
 .accordion-panel {

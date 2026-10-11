@@ -117,13 +117,13 @@ export default function Skills() {
                 href={`#${name.toLowerCase()}`}
                 data-enter="pop"
                 style={{ "--d": 500 + i * 50 } as React.CSSProperties}
-                className="shrink-0 rounded-full border border-line px-3 py-1 font-[family-name:var(--font-jetbrains)] text-xs text-muted transition-colors duration-150 hover:border-accent/60 hover:text-fg"
+                className="shrink-0 rounded-full border border-line px-3.5 py-2 font-[family-name:var(--font-jetbrains)] text-xs text-muted transition-colors duration-150 hover:border-accent/60 hover:text-fg"
               >
                 {name}
               </a>
             ))}
           </nav>
-          <p className="hidden shrink-0 items-center gap-4 font-[family-name:var(--font-jetbrains)] text-[11px] text-muted md:flex">
+          <p className="hidden shrink-0 items-center gap-4 font-[family-name:var(--font-jetbrains)] text-xs text-muted md:flex">
             <span className="flex items-center gap-2"><Tier tier="daily driver" /> daily</span>
             <span className="flex items-center gap-2"><Tier tier="production" /> production</span>
             <span className="flex items-center gap-2"><Tier tier="familiar" /> familiar</span>
@@ -147,7 +147,7 @@ export default function Skills() {
                 </p>
                 <h2 className="mt-2 flex items-center gap-3 font-[family-name:var(--font-space)] text-2xl font-semibold tracking-tight md:text-[28px]">
                   {c.name}
-                  {specialty && <span className="pill !text-[11px]">specialty</span>}
+                  {specialty && <span className="pill !text-xs">specialty</span>}
                 </h2>
                 <p className={`mt-3 max-w-[48ch] text-sm leading-relaxed ${specialty ? "text-fg/85" : "text-muted"}`}>
                   {c.context}
@@ -169,7 +169,7 @@ export default function Skills() {
                   >
                     <span className="flex min-w-0 flex-col gap-1">
                       <span className="font-medium">{chip.name}</span>
-                      <span className="font-[family-name:var(--font-jetbrains)] text-[11px] text-muted">
+                      <span className="font-[family-name:var(--font-jetbrains)] text-xs text-muted">
                         since {chip.since}
                         <span className="hidden sm:inline"> · </span>
                         <span className="block sm:inline">{chip.tier}</span>

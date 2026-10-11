@@ -28,7 +28,7 @@ export default function FilterPills({
             data-active={on}
             aria-pressed={on}
             onClick={() => onChange(o)}
-            className={`relative z-[1] rounded-full border px-4 py-1.5 font-[family-name:var(--font-jetbrains)] text-[13px] transition-colors duration-300 ${
+            className={`relative z-[1] rounded-full border px-4 py-2 font-[family-name:var(--font-jetbrains)] text-[13px] transition-colors duration-300 ${
               on ? "border-transparent text-on-primary" : "border-line text-muted hover:border-fg/25 hover:text-fg"
             }`}
           >
