@@ -17,21 +17,27 @@ export const featuredProjects = [
     tagline: "A beautifully-crafted Quran app trusted by 100k+ daily readers.",
     tags: ["React Native", "TypeScript", "SQLite", "Reanimated"],
     href: "/projects",
-    tone: "from-lime-400/20",
+    type: "Mobile",
+    year: "2025",
+    tone: "from-primary/30",
   },
   {
     name: "FleetPulse Dashboard",
     tagline: "Real-time logistics tracking that cut dispatch errors by 60%.",
     tags: ["Next.js", "PostgreSQL", "WebSockets", "Redis"],
     href: "/projects",
-    tone: "from-emerald-400/20",
+    type: "Web",
+    year: "2025",
+    tone: "from-accent/20",
   },
   {
     name: "Ledgerly",
     tagline: "Accounting automation for freelancers — invoices to taxes in one flow.",
     tags: ["Next.js", "tRPC", "Stripe", "Prisma"],
     href: "/projects",
-    tone: "from-teal-400/20",
+    type: "Web",
+    year: "2024",
+    tone: "from-secondary",
   },
 ];
 
@@ -215,4 +221,23 @@ export const services = [
     engagement: "weekly",
     from: "from $2k",
   },
+];
+
+/** Full project list for /projects (flagship spans two columns when unfiltered). */
+export const allProjects: {
+  name: string;
+  type: string;
+  year: string;
+  role: string;
+  tagline: string;
+  tags: string[];
+  tone: string;
+  flagship?: boolean;
+}[] = [
+  { name: "Quran Companion", type: "Mobile", year: "2025", role: "Solo build", tagline: "Offline-first Quran app with 100k+ daily readers.", tags: ["React Native", "SQLite", "Reanimated"], tone: "from-primary/30", flagship: true },
+  { name: "FleetPulse Dashboard", type: "Web", year: "2025", role: "Lead engineer", tagline: "Real-time logistics tracking that cut dispatch errors by 60%.", tags: ["Next.js", "WebSockets", "Redis"], tone: "from-accent/20" },
+  { name: "Ledgerly", type: "Web", year: "2024", role: "Full-stack", tagline: "Accounting automation for freelancers.", tags: ["Next.js", "tRPC", "Stripe"], tone: "from-secondary" },
+  { name: "BankLite", type: "Mobile", year: "2023", role: "Team lead", tagline: "Fintech app serving 250k customers at 0.3% crash rate.", tags: ["React Native", "Kotlin", "GraphQL"], tone: "from-primary/20" },
+  { name: "OrderFlow API", type: "Backend", year: "2023", role: "Architect", tagline: "Order-processing backbone handling 2M requests a day.", tags: ["NestJS", "PostgreSQL", "Docker"], tone: "from-accent/15" },
+  { name: "StudioSite CMS", type: "Client work", year: "2022", role: "Full-stack", tagline: "Custom CMS powering 12 agency client sites.", tags: ["React", "Node.js", "PostgreSQL"], tone: "from-secondary" },
 ];

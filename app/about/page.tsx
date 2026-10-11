@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Reveal from "@/components/reveal";
 import SectionHeader from "@/components/section-header";
 import CertificatesSection from "@/components/certificates-section";
+import ScrollLine from "@/components/scroll-line";
+import SplitText from "@/components/split-text";
 
 export const metadata: Metadata = { title: "About — Hafiz" };
 
@@ -25,35 +27,57 @@ const interests = [
   { label: "Reading", icon: "📚", span: "md:col-span-2" },
 ];
 
+const facts = [
+  { k: "based", v: "Karachi, Pakistan" },
+  { k: "focus", v: "Mobile & web" },
+  { k: "shipping since", v: "2018" },
+  { k: "works with", v: "Founders & product teams" },
+];
+
 export default function About() {
   return (
-    <div className="pt-16">
-      {/* Intro */}
-      <section className="mx-auto grid max-w-[1200px] gap-12 px-6 py-24 lg:grid-cols-12 lg:px-12">
+    <>
+      {/* Intro — fact sheet slides in from the left, statement focuses in word by word */}
+      <section className="container-site page-top grid gap-10 pb-12 lg:grid-cols-12 lg:gap-14">
         <div className="lg:col-span-5">
-          <Reveal>
-            <div className="card sticky top-24 flex aspect-[4/5] items-center justify-center rounded-[24px] p-8">
-              <span className="font-[family-name:var(--font-space)] text-[96px] font-semibold text-primary">H.</span>
+          <div data-enter="left" style={{ "--d": 100 } as React.CSSProperties} className="lg:sticky lg:top-28">
+            <div className="card ring-gradient overflow-hidden rounded-[24px]">
+              <div className="relative flex aspect-[16/10] items-center justify-center overflow-hidden border-b border-line lg:aspect-[5/4]">
+                <div className="bg-grid pointer-events-none absolute inset-0" aria-hidden="true" />
+                <div className="pointer-events-none absolute h-56 w-56 rounded-full bg-primary/25 blur-[70px]" aria-hidden="true" />
+                <span className="relative font-[family-name:var(--font-space)] text-[88px] font-semibold leading-none text-primary md:text-[112px]">
+                  H.
+                </span>
+              </div>
+              <dl className="grid grid-cols-2 gap-px bg-line">
+                {facts.map((f) => (
+                  <div key={f.k} className="bg-surface p-4">
+                    <dt className="font-[family-name:var(--font-jetbrains)] text-[11px] text-muted">{f.k}</dt>
+                    <dd className="mt-1 text-sm">{f.v}</dd>
+                  </div>
+                ))}
+              </dl>
             </div>
-          </Reveal>
+          </div>
         </div>
-        <div className="lg:col-span-7">
-          <Reveal stagger>
-            <p className="eyebrow">{"// about"}</p>
-            <h1 className="mt-3 font-[family-name:var(--font-space)] text-[32px] font-semibold leading-[1.15] md:text-[48px]">
-              Expensive, but the work is worth it.
-            </h1>
-            <p className="mt-8 max-w-[68ch] text-lg leading-relaxed">
-              I say that openly because it&apos;s the honest version of what every client discovers anyway:
-              cheap software costs more. I&apos;ve spent eight years learning exactly where products break —
-              and building them so they don&apos;t.
-            </p>
-            <p className="mt-6 max-w-[68ch] leading-relaxed text-muted">
+
+        <div className="lg:col-span-7 lg:pt-4">
+          <p data-enter="rise" className="eyebrow">{"// about"}</p>
+          <h1 className="h-display mt-4 text-[38px] md:text-[56px]">
+            <SplitText text="Expensive, but the work is worth it." enter="blur" step={70} delay={150} accent={["worth"]} />
+          </h1>
+          <p data-enter="rise" style={{ "--d": 650 } as React.CSSProperties} className="mt-8 max-w-[62ch] text-lg leading-relaxed md:text-xl">
+            I say that openly because it&apos;s the honest version of what every client discovers anyway:
+            cheap software costs more. I&apos;ve spent eight years learning exactly where products break —
+            and building them so they don&apos;t.
+          </p>
+          <Reveal variant="fade" stagger each={0.2} start="top 95%">
+            <p className="mt-6 max-w-[64ch] leading-relaxed text-muted">
               My path started in Karachi, building web apps for local businesses. Mobile pulled me in
               when I realized the apps people rely on daily are the ones held to the highest standard —
               a crash isn&apos;t a bug report, it&apos;s a deleted app.
             </p>
-            <p className="mt-6 max-w-[68ch] leading-relaxed text-muted">
+            <p className="mt-5 max-w-[64ch] leading-relaxed text-muted">
               I love problems with constraints: offline-first sync, cold-start budgets, legacy code that
               can&apos;t stop serving users while it&apos;s being replaced. I work directly with founders and
               product teams, communicate in outcomes, and give estimates I actually hit.
@@ -62,31 +86,42 @@ export default function About() {
         </div>
       </section>
 
-      {/* Career journey — vertical timeline */}
-      <section className="mx-auto max-w-[1200px] px-6 py-24 lg:px-12">
-        <SectionHeader eyebrow="journey" title="How I got here" />
-        <div className="mt-12 border-l-2 border-line pl-8">
-          {journey.map((j) => (
-            <Reveal key={j.year} className="relative pb-12 last:pb-0">
-              <span className="absolute -left-[39px] top-1.5 h-2.5 w-2.5 rounded-full bg-accent" />
-              <p className="font-[family-name:var(--font-jetbrains)] text-[13px] text-muted">{j.year}</p>
-              <h3 className="mt-1 font-[family-name:var(--font-space)] text-lg font-medium">{j.title}</h3>
-              <p className="mt-1 max-w-[60ch] text-muted">{j.text}</p>
-            </Reveal>
-          ))}
-        </div>
+      {/* Career journey — centre rail fills as you scroll; milestones alternate sides */}
+      <section className="container-site section">
+        <SectionHeader eyebrow="journey" title="How I got here" center />
+        <ol className="relative mx-auto mt-10 max-w-[920px]">
+          <ScrollLine className="bottom-3 left-[5px] top-3 w-px md:left-1/2 md:-translate-x-1/2" />
+          {journey.map((j, i) => {
+            const right = i % 2 === 1;
+            return (
+              <li key={j.year} className="relative grid pb-10 pl-9 last:pb-0 md:grid-cols-2 md:gap-14 md:pl-0">
+                <span className="absolute left-0 top-1.5 h-[11px] w-[11px] rounded-full border-2 border-accent bg-background md:left-1/2 md:-translate-x-1/2" />
+                <Reveal
+                  variant={right ? "slide-right" : "slide-left"}
+                  start="top 82%"
+                  className={right ? "md:col-start-2" : "md:text-right"}
+                >
+                  <p className="font-[family-name:var(--font-space)] text-3xl font-semibold tracking-tight text-fg/15 md:text-4xl">{j.year}</p>
+                  <h3 className="mt-1 font-[family-name:var(--font-space)] text-lg font-medium">{j.title}</h3>
+                  <p className={`mt-1 max-w-[42ch] text-muted ${right ? "" : "md:ml-auto"}`}>{j.text}</p>
+                </Reveal>
+              </li>
+            );
+          })}
+        </ol>
       </section>
 
-      {/* Education */}
-      <section className="mx-auto max-w-[1200px] px-6 py-24 lg:px-12">
-        <SectionHeader eyebrow="education" title="Education" />
-        <Reveal stagger className="mt-12 grid gap-6 md:grid-cols-2">
+      {/* Education — ledger rows with an oversized date column */}
+      <section className="container-site section">
+        <SectionHeader eyebrow="education" title="Education" motion="fade" />
+        <Reveal variant="clip-left" stagger each={0.15} className="mt-10 flex flex-col">
           {education.map((e) => (
-            <div key={e.degree} className="card p-8">
-              <h3 className="font-[family-name:var(--font-space)] text-lg font-medium">{e.degree}</h3>
-              <p className="mt-1 text-muted">{e.school}</p>
-              <p className="mt-3 font-[family-name:var(--font-jetbrains)] text-[13px] text-muted">{e.years}</p>
-              <p className="mt-2 text-sm text-muted">{e.note}</p>
+            <div key={e.degree} className="grid gap-2 border-t border-line py-6 last:border-b md:grid-cols-12 md:items-baseline md:gap-6">
+              <p className="font-[family-name:var(--font-jetbrains)] text-sm text-accent md:col-span-3">{e.years}</p>
+              <h3 className="font-[family-name:var(--font-space)] text-xl font-medium md:col-span-5">{e.degree}</h3>
+              <p className="text-muted md:col-span-4">
+                {e.school} <span className="text-fg/30">·</span> <span className="text-sm">{e.note}</span>
+              </p>
             </div>
           ))}
         </Reveal>
@@ -95,18 +130,23 @@ export default function About() {
       {/* Certifications */}
       <CertificatesSection />
 
-      {/* Interests — bento */}
-      <section className="mx-auto max-w-[1280px] px-6 py-24 lg:px-12">
-        <SectionHeader eyebrow="interests" title="Beyond the keyboard" />
-        <Reveal stagger className="mt-12 grid grid-cols-2 gap-4 md:grid-cols-4">
+      {/* Interests — bento that springs in from the edges */}
+      <section className="container-site section">
+        <SectionHeader eyebrow="interests" title="Beyond the keyboard" motion="blur" />
+        <Reveal variant="scale" stagger from="edges" className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
           {interests.map((i) => (
-            <div key={i.label} className={`card flex items-center gap-3 p-6 ${i.span}`}>
-              <span className="text-2xl" aria-hidden>{i.icon}</span>
+            <div key={i.label} className={`card spotlight group flex items-center gap-4 p-5 md:p-6 ${i.span}`}>
+              <span
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[12px] bg-background text-2xl transition-transform duration-300 group-hover:-rotate-12 group-hover:scale-110"
+                aria-hidden
+              >
+                {i.icon}
+              </span>
               <span className="font-[family-name:var(--font-space)] font-medium">{i.label}</span>
             </div>
           ))}
         </Reveal>
       </section>
-    </div>
+    </>
   );
 }

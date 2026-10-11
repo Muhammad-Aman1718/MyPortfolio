@@ -1,43 +1,44 @@
 import Reveal from "./reveal";
 import SectionHeader from "./section-header";
+import { ArrowUpRight } from "./icons";
 import { certificates } from "@/lib/data";
 
-/** Certifications — card grid with issuer, year, and verification link. */
+/** Certifications — compact verification rows that flip up into place. */
 export default function CertificatesSection() {
   return (
-    <section className="mx-auto max-w-[1200px] px-6 py-24 lg:px-12">
+    <section className="container-site section">
       <SectionHeader
         eyebrow="certifications"
         title="Certified, verified"
         description="Credentials that back the work — every one links to its verification page."
+        motion="wipe"
       />
-      <Reveal stagger className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <Reveal variant="slide-left" stagger each={0.1} className="mt-10 grid gap-3 md:grid-cols-2 md:gap-4">
         {certificates.map((c) => (
           <a
             key={c.id}
             href={c.href}
             target="_blank"
             rel="noreferrer"
-            className="card group flex flex-col p-6"
+            className="card card-hover spotlight group flex items-center gap-4 p-5"
           >
-            <div className="flex items-start justify-between">
-              <span className="flex h-10 w-10 items-center justify-center rounded-[10px] bg-secondary">
-                <svg viewBox="0 0 24 24" className="h-5 w-5 text-accent" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="9" r="6" />
-                  <path d="M9 14.5 7.5 22l4.5-2.5L16.5 22 15 14.5" />
-                </svg>
-              </span>
-              <svg viewBox="0 0 24 24" className="h-4 w-4 text-muted transition-colors duration-150 group-hover:text-accent" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M7 17 17 7M9 7h8v8" />
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[12px] bg-secondary transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-105">
+              <svg viewBox="0 0 24 24" className="h-6 w-6 text-accent" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <circle cx="12" cy="9" r="6" />
+                <path d="M9 14.5 7.5 22l4.5-2.5L16.5 22 15 14.5" />
               </svg>
-            </div>
-            <h3 className="mt-5 font-[family-name:var(--font-space)] text-base font-medium leading-snug">
-              {c.name}
-            </h3>
-            <p className="mt-2 text-sm text-muted">{c.issuer}</p>
-            <p className="mt-auto pt-4 font-[family-name:var(--font-jetbrains)] text-xs text-muted">
-              {c.year} · {c.id}
-            </p>
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block font-[family-name:var(--font-space)] font-medium leading-snug">{c.name}</span>
+              <span className="mt-1 block text-sm text-muted">
+                {c.issuer}
+                <span className="font-[family-name:var(--font-jetbrains)] text-xs"> · {c.year} · {c.id}</span>
+              </span>
+            </span>
+            <span className="text-muted transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent">
+              <ArrowUpRight />
+              <span className="sr-only">(verify, opens in new tab)</span>
+            </span>
           </a>
         ))}
       </Reveal>

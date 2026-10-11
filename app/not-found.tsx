@@ -24,8 +24,8 @@ export default function NotFound() {
   }, []);
 
   return (
-    <div className="flex min-h-[80vh] flex-col items-center justify-center px-6 pt-16">
-      <div className="card w-full max-w-[560px] overflow-hidden rounded-[12px] p-0">
+    <div className="flex min-h-[80vh] flex-col items-center justify-center px-5 pb-16 pt-28">
+      <div data-enter="card" className="card w-full max-w-[560px] overflow-hidden rounded-[12px] p-0 shadow-[0_40px_80px_-30px_rgba(234,0,68,0.3)]">
         <div className="flex items-center gap-2 border-b border-line px-4 py-3">
           <span className="h-3 w-3 rounded-full bg-error/70" />
           <span className="h-3 w-3 rounded-full bg-accent/50" />
