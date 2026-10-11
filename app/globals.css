@@ -1,26 +1,176 @@
 @import "tailwindcss";
 
+/* ─── Crimson Night — dark only ─── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #111112;
+  --surface: #1a1a1c;
+  --primary: #ea0044;
+  --secondary: #2b0a17;
+  --accent: #ff3268;
+  --fg: #fafafa;
+  --muted: #9a9a9e;
+  --line: #27272b;
+  --error: #e5484d;
+  --on-primary: #ffffff;
 }
 
 @theme inline {
   --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-surface: var(--surface);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-error: var(--error);
+  --color-on-primary: var(--on-primary);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-space), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--fg);
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--primary);
+  color: var(--on-primary);
+}
+
+:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--accent) 60%, transparent);
+  outline-offset: 2px;
+}
+
+/* Availability dot */
+@keyframes pulse-dot {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--primary) 45%, transparent); }
+  50% { box-shadow: 0 0 0 6px transparent; }
+}
+.pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/* Glass navbar */
+.glass {
+  background: color-mix(in srgb, var(--background) 60%, transparent);
+  backdrop-filter: blur(18px) saturate(150%);
+}
+
+/* Slow ambient glow drifting behind the hero */
+@keyframes glow-drift {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+  33% { transform: translate(60px, -40px) scale(1.15); opacity: 0.7; }
+  66% { transform: translate(-40px, 30px) scale(0.95); opacity: 0.45; }
+}
+.hero-glow {
+  position: absolute;
+  border-radius: 9999px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--primary) 28%, transparent) 0%, transparent 70%);
+  filter: blur(60px);
+  pointer-events: none;
+  animation: glow-drift 14s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+/* Cards */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  transition: border-color 250ms ease-out, transform 250ms ease-out, box-shadow 250ms ease-out;
+}
+.card:hover {
+  border-color: color-mix(in srgb, var(--primary) 55%, transparent);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px color-mix(in srgb, var(--primary) 14%, transparent);
+}
+
+/* Buttons */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 24px;
+  border-radius: 10px;
+  background: var(--primary);
+  color: var(--on-primary);
+  font-weight: 500;
+  transition: transform 200ms ease-out, filter 200ms ease-out, box-shadow 200ms ease-out;
+}
+.btn-primary:hover {
+  filter: brightness(1.12);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px color-mix(in srgb, var(--primary) 45%, transparent);
+}
+.btn-primary:active { transform: scale(0.97); }
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 24px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  color: var(--fg);
+  font-weight: 500;
+  background: transparent;
+  transition: border-color 200ms ease-out, transform 200ms ease-out, box-shadow 200ms ease-out;
+}
+.btn-secondary:hover {
+  border-color: color-mix(in srgb, var(--accent) 70%, transparent);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--primary) 18%, transparent);
+}
+.btn-secondary:active { transform: scale(0.97); }
+
+/* Tag pills */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  background: var(--secondary);
+  color: var(--accent);
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 12px;
+  padding: 4px 12px;
+  white-space: nowrap;
+}
+
+/* Mono eyebrow label */
+.eyebrow {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 13px;
+  color: var(--accent);
+  letter-spacing: 0.02em;
+}
+
+/* Arrow-link that slides right on hover */
+.arrow-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent);
+  font-weight: 500;
+}
+.arrow-link svg { transition: transform 150ms ease-out; }
+.arrow-link:hover svg { transform: translateX(4px); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .pulse-dot, .hero-glow { animation: none; }
 }
