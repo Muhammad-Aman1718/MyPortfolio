@@ -43,7 +43,7 @@ export default function CountUp({
   }, [value, suffix]);
 
   return (
-    <span ref={ref} className={className}>
+    <span ref={ref} className={`tabular-nums ${className ?? ""}`}>
       0{suffix}
     </span>
   );
