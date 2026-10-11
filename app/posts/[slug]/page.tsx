@@ -77,7 +77,7 @@ export default async function PostPage({ params }: PageProps<"/posts/[slug]">) {
             </p>
             <div data-enter="rise" style={d(520)} className="mt-8 flex flex-wrap items-center justify-between gap-4 border-y border-line py-4">
               <div className="flex items-center gap-3">
-                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary font-[family-name:var(--font-space)] font-semibold text-primary">
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary font-[family-name:var(--font-space)] font-semibold text-accent">
                   H.
                 </span>
                 <span className="text-sm">
