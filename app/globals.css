@@ -3,15 +3,20 @@
 /* ─── Crimson Night — dark only ─── */
 :root {
   --background: #111112;
-  --surface: #1a1a1c;
+  --surface: #1c1c1f;
   --surface-hi: #202023;
   --primary: #ea0044;
   --secondary: #2b0a17;
   --accent: #ff3268;
   --fg: #fafafa;
   --muted: #9a9a9e;
-  --line: #27272b;
-  --error: #e5484d;
+  --line: #2e2e33;
+  /* Boundaries of interactive controls (inputs) need ≥3:1 against bg and card — WCAG 1.4.11 */
+  --line-strong: #6b6b72;
+  /* Filled-primary hover goes deeper, not brighter, so white labels stay ≥4.5:1 */
+  --primary-hover: #d4003e;
+  /* Orange-red, deliberately off the crimson hue so an error never reads as "brand" */
+  --error: #ff6b4a;
   --on-primary: #ffffff;
 
   /* Motion tokens — shared by CSS entrances and GSAP presets */
@@ -29,6 +34,7 @@
   --color-fg: var(--fg);
   --color-muted: var(--muted);
   --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
   --color-error: var(--error);
   --color-on-primary: var(--on-primary);
 
@@ -147,6 +153,8 @@ body {
     background: var(--surface);
     border: 1px solid var(--line);
     border-radius: 16px;
+    /* faint top highlight: keeps cards distinct from the page on dim or washed-out screens */
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.035);
   }
   /* Only interactive cards lift — static content no longer pretends to be clickable */
   .card-hover {
@@ -155,7 +163,7 @@ body {
   .card-hover:hover {
     border-color: color-mix(in srgb, var(--primary) 55%, transparent);
     transform: translateY(-4px);
-    box-shadow: 0 14px 40px -12px color-mix(in srgb, var(--primary) 30%, transparent);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.035), 0 14px 40px -12px color-mix(in srgb, var(--primary) 30%, transparent);
   }
   /* Press feedback (ui-ux-pro-max: scale-feedback) — after :hover so it wins while pressed */
   .card-hover:active { transform: translateY(-2px) scale(0.99); }
@@ -208,7 +216,7 @@ body {
     transition: transform 200ms ease-out, filter 200ms ease-out, box-shadow 200ms ease-out;
   }
   .btn-primary:hover {
-    filter: brightness(1.12);
+    background: var(--primary-hover);
     box-shadow: 0 8px 28px color-mix(in srgb, var(--primary) 45%, transparent);
   }
   .btn-primary:active { transform: scale(0.97); }
@@ -291,15 +299,20 @@ body {
   .field {
     width: 100%;
     border-radius: 10px;
-    border: 1px solid var(--line);
+    border: 1px solid var(--line-strong);
     background: var(--background);
     color: var(--fg);
     font-size: 14px;
     outline: none;
     transition: border-color 150ms ease-out, box-shadow 150ms ease-out, background-color 150ms ease-out;
   }
-  .field::placeholder { color: color-mix(in srgb, var(--muted) 70%, transparent); }
-  .field:hover { border-color: color-mix(in srgb, var(--muted) 40%, var(--line)); }
+  .field::placeholder { color: color-mix(in srgb, var(--muted) 85%, transparent); }
+  .field:hover { border-color: var(--muted); }
+  .field[aria-invalid="true"] { border-color: var(--error); }
+  .field[aria-invalid="true"]:focus {
+    border-color: var(--error);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--error) 22%, transparent);
+  }
   .field:focus {
     border-color: color-mix(in srgb, var(--accent) 70%, transparent);
     box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 28%, transparent);

@@ -4,16 +4,71 @@ import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { ArrowIcon } from "./icons";
 
+type Field = "name" | "email" | "message";
+
+/** Says what's wrong and how to fix it (ui-ux-pro-max: error-clarity). */
+function validate(field: Field, value: string): string {
+  const v = value.trim();
+  if (field === "name") return v ? "" : "Please enter your name.";
+  if (field === "email") {
+    if (!v) return "Please enter your email so I can reply.";
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? "" : "That email looks incomplete — use a format like you@company.com.";
+  }
+  return v.length >= 10 ? "" : "Tell me a little about the project (at least 10 characters).";
+}
+
+/** Error text under its field: icon + words, never colour alone. */
+function FieldError({ id, message }: { id: string; message: string }) {
+  return (
+    <span id={id} aria-live="polite" className="min-h-0 text-xs">
+      {message && (
+        <span className="flex items-start gap-1.5 text-error">
+          <svg viewBox="0 0 24 24" className="mt-px h-3.5 w-3.5 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M12 7.5v5M12 16h.01" />
+          </svg>
+          {message}
+        </span>
+      )}
+    </span>
+  );
+}
+
 export function ContactForm() {
   const params = useSearchParams();
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
+  const [errors, setErrors] = useState<Partial<Record<Field, string>>>({});
+
+  // Validate when the user leaves a field; once a field shows an error, re-check as they type so it clears.
+  const check = (field: Field, value: string) => setErrors((e) => ({ ...e, [field]: validate(field, value) }));
+  const onBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => check(e.target.name as Field, e.target.value);
+  const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const f = e.target.name as Field;
+    if (errors[f]) check(f, e.target.value);
+  };
+  const a11y = (f: Field) => ({
+    "aria-invalid": errors[f] ? true : undefined,
+    "aria-describedby": `${f}-error`,
+    onBlur,
+    onChange,
+  });
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
     // Honeypot check
     if ((form.elements.namedItem("website") as HTMLInputElement)?.value) return;
+    const next = Object.fromEntries(
+      (["name", "email", "message"] as Field[]).map((f) => [f, validate(f, (form.elements.namedItem(f) as HTMLInputElement).value)]),
+    ) as Record<Field, string>;
+    setErrors(next);
+    const firstInvalid = (["name", "email", "message"] as Field[]).find((f) => next[f]);
+    if (firstInvalid) {
+      // Move focus to the first problem (ui-ux-pro-max: focus-management)
+      (form.elements.namedItem(firstInvalid) as HTMLElement).focus();
+      return;
+    }
     setSending(true);
     setTimeout(() => {
       setSending(false);
@@ -40,7 +95,7 @@ export function ContactForm() {
   const inputCls = "field h-11 px-4";
 
   return (
-    <form onSubmit={onSubmit} className="card flex flex-col gap-5 p-6 md:p-8">
+    <form noValidate onSubmit={onSubmit} className="card flex flex-col gap-5 p-6 md:p-8">
       <div className="flex items-center justify-between border-b border-line pb-5">
         <p className="font-[family-name:var(--font-space)] text-lg font-medium">Project brief</p>
         <p className="font-[family-name:var(--font-jetbrains)] text-xs text-muted">
@@ -52,14 +107,20 @@ export function ContactForm() {
       <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
 
       <div className="grid gap-5 sm:grid-cols-2">
-        <label className={labelCls}>
-          <span>Name<span className="text-accent" aria-hidden="true"> *</span></span>
-          <input required name="name" autoComplete="name" className={inputCls} placeholder="Your name" />
-        </label>
-        <label className={labelCls}>
-          <span>Email<span className="text-accent" aria-hidden="true"> *</span></span>
-          <input required type="email" name="email" autoComplete="email" className={inputCls} placeholder="you@company.com" />
-        </label>
+        <div className="flex flex-col gap-1.5">
+          <label className={labelCls}>
+            <span>Name<span className="text-accent" aria-hidden="true"> *</span></span>
+            <input required name="name" autoComplete="name" className={inputCls} placeholder="Your name" {...a11y("name")} />
+          </label>
+          <FieldError id="name-error" message={errors.name ?? ""} />
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <label className={labelCls}>
+            <span>Email<span className="text-accent" aria-hidden="true"> *</span></span>
+            <input required type="email" name="email" autoComplete="email" className={inputCls} placeholder="you@company.com" {...a11y("email")} />
+          </label>
+          <FieldError id="email-error" message={errors.email ?? ""} />
+        </div>
       </div>
 
       <div className="grid gap-5 sm:grid-cols-2">
@@ -75,7 +136,7 @@ export function ContactForm() {
         </label>
         <label className={labelCls}>
           <span>
-            Budget range <span className="text-xs text-muted/70">(optional)</span>
+            Budget range <span className="text-xs text-muted">(optional)</span>
           </span>
           <select name="budget" className={inputCls} defaultValue="">
             <option value="">Select…</option>
@@ -87,10 +148,13 @@ export function ContactForm() {
         </label>
       </div>
 
-      <label className={labelCls}>
-        <span>Message<span className="text-accent" aria-hidden="true"> *</span></span>
-        <textarea required name="message" rows={5} className="field resize-y p-4" placeholder="What are you building?" />
-      </label>
+      <div className="flex flex-col gap-1.5">
+        <label className={labelCls}>
+          <span>Message<span className="text-accent" aria-hidden="true"> *</span></span>
+          <textarea required name="message" rows={5} className="field resize-y p-4" placeholder="What are you building?" {...a11y("message")} />
+        </label>
+        <FieldError id="message-error" message={errors.message ?? ""} />
+      </div>
 
       <button type="submit" disabled={sending} className="btn-primary !h-12 disabled:opacity-70">
         {sending ? (
