@@ -3,15 +3,20 @@
 /* ─── Crimson Night — dark only ─── */
 :root {
   --background: #111112;
-  --surface: #1a1a1c;
+  --surface: #1c1c1f;
   --surface-hi: #202023;
   --primary: #ea0044;
   --secondary: #2b0a17;
   --accent: #ff3268;
   --fg: #fafafa;
   --muted: #9a9a9e;
-  --line: #27272b;
-  --error: #e5484d;
+  --line: #2e2e33;
+  /* Boundaries of interactive controls (inputs) need ≥3:1 against bg and card — WCAG 1.4.11 */
+  --line-strong: #6b6b72;
+  /* Filled-primary hover goes deeper, not brighter, so white labels stay ≥4.5:1 */
+  --primary-hover: #d4003e;
+  /* Orange-red, deliberately off the crimson hue so an error never reads as "brand" */
+  --error: #ff6b4a;
   --on-primary: #ffffff;
 
   /* Motion tokens — shared by CSS entrances and GSAP presets */
@@ -29,6 +34,7 @@
   --color-fg: var(--fg);
   --color-muted: var(--muted);
   --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
   --color-error: var(--error);
   --color-on-primary: var(--on-primary);
 
@@ -147,6 +153,8 @@ body {
     background: var(--surface);
     border: 1px solid var(--line);
     border-radius: 16px;
+    /* faint top highlight: keeps cards distinct from the page on dim or washed-out screens */
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.035);
   }
   /* Only interactive cards lift — static content no longer pretends to be clickable */
   .card-hover {
@@ -155,7 +163,7 @@ body {
   .card-hover:hover {
     border-color: color-mix(in srgb, var(--primary) 55%, transparent);
     transform: translateY(-4px);
-    box-shadow: 0 14px 40px -12px color-mix(in srgb, var(--primary) 30%, transparent);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.035), 0 14px 40px -12px color-mix(in srgb, var(--primary) 30%, transparent);
   }
   /* Press feedback (ui-ux-pro-max: scale-feedback) — after :hover so it wins while pressed */
   .card-hover:active { transform: translateY(-2px) scale(0.99); }
@@ -208,7 +216,7 @@ body {
     transition: transform 200ms ease-out, filter 200ms ease-out, box-shadow 200ms ease-out;
   }
   .btn-primary:hover {
-    filter: brightness(1.12);
+    background: var(--primary-hover);
     box-shadow: 0 8px 28px color-mix(in srgb, var(--primary) 45%, transparent);
   }
   .btn-primary:active { transform: scale(0.97); }
@@ -291,15 +299,20 @@ body {
   .field {
     width: 100%;
     border-radius: 10px;
-    border: 1px solid var(--line);
+    border: 1px solid var(--line-strong);
     background: var(--background);
     color: var(--fg);
     font-size: 14px;
     outline: none;
     transition: border-color 150ms ease-out, box-shadow 150ms ease-out, background-color 150ms ease-out;
   }
-  .field::placeholder { color: color-mix(in srgb, var(--muted) 70%, transparent); }
-  .field:hover { border-color: color-mix(in srgb, var(--muted) 40%, var(--line)); }
+  .field::placeholder { color: color-mix(in srgb, var(--muted) 85%, transparent); }
+  .field:hover { border-color: var(--muted); }
+  .field[aria-invalid="true"] { border-color: var(--error); }
+  .field[aria-invalid="true"]:focus {
+    border-color: var(--error);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--error) 22%, transparent);
+  }
   .field:focus {
     border-color: color-mix(in srgb, var(--accent) 70%, transparent);
     box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 28%, transparent);
@@ -352,9 +365,62 @@ body {
 }
 .mask-line > span { display: inline-block; }
 
-/* Route change: a short fade so pages don't hard-cut */
+/* ─── Route transitions (React <ViewTransition>, see components/route-transition.tsx) ───
+   motion-designer vocabulary: depart fast (ease-in), arrive gentler (ease-out),
+   direction encodes hierarchy, the shared preview morphs instead of crossfading. */
 @keyframes page-in { from { opacity: 0; transform: translateY(6px); } }
-.page-enter { animation: page-in 0.45s var(--ease-soft) both; }
+@supports not (view-transition-name: none) {
+  .page-enter { animation: page-in 0.45s var(--ease-soft) both; }
+}
+
+::view-transition { pointer-events: none; }
+::view-transition-old(root),
+::view-transition-new(root) { animation: none; }
+
+/* The navbar is the fixed anchor: it never moves with the page */
+::view-transition-group(site-header) { animation: none; z-index: 100; }
+::view-transition-old(site-header) { display: none; }
+::view-transition-new(site-header) { animation: none; }
+
+@keyframes vt-fade-in { from { opacity: 0; } }
+@keyframes vt-fade-out { to { opacity: 0; } }
+@keyframes vt-rise { from { transform: translateY(14px); } }
+@keyframes vt-slide { from { translate: var(--vt-offset) 0; } }
+@keyframes vt-slide-out { to { translate: var(--vt-offset) 0; } }
+
+/* Untagged navigation: depart 150ms, arrive 260ms after it */
+::view-transition-old(.page-fade) { animation: 150ms cubic-bezier(0.32, 0, 0.67, 0) both vt-fade-out; }
+::view-transition-new(.page-fade) {
+  animation:
+    260ms var(--ease-out) 120ms both vt-fade-in,
+    420ms var(--ease-out) 120ms both vt-rise;
+}
+
+/* Into a detail page: old content leaves left, new arrives from the right */
+::view-transition-old(.nav-forward) {
+  --vt-offset: -48px;
+  animation: 150ms ease-in both vt-fade-out, 380ms cubic-bezier(0.65, 0, 0.35, 1) both vt-slide-out;
+}
+::view-transition-new(.nav-forward) {
+  --vt-offset: 48px;
+  animation: 240ms ease-out 140ms both vt-fade-in, 420ms cubic-bezier(0.65, 0, 0.35, 1) both vt-slide;
+}
+/* Back to a list: mirrored */
+::view-transition-old(.nav-back) {
+  --vt-offset: 48px;
+  animation: 150ms ease-in both vt-fade-out, 380ms cubic-bezier(0.65, 0, 0.35, 1) both vt-slide-out;
+}
+::view-transition-new(.nav-back) {
+  --vt-offset: -48px;
+  animation: 240ms ease-out 140ms both vt-fade-in, 420ms cubic-bezier(0.65, 0, 0.35, 1) both vt-slide;
+}
+
+/* Shared project preview: the card lifts into the case-study hero */
+::view-transition-group(.morph) { animation-duration: 480ms; animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); }
+/* contain (not cover): card and hero have different aspect ratios but the device sits centred in
+   both, so the phone/browser keeps its size instead of zooming mid-flight */
+::view-transition-old(.morph),
+::view-transition-new(.morph) { width: 100%; height: 100%; object-fit: contain; }
 
 /* ─── Scroll reveals ─── */
 /* JS hides [data-reveal] until GSAP owns it; failsafe un-hides if scripts never run */
@@ -419,6 +485,9 @@ html.js [data-reveal] {
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) { animation-duration: 0s !important; animation-delay: 0s !important; }
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-delay: 0ms !important;

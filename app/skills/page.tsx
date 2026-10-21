@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { ArrowIcon } from "@/components/icons";
 import Reveal from "@/components/reveal";
 import ScrollLine from "@/components/scroll-line";
 
@@ -152,6 +154,12 @@ export default function Skills() {
                 <p className={`mt-3 max-w-[48ch] text-sm leading-relaxed ${specialty ? "text-fg/85" : "text-muted"}`}>
                   {c.context}
                 </p>
+                {specialty && (
+                  <p className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm">
+                    <Link href="/projects/quran-companion" className="arrow-link">Quran Companion {ArrowIcon}</Link>
+                    <Link href="/projects/fleetpulse-dashboard" className="arrow-link">FleetPulse {ArrowIcon}</Link>
+                  </p>
+                )}
               </Reveal>
               <Reveal
                 variant="scale"

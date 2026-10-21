@@ -61,7 +61,10 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="pointer-events-none fixed inset-x-0 top-3 z-50 flex justify-center px-3 sm:top-4 sm:px-4">
+      <header
+        style={{ viewTransitionName: "site-header" }}
+        className="pointer-events-none fixed inset-x-0 top-3 z-50 flex justify-center px-3 sm:top-4 sm:px-4"
+      >
         <div
           data-enter="drop"
           className={`glass pointer-events-auto flex h-14 w-full max-w-full items-center gap-1 rounded-full border pl-5 pr-2 transition-[box-shadow,border-color] duration-300 lg:w-fit ${
