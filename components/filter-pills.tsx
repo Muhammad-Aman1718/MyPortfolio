@@ -2,7 +2,7 @@
 
 import { useIndicator } from "@/lib/use-indicator";
 
-/** Single-select filter chips; the filled pill slides between options. */
+/** Single-select filter chips; the filled crimson pill slides between options. */
 export default function FilterPills({
   options,
   value,
@@ -17,8 +17,13 @@ export default function FilterPills({
   const { ref } = useIndicator<HTMLDivElement>(value);
 
   return (
-    <div ref={ref} role="group" aria-label={label} className="relative flex flex-wrap gap-2 [--ind-fallback:var(--primary)]">
-      <span data-indicator="" className="indicator rounded-full bg-primary shadow-[0_6px_20px_-6px_rgba(234,0,68,0.6)]" />
+    <div
+      ref={ref}
+      role="group"
+      aria-label={label}
+      className="relative flex w-fit max-w-full gap-1 overflow-x-auto rounded-full bg-surface p-1.5 [--ind-fallback:var(--primary)] [scrollbar-width:none]"
+    >
+      <span data-indicator="" className="indicator rounded-full bg-primary" />
       {options.map((o) => {
         const on = o === value;
         return (
@@ -28,8 +33,8 @@ export default function FilterPills({
             data-active={on}
             aria-pressed={on}
             onClick={() => onChange(o)}
-            className={`relative z-[1] rounded-full border px-4 py-2 font-[family-name:var(--font-jetbrains)] text-[13px] transition-colors duration-300 ${
-              on ? "border-transparent text-on-primary" : "border-line text-muted hover:border-fg/25 hover:text-fg"
+            className={`relative z-[1] shrink-0 rounded-full px-4 py-2 text-sm font-medium transition-colors duration-300 ${
+              on ? "text-on-primary" : "text-muted hover:text-fg"
             }`}
           >
             {o}

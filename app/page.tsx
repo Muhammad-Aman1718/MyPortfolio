@@ -53,7 +53,7 @@ export default function Home() {
               </span>
             </h1>
 
-            <div className="relative mt-10 w-full max-w-[360px] lg:absolute lg:right-0 lg:top-1/2 lg:mt-0 lg:w-[340px] lg:-translate-y-[70%] lg:rotate-[4deg]">
+            <div className="relative mt-10 hidden w-full max-w-[360px] lg:absolute lg:block lg:right-0 lg:top-1/2 lg:mt-0 lg:w-[340px] lg:-translate-y-[70%] lg:rotate-[4deg]">
               <div {...enter("card", 550)}>
                 <Tilt className="card overflow-hidden !bg-[#1a1a1b] shadow-[0_40px_80px_-24px_rgba(0,0,0,0.85)]">
                   <div className="flex items-center gap-1.5 bg-surface-hi/50 px-4 py-3">
@@ -108,7 +108,7 @@ export default function Home() {
               ))}
             </ul>
           </div>
-          <div className="min-w-0 flex-1">
+          <div className="hidden min-w-0 flex-1 md:block">
             <Marquee items={coreTools} label="Technologies I work with" />
           </div>
         </div>

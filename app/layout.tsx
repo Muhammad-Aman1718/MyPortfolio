@@ -112,7 +112,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
         <JsonLd data={identity} />
       </head>
-      <body id="top" className="min-h-full flex flex-col">
+      {/* Extensions (e.g. ColorZilla's cz-shortcut-listen) add attributes to <body> before React hydrates */}
+      <body id="top" className="min-h-full flex flex-col" suppressHydrationWarning>
         <a
           href="#content"
           className="sr-only z-[60] rounded-md bg-primary px-4 py-2 text-on-primary focus:not-sr-only focus:fixed focus:left-4 focus:top-4"

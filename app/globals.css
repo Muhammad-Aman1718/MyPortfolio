@@ -464,8 +464,12 @@ html.js [data-reveal] {
   width: max-content;
   animation: marquee 40s linear infinite;
 }
-.marquee:hover .marquee-track,
-.marquee:focus-within .marquee-track,
+/* Hover-pause only with a real pointer: on touch screens :hover sticks after a tap and froze the strip.
+   Keyboard users pause it by focusing inside (focus-visible, not tap focus). */
+@media (hover: hover) and (pointer: fine) {
+  .marquee:hover .marquee-track { animation-play-state: paused; }
+}
+.marquee:has(:focus-visible) .marquee-track,
 .marquee[data-paused="true"] .marquee-track { animation-play-state: paused; }
 
 /* ─── Accordion (animates height without measuring) ─── */
