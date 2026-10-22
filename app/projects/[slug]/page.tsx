@@ -21,7 +21,8 @@ export async function generateMetadata({ params }: PageProps<"/projects/[slug]">
   const p = getProject((await params).slug);
   if (!p) return {};
   return {
-    title: `${p.name} — Case study — Hafiz`,
+    title: `${p.name} — Case study`,
+    alternates: { canonical: `/projects/${p.slug}` },
     description: p.summary,
     openGraph: { title: `${p.name} — case study`, description: p.summary, type: "article" },
   };

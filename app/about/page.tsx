@@ -1,152 +1,183 @@
-import type { Metadata } from "next";
+import Link from "next/link";
 import Reveal from "@/components/reveal";
 import SectionHeader from "@/components/section-header";
-import CertificatesSection from "@/components/certificates-section";
-import ScrollLine from "@/components/scroll-line";
-import SplitText from "@/components/split-text";
+import PageHero from "@/components/page-hero";
+import CtaPanel from "@/components/cta-panel";
+import { ArrowIcon } from "@/components/icons";
+import { experienceByCompany, stats } from "@/lib/data";
+import { pageMeta } from "@/lib/seo";
+import { site } from "@/lib/site";
 
-export const metadata: Metadata = { title: "About — Hafiz" };
-
-const journey = [
-  { year: "2018", title: "First production app", text: "Shipped my first client web app and got hooked on building things people actually use." },
-  { year: "2020", title: "Went mobile", text: "Led my first React Native team and found my specialty: apps that feel native and never crash." },
-  { year: "2023", title: "Independent", text: "Left full-time work to consult directly with founders who care about quality." },
-  { year: "2026", title: "Today", text: "Building products for clients worldwide from Karachi, one well-scoped project at a time." },
-];
-
-const education = [
-  { degree: "BS Computer Science", school: "NED University", years: "2014 — 2018", note: "Graduated with distinction" },
-  { degree: "Certified Hifz Program", school: "Jamia Institute", years: "2008 — 2012", note: "Quranic scholarship foundation" },
-];
-
-// SVG icons (ui-ux-pro-max: no emoji as icons) — one stroke style site-wide
-const interests = [
-  { label: "Quranic scholarship", span: "md:col-span-2", icon: "M2 4h6a4 4 0 0 1 4 4v12a3 3 0 0 0-3-3H2zM22 4h-6a4 4 0 0 0-4 4v12a3 3 0 0 1 3-3h7z" },
-  { label: "Travel — Morocco next", span: "", icon: "M12 2a10 10 0 1 0 0 20a10 10 0 1 0 0-20M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20" },
-  { label: "Architecture", span: "", icon: "M3 22h18M6 18v-7M10 18v-7M14 18v-7M18 18v-7M12 2l8 5H4z" },
-  { label: "Real-estate design", span: "md:col-span-2", icon: "M3 21V3l18 18zM7 17v-4l4 4zM3 8h2M3 13h2" },
-  { label: "Reading", span: "md:col-span-2", icon: "M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5zM4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5" },
-];
+export const metadata = pageMeta({
+  title: "About",
+  description:
+    "Muhammad Aman is a full-stack and React Native developer from Faisalabad, Pakistan, building scalable web platforms and cross-platform mobile apps.",
+  path: "/about",
+});
 
 const facts = [
-  { k: "based", v: "Karachi, Pakistan" },
-  { k: "focus", v: "Mobile & web" },
-  { k: "shipping since", v: "2018" },
-  { k: "works with", v: "Founders & product teams" },
+  { k: "Based in", v: `${site.location.city}, ${site.location.country}` },
+  { k: "Focus", v: "Full-stack web & mobile" },
+  { k: "Currently", v: "Mobile App Developer at SIGMAKODE" },
+  { k: "Building since", v: "2024" },
+];
+
+// One stroke style site-wide (ui-ux-pro-max: no emoji as icons)
+const beyond = [
+  {
+    title: "Writing",
+    text: "I share research-based notes on what I build on Hashnode and Medium.",
+    icon: "M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5zM4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5",
+  },
+  {
+    title: "Open source",
+    text: "Contributing back and building free apps and tools in my spare time.",
+    icon: "M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21",
+  },
+  {
+    title: "Machine learning & AI",
+    text: "Currently diving into ML and AI to widen the problems I can solve.",
+    icon: "M12 2a4 4 0 0 1 4 4v1a3 3 0 0 1 3 3v1a3 3 0 0 1-1 5.2V18a4 4 0 0 1-6 3.5A4 4 0 0 1 6 18v-1.8A3 3 0 0 1 5 11v-1a3 3 0 0 1 3-3V6a4 4 0 0 1 4-4zM12 2v19.5",
+  },
+  {
+    title: "New frameworks",
+    text: "Experimenting with new tools before they reach client work.",
+    icon: "M12 2 2 7l10 5 10-5zM2 17l10 5 10-5M2 12l10 5 10-5",
+  },
 ];
 
 export default function About() {
+  // Oldest first reads as a story
+  const journey = [...experienceByCompany].reverse();
+
   return (
     <>
-      {/* Intro — fact sheet slides in from the left, statement focuses in word by word */}
-      <section className="container-site page-top grid gap-10 pb-12 lg:grid-cols-12 lg:gap-14">
-        <div className="lg:col-span-5">
-          <div data-enter="left" style={{ "--d": 100 } as React.CSSProperties} className="lg:sticky lg:top-28">
-            <div className="card ring-gradient overflow-hidden rounded-[24px]">
-              <div className="relative flex aspect-[16/10] items-center justify-center overflow-hidden border-b border-line lg:aspect-[5/4]">
-                <div className="bg-grid pointer-events-none absolute inset-0" aria-hidden="true" />
-                <div className="pointer-events-none absolute h-56 w-56 rounded-full bg-primary/25 blur-[70px]" aria-hidden="true" />
-                <span className="relative font-[family-name:var(--font-space)] text-[88px] font-semibold leading-none text-primary md:text-[112px]">
-                  H.
-                </span>
-              </div>
-              <dl className="grid grid-cols-2 gap-px bg-line">
-                {facts.map((f) => (
-                  <div key={f.k} className="bg-surface p-4">
-                    <dt className="font-[family-name:var(--font-jetbrains)] text-xs text-muted">{f.k}</dt>
-                    <dd className="mt-1 text-sm">{f.v}</dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
-          </div>
-        </div>
+      <PageHero
+        eyebrow="About me"
+        title="I build products that scale."
+        highlight={["scale."]}
+        description="Full-stack engineer focused on high-performance web platforms and cross-platform mobile apps — turning complex requirements into products that feel simple."
+      />
 
-        <div className="lg:col-span-7 lg:pt-4">
-          <p data-enter="rise" className="eyebrow">{"// about"}</p>
-          <h1 className="h-display mt-4 text-[38px] md:text-[56px]">
-            <SplitText text="Expensive, but the work is worth it." enter="blur" step={70} delay={150} accent={["worth"]} />
-          </h1>
-          <p data-enter="rise" style={{ "--d": 650 } as React.CSSProperties} className="mt-8 max-w-[62ch] text-lg leading-relaxed md:text-xl">
-            I say that openly because it&apos;s the honest version of what every client discovers anyway:
-            cheap software costs more. I&apos;ve spent eight years learning exactly where products break —
-            and building them so they don&apos;t.
-          </p>
-          <Reveal variant="fade" stagger each={0.08} start="top 95%">
-            <p className="mt-6 max-w-[64ch] leading-relaxed text-muted">
-              My path started in Karachi, building web apps for local businesses. Mobile pulled me in
-              when I realized the apps people rely on daily are the ones held to the highest standard —
-              a crash isn&apos;t a bug report, it&apos;s a deleted app.
-            </p>
-            <p className="mt-5 max-w-[64ch] leading-relaxed text-muted">
-              I love problems with constraints: offline-first sync, cold-start budgets, legacy code that
-              can&apos;t stop serving users while it&apos;s being replaced. I work directly with founders and
-              product teams, communicate in outcomes, and give estimates I actually hit.
-            </p>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* Career journey — centre rail fills as you scroll; milestones alternate sides */}
-      <section className="container-site section">
-        <SectionHeader eyebrow="journey" title="How I got here" center />
-        <ol className="relative mx-auto mt-10 max-w-[920px]">
-          <ScrollLine className="bottom-3 left-[5px] top-3 w-px md:left-1/2 md:-translate-x-1/2" />
-          {journey.map((j, i) => {
-            const right = i % 2 === 1;
-            return (
-              <li key={j.year} className="relative grid pb-10 pl-9 last:pb-0 md:grid-cols-2 md:gap-14 md:pl-0">
-                <span className="absolute left-0 top-1.5 h-[11px] w-[11px] rounded-full border-2 border-accent bg-background md:left-1/2 md:-translate-x-1/2" />
-                <Reveal
-                  variant={right ? "slide-right" : "slide-left"}
-                  start="top 82%"
-                  className={right ? "md:col-start-2" : "md:text-right"}
-                >
-                  <p className="font-[family-name:var(--font-space)] text-3xl font-semibold tracking-tight text-fg/45 md:text-4xl">{j.year}</p>
-                  <h3 className="mt-1 font-[family-name:var(--font-space)] text-lg font-medium">{j.title}</h3>
-                  <p className={`mt-1 max-w-[42ch] text-muted ${right ? "" : "md:ml-auto"}`}>{j.text}</p>
-                </Reveal>
-              </li>
-            );
-          })}
-        </ol>
-      </section>
-
-      {/* Education — ledger rows with an oversized date column */}
-      <section className="container-site section">
-        <SectionHeader eyebrow="education" title="Education" motion="fade" />
-        <Reveal variant="clip-left" stagger each={0.08} className="mt-10 flex flex-col">
-          {education.map((e) => (
-            <div key={e.degree} className="grid gap-2 border-t border-line py-6 last:border-b md:grid-cols-12 md:items-baseline md:gap-6">
-              <p className="font-[family-name:var(--font-jetbrains)] text-sm text-accent md:col-span-3">{e.years}</p>
-              <h3 className="font-[family-name:var(--font-space)] text-xl font-medium md:col-span-5">{e.degree}</h3>
-              <p className="text-muted md:col-span-4">
-                {e.school} <span className="text-fg/30">·</span> <span className="text-sm">{e.note}</span>
+      {/* Portrait + story */}
+      <section className="container-site pb-6">
+        <div className="grid gap-6 lg:grid-cols-12">
+          {/* Portrait slot: monogram until a photo is added (swap for next/image) */}
+          <div data-enter="left" className="flex flex-col gap-3 lg:col-span-5">
+            <div className="@container relative flex aspect-[16/10] items-end sm:aspect-[16/9] lg:aspect-[4/5] overflow-hidden rounded-[24px] bg-surface p-7">
+              <span
+                aria-hidden="true"
+                className="h-mega pointer-events-none absolute inset-0 flex items-center justify-center pb-16 text-[44cqw]"
+              >
+                MA<span className="text-primary">.</span>
+              </span>
+              <p className="relative">
+                <span className="block font-[family-name:var(--font-space)] text-2xl font-bold">{site.name}</span>
+                <span className="text-sm text-muted">{site.role}</span>
               </p>
             </div>
+            <dl className="grid grid-cols-2 gap-3">
+              {facts.map((f) => (
+                <div key={f.k} className="rounded-[20px] bg-surface p-4">
+                  <dt className="text-xs text-subtle">{f.k}</dt>
+                  <dd className="mt-1 text-sm font-medium">{f.v}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+
+          <div className="flex flex-col gap-6 lg:col-span-7">
+            <Reveal variant="fade" stagger each={0.08} start="top 95%" className="rounded-[24px] bg-surface p-7 md:p-10">
+              <p className="text-xl leading-relaxed md:text-2xl">
+                I&apos;m {site.name}, a multi-disciplinary developer focused on full-stack engineering and modern app
+                development.
+              </p>
+              <p className="mt-6 leading-relaxed text-muted">
+                I don&apos;t just write code — I build platforms designed for scale, performance and an uncompromising
+                attention to detail. From mapping out complex workflows to deploying production-ready applications, my
+                work has been shaped by solving real problems.
+              </p>
+              <p className="mt-4 leading-relaxed text-muted">
+                My experience spans cross-platform mobile apps and optimised web systems, always balancing modern
+                technology with human-centred design. Today I build React Native apps at SIGMAKODE in Faisalabad.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Link href="/contact" className="btn-primary">
+                  Work with me {ArrowIcon}
+                </Link>
+                <Link href="/experience" className="btn-secondary">
+                  See my experience
+                </Link>
+              </div>
+            </Reveal>
+
+            <Reveal variant="scale" stagger className="grid grid-cols-2 gap-3 md:grid-cols-4">
+              {stats.map((s) => (
+                <div key={s.label} className="rounded-[20px] bg-surface p-5">
+                  <p className="font-[family-name:var(--font-space)] text-[34px] font-bold leading-none tracking-tight">
+                    {s.value}
+                    {s.suffix}
+                  </p>
+                  <p className="mt-2 text-[13px] text-subtle">{s.label}</p>
+                </div>
+              ))}
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* Journey — oldest to newest; the current role is the crimson card */}
+      <section className="container-site section">
+        <SectionHeader eyebrow="Journey" title="How I got here." highlight={["here."]} />
+        <Reveal as="ol" variant="fade-up" stagger each={0.08} className="mt-10 grid gap-3 md:grid-cols-3">
+          {journey.map((c, i) => (
+            <li
+              key={c.company}
+              className={`flex min-h-[200px] flex-col justify-between gap-8 rounded-[24px] p-6 ${
+                c.current ? "bg-primary text-on-primary" : "bg-surface"
+              }`}
+            >
+              <span className={`text-sm font-medium ${c.current ? "text-white" : "text-subtle"}`}>
+                {String(i + 1).padStart(2, "0")} · {c.period}
+              </span>
+              <span>
+                <span className="block font-[family-name:var(--font-space)] text-2xl font-bold leading-tight">{c.company}</span>
+                {/* Roles at the same company listed beneath it, earliest first */}
+                <span className="mt-3 flex flex-col gap-1.5">
+                  {[...c.roles].reverse().map((r) => (
+                    <span key={r.role} className={`flex flex-wrap justify-between gap-x-3 text-sm ${c.current ? "text-white" : "text-muted"}`}>
+                      <span className="font-medium">{r.role}</span>
+                      <span className={c.current ? "text-white" : "text-subtle"}>{r.years}</span>
+                    </span>
+                  ))}
+                </span>
+              </span>
+            </li>
           ))}
         </Reveal>
       </section>
 
-      {/* Certifications */}
-      <CertificatesSection />
-
-      {/* Interests — bento that springs in from the edges */}
+      {/* Beyond client work */}
       <section className="container-site section">
-        <SectionHeader eyebrow="interests" title="Beyond the keyboard" motion="blur" />
-        <Reveal variant="scale" stagger from="edges" className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
-          {interests.map((i) => (
-            <div key={i.label} className={`card spotlight group flex items-center gap-4 p-5 md:p-6 ${i.span}`}>
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[12px] border border-line bg-background text-accent transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-105">
+        <SectionHeader eyebrow="Beyond the code" title="What keeps me sharp." highlight={["sharp."]} motion="blur" />
+        <Reveal variant="scale" stagger className="mt-10 grid gap-3 sm:grid-cols-2">
+          {beyond.map((b) => (
+            <div key={b.title} className="card spotlight flex gap-5 p-6 md:p-7">
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-surface-hi text-fg">
                 <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d={i.icon} />
+                  <path d={b.icon} />
                 </svg>
               </span>
-              <span className="font-[family-name:var(--font-space)] font-medium">{i.label}</span>
+              <span>
+                <span className="block font-[family-name:var(--font-space)] text-lg font-bold">{b.title}</span>
+                <span className="mt-1 block leading-relaxed text-muted">{b.text}</span>
+              </span>
             </div>
           ))}
         </Reveal>
       </section>
+
+      <CtaPanel title="Let's collaborate on your next project." />
     </>
   );
 }

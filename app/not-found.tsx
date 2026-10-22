@@ -1,51 +1,65 @@
-"use client";
-
+import type { Metadata } from "next";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { ArrowIcon, ArrowUpRight } from "@/components/icons";
 
-const lines = [
-  "$ locate page",
-  "error 404: not found",
-  "$ suggestions:",
+export const metadata: Metadata = { title: "Page not found" };
+
+const d = (ms: number) => ({ "--d": ms }) as React.CSSProperties;
+
+const routes = [
+  { href: "/projects", label: "Projects", note: "Selected web & mobile work" },
+  { href: "/experience", label: "Experience", note: "Where I've built" },
+  { href: "/posts", label: "Posts", note: "Articles & research" },
+  { href: "/contact", label: "Contact", note: "Start a conversation" },
 ];
 
+/** 404 — poster-sized numerals (the 0 in crimson), one clear way home, and the likely destinations. */
 export default function NotFound() {
-  const [shown, setShown] = useState(0);
-
-  useEffect(() => {
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let i = 0;
-    const timer = setInterval(() => {
-      i += 1;
-      setShown(i);
-      if (i > lines.length) clearInterval(timer);
-    }, reduced ? 0 : 400);
-    return () => clearInterval(timer);
-  }, []);
-
   return (
-    <div className="flex min-h-[80dvh] flex-col items-center justify-center px-5 pb-16 pt-28">
-      <div data-enter="card" className="card w-full max-w-[560px] overflow-hidden rounded-[12px] p-0 shadow-[0_40px_80px_-30px_rgba(234,0,68,0.3)]">
-        <div className="flex items-center gap-2 border-b border-line px-4 py-3">
-          <span className="h-3 w-3 rounded-full bg-error/70" />
-          <span className="h-3 w-3 rounded-full bg-accent/50" />
-          <span className="h-3 w-3 rounded-full bg-primary/70" />
-        </div>
-        <div className="flex min-h-[220px] flex-col gap-2 p-6 font-[family-name:var(--font-jetbrains)] text-sm">
-          {lines.slice(0, shown).map((l, i) => (
-            <p key={l} className={i === 1 ? "text-error" : "text-muted"}>{l}</p>
-          ))}
-          {shown > lines.length && (
-            <div className="flex flex-col gap-1 pl-4">
-              <Link href="/" className="text-accent hover:underline">→ /home</Link>
-              <Link href="/projects" className="text-accent hover:underline">→ /projects</Link>
-              <Link href="/posts" className="text-accent hover:underline">→ /posts</Link>
-            </div>
-          )}
+    <div className="container-site page-top flex min-h-[100svh] flex-col pb-10">
+      <p data-enter="rise" className="eyebrow">Error 404</p>
+
+      <div className="flex flex-1 flex-col justify-center py-8">
+        <p aria-hidden="true" className="h-mega -ml-[0.05em] select-none text-[42vw] leading-[0.78] md:text-[min(30vw,22rem)]">
+          <span data-enter="blur" style={d(100)} className="inline-block">4</span>
+          <span data-enter="blur" style={d(220)} className="inline-block text-primary">0</span>
+          <span data-enter="blur" style={d(340)} className="inline-block">4</span>
+        </p>
+        <h1 data-enter="rise" style={d(450)} className="h-display mt-8 max-w-[18ch] text-[36px] font-bold md:text-[52px]">
+          This page took a <em>wrong turn.</em>
+        </h1>
+        <p data-enter="rise" style={d(550)} className="mt-4 max-w-[48ch] text-lg text-muted">
+          The link may be old or mistyped. Everything that exists is one click away below.
+        </p>
+        <div data-enter="pop" style={d(650)} className="mt-8 flex flex-wrap gap-3">
+          <Link href="/" className="btn-primary">
+            Back to home {ArrowIcon}
+          </Link>
+          <Link href="/contact" className="btn-secondary">
+            Report a broken link
+          </Link>
         </div>
       </div>
-      <p className="mt-8 text-muted">This page doesn&apos;t exist.</p>
-      <Link href="/" className="btn-primary mt-4">Back to home</Link>
+
+      <nav aria-label="Popular pages" className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {routes.map((r, i) => (
+          <Link
+            key={r.href}
+            href={r.href}
+            data-enter="rise"
+            style={d(750 + i * 70)}
+            className="group flex items-center justify-between gap-4 rounded-[20px] bg-surface p-5 transition-colors duration-200 hover:bg-surface-hi"
+          >
+            <span>
+              <span className="block font-[family-name:var(--font-space)] text-lg font-bold">{r.label}</span>
+              <span className="text-sm text-subtle">{r.note}</span>
+            </span>
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface-hi transition-[background-color,transform] duration-300 group-hover:rotate-45 group-hover:bg-primary group-hover:text-on-primary">
+              <ArrowUpRight />
+            </span>
+          </Link>
+        ))}
+      </nav>
     </div>
   );
 }

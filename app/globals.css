@@ -1,18 +1,24 @@
 @import "tailwindcss";
 
-/* ─── Crimson Night — dark only ─── */
+/* ─── Crimson Night — dark only ───
+   One red, one neutral ramp. Depth comes from grey value steps
+   (page → surface → surface-hi), not from borders, gradients or red tints.
+   Red is reserved for large type, solid fills and CTAs. */
 :root {
   --background: #111112;
-  --surface: #1c1c1f;
-  --surface-hi: #202023;
+  --surface: #1f1f1f;
+  --surface-hi: #2b2b2b;
   --primary: #ea0044;
-  --secondary: #2b0a17;
-  --accent: #ff3268;
+  /* Neutral chip fill — tags no longer sit on a wine-red wash */
+  --secondary: #2b2b2b;
+  /* Alias, not a second red: older markup using `accent` resolves to the brand crimson */
+  --accent: var(--primary);
   --fg: #fafafa;
-  --muted: #9a9a9e;
-  --line: #2e2e33;
+  --muted: #b8b8b8;
+  --subtle: #828282;
+  --line: #2b2b2b;
   /* Boundaries of interactive controls (inputs) need ≥3:1 against bg and card — WCAG 1.4.11 */
-  --line-strong: #6b6b72;
+  --line-strong: #6b6b6b;
   /* Filled-primary hover goes deeper, not brighter, so white labels stay ≥4.5:1 */
   --primary-hover: #d4003e;
   /* Orange-red, deliberately off the crimson hue so an error never reads as "brand" */
@@ -33,6 +39,7 @@
   --color-accent: var(--accent);
   --color-fg: var(--fg);
   --color-muted: var(--muted);
+  --color-subtle: var(--subtle);
   --color-line: var(--line);
   --color-line-strong: var(--line-strong);
   --color-error: var(--error);
@@ -69,8 +76,8 @@ body {
 }
 
 :focus-visible {
-  outline: 2px solid color-mix(in srgb, var(--accent) 60%, transparent);
-  outline-offset: 2px;
+  outline: 2px solid var(--fg);
+  outline-offset: 3px;
 }
 
 @keyframes pulse-dot {
@@ -108,21 +115,34 @@ body {
     line-height: 1.05;
     text-wrap: balance;
   }
+  /* Section titles are two-tone: white lead-in, the keyword wrapped in <em> goes crimson */
   .h-section {
     font-family: var(--font-space), ui-sans-serif, system-ui, sans-serif;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    line-height: 1.1;
-    font-size: clamp(1.75rem, 1.2rem + 1.6vw, 2.375rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    font-size: clamp(2.125rem, 1.4rem + 2.6vw, 3.25rem);
     text-wrap: balance;
   }
+  .h-section em, .h-display em, .h-mega em { font-style: normal; color: var(--primary); }
 
-  /* Subtle dotted grid used behind hero areas */
-  .bg-grid {
-    background-image: radial-gradient(color-mix(in srgb, var(--fg) 9%, transparent) 1px, transparent 1px);
-    background-size: 24px 24px;
-    mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 30%, transparent 75%);
+  /* Poster-scale uppercase type for the hero and the footer wordmark */
+  .h-mega {
+    font-family: var(--font-space), ui-sans-serif, system-ui, sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.045em;
+    line-height: 0.82;
   }
+
+  /* Policy text (components/legal-page.tsx) */
+  .legal-body ul { display: flex; flex-direction: column; gap: 0.5rem; padding-left: 1.25rem; list-style: disc; }
+  .legal-body li::marker { color: var(--primary); }
+  .legal-body a { color: var(--fg); text-decoration: underline; text-underline-offset: 3px; }
+  .legal-body strong { color: var(--fg); font-weight: 600; }
+
+  /* Dotted grid — retired: surfaces separate by grey steps now. Kept as a no-op for old markup. */
+  .bg-grid { display: none; }
 
   /* Availability dot */
   .pulse-dot {
@@ -136,34 +156,26 @@ body {
     -webkit-backdrop-filter: blur(18px) saturate(150%);
   }
 
-  /* Slow ambient glow drifting behind the hero */
-  .hero-glow {
-    position: absolute;
-    border-radius: 9999px;
-    background: radial-gradient(circle, color-mix(in srgb, var(--primary) 28%, transparent) 0%, transparent 70%);
-    filter: blur(60px);
-    pointer-events: none;
-    animation: glow-drift 14s ease-in-out infinite;
-    will-change: transform, opacity;
-  }
+  /* Ambient hero glow — retired with the red haze. No-op for old markup. */
+  .hero-glow { display: none; }
 
-  /* ─── Cards ─── */
+  /* ─── Cards ─── borderless; the grey step from the page is the edge */
   .card {
     position: relative;
     background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    /* faint top highlight: keeps cards distinct from the page on dim or washed-out screens */
-    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.035);
+    border-radius: 24px;
+    box-shadow:
+      0 0.6px 0.6px -1.25px rgb(0 0 0 / 0.18),
+      0 2.3px 2.3px -2.5px rgb(0 0 0 / 0.16),
+      0 10px 10px -3.75px rgb(0 0 0 / 0.06);
   }
   /* Only interactive cards lift — static content no longer pretends to be clickable */
   .card-hover {
-    transition: border-color 250ms ease-out, transform 300ms var(--ease-out), box-shadow 300ms ease-out, background-color 250ms ease-out;
+    transition: transform 300ms var(--ease-out), background-color 250ms ease-out;
   }
   .card-hover:hover {
-    border-color: color-mix(in srgb, var(--primary) 55%, transparent);
     transform: translateY(-4px);
-    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.035), 0 14px 40px -12px color-mix(in srgb, var(--primary) 30%, transparent);
+    background: var(--surface-hi);
   }
   /* Press feedback (ui-ux-pro-max: scale-feedback) — after :hover so it wins while pressed */
   .card-hover:active { transform: translateY(-2px) scale(0.99); }
@@ -176,48 +188,47 @@ body {
     inset: 0;
     z-index: -1;
     border-radius: inherit;
-    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--primary) 13%, transparent), transparent 45%);
+    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgb(255 255 255 / 0.05), transparent 45%);
     opacity: 0;
     transition: opacity 300ms ease-out;
     pointer-events: none;
   }
   .spotlight:hover::before { opacity: 1; }
 
-  /* Gradient hairline border for highlighted panels */
-  .ring-gradient {
-    position: relative;
-  }
-  .ring-gradient::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    padding: 1px;
-    background: linear-gradient(140deg, color-mix(in srgb, var(--accent) 70%, transparent), transparent 40%, transparent 60%, color-mix(in srgb, var(--primary) 45%, transparent));
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
-  }
+  /* Gradient hairline — retired (no gradients). No-op for old markup. */
+  .ring-gradient { position: relative; }
 
-  /* ─── Buttons ─── */
+  /* ─── Buttons ─── pills; primary is glossy: layered crimson drop + inner white highlight */
   .btn-primary {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    height: 44px;
-    padding: 0 22px;
-    border-radius: 10px;
+    height: 46px;
+    padding: 0 24px;
+    border-radius: 999px;
     background: var(--primary);
     color: var(--on-primary);
     font-weight: 500;
     white-space: nowrap;
-    transition: transform 200ms ease-out, filter 200ms ease-out, box-shadow 200ms ease-out;
+    box-shadow:
+      0 0.5px 0.9px -1.2px rgb(234 0 68 / 0.68),
+      0 1.8px 3.3px -2.3px rgb(234 0 68 / 0.61),
+      0 8px 14.4px -3.5px rgb(234 0 68 / 0.3),
+      inset 0.3px 0.4px 0.3px -1.2px rgb(255 255 255 / 0.91),
+      inset 1px 1.3px 1px -2.4px rgb(255 255 255 / 0.84),
+      inset 2.5px 3.5px 2.6px -3.6px rgb(255 255 255 / 0.66);
+    transition: transform 200ms ease-out, background-color 200ms ease-out, box-shadow 200ms ease-out;
   }
   .btn-primary:hover {
     background: var(--primary-hover);
-    box-shadow: 0 8px 28px color-mix(in srgb, var(--primary) 45%, transparent);
+    box-shadow:
+      0 0.5px 0.9px -1.2px rgb(234 0 68 / 0.68),
+      0 1.8px 3.3px -2.3px rgb(234 0 68 / 0.61),
+      0 12px 24px -4px rgb(234 0 68 / 0.45),
+      inset 0.3px 0.4px 0.3px -1.2px rgb(255 255 255 / 0.91),
+      inset 1px 1.3px 1px -2.4px rgb(255 255 255 / 0.84),
+      inset 2.5px 3.5px 2.6px -3.6px rgb(255 255 255 / 0.66);
   }
   .btn-primary:active { transform: scale(0.97); }
 
@@ -226,34 +237,34 @@ body {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    height: 44px;
-    padding: 0 22px;
-    border-radius: 10px;
-    border: 1px solid var(--line);
+    height: 46px;
+    padding: 0 24px;
+    border-radius: 999px;
     color: var(--fg);
     font-weight: 500;
     white-space: nowrap;
-    background: color-mix(in srgb, var(--surface) 50%, transparent);
-    transition: border-color 200ms ease-out, transform 200ms ease-out, background-color 200ms ease-out;
+    background: var(--surface-hi);
+    box-shadow:
+      inset 0.3px 0.4px 0.1px -1.2px rgb(255 255 255 / 0.18),
+      inset 1px 1.3px 0.3px -2.4px rgb(255 255 255 / 0.17),
+      inset 2.5px 3.5px 0.9px -3.6px rgb(255 255 255 / 0.13);
+    transition: transform 200ms ease-out, background-color 200ms ease-out;
   }
-  .btn-secondary:hover {
-    border-color: color-mix(in srgb, var(--accent) 70%, transparent);
-    background: var(--surface);
-  }
+  .btn-secondary:hover { background: #363636; }
   .btn-secondary:active { transform: scale(0.97); }
 
   .btn-primary svg, .btn-secondary svg { transition: transform 200ms var(--ease-out); }
   .btn-primary:hover svg, .btn-secondary:hover svg { transform: translateX(3px); }
 
-  /* Tag pills */
+  /* Tag pills — neutral; red stays for big moments */
   .pill {
     display: inline-flex;
     align-items: center;
     border-radius: 999px;
-    background: var(--secondary);
-    color: var(--accent);
-    font-family: var(--font-jetbrains), monospace;
+    background: var(--surface-hi);
+    color: var(--muted);
     font-size: 12px;
+    font-weight: 500;
     padding: 4px 12px;
     white-space: nowrap;
   }
@@ -261,20 +272,20 @@ body {
     display: inline-flex;
     align-items: center;
     border-radius: 999px;
-    border: 1px solid var(--line);
+    background: rgb(130 130 130 / 0.1);
     color: var(--muted);
-    font-family: var(--font-jetbrains), monospace;
     font-size: 12px;
-    padding: 3px 11px;
+    padding: 4px 12px;
     white-space: nowrap;
   }
 
-  /* Mono eyebrow label */
+  /* Small label above a heading — quiet grey, the heading carries the colour */
   .eyebrow {
-    font-family: var(--font-jetbrains), monospace;
     font-size: 13px;
-    color: var(--accent);
-    letter-spacing: 0.02em;
+    font-weight: 500;
+    color: var(--subtle);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
 
   /* Arrow-link that slides right on hover */
@@ -282,9 +293,11 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    color: var(--accent);
+    color: var(--fg);
     font-weight: 500;
+    transition: color 150ms ease-out;
   }
+  .arrow-link:hover { color: var(--muted); }
   .arrow-link svg { transition: transform 200ms var(--ease-out); }
   .arrow-link:hover svg, .group:hover .arrow-link svg { transform: translateX(4px); }
 
@@ -314,8 +327,8 @@ body {
     box-shadow: 0 0 0 4px color-mix(in srgb, var(--error) 22%, transparent);
   }
   .field:focus {
-    border-color: color-mix(in srgb, var(--accent) 70%, transparent);
-    box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 28%, transparent);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 22%, transparent);
     background: var(--surface);
   }
 }
@@ -427,7 +440,7 @@ body {
 @keyframes reveal-failsafe { to { visibility: visible; } }
 html.js [data-reveal] {
   visibility: hidden;
-  animation: reveal-failsafe 0s 4s forwards;
+  animation: reveal-failsafe 0s 2s forwards;
 }
 
 /* Re-triggerable stagger used when filtered lists change (posts) */

@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import ProjectsGrid from "@/components/projects-grid";
 import { allProjects } from "@/lib/data";
 
-export const metadata: Metadata = { title: "Projects — Hafiz" };
+export const metadata: Metadata = pageMeta({
+  title: "Projects",
+  description: "Selected web and mobile projects by Muhammad Aman — React Native apps, Next.js products and the backends behind them.",
+  path: "/projects",
+});
 
 export default function Projects() {
   return (

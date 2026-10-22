@@ -20,7 +20,8 @@ export async function generateMetadata({ params }: PageProps<"/posts/research/[s
   const paper = getPaper((await params).slug);
   if (!paper) return {};
   return {
-    title: `${paper.title} — Hafiz`,
+    title: paper.title,
+    alternates: { canonical: `/posts/research/${paper.slug}` },
     description: paper.abstract,
     openGraph: { title: paper.title, description: paper.abstract, type: "article", publishedTime: paper.isoDate },
   };

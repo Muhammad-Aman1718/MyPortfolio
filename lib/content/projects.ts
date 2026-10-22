@@ -114,7 +114,7 @@ const caseStudies: Record<string, CaseStudy> = {
     ],
     stack: ["Next.js", "TypeScript", "PostgreSQL", "WebSockets", "Redis", "Mapbox"],
     quote: {
-      text: "Hafiz rebuilt our app in half the estimated time and it hasn't crashed once in eight months. Worth every dollar.",
+      text: "Aman rebuilt our app in half the estimated time and it hasn't crashed once in eight months. Worth every dollar.",
       name: "Sarah Mitchell",
       role: "CTO, FleetPulse",
     },
