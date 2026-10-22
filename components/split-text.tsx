@@ -4,7 +4,8 @@ type Enter = "mask" | "skew" | "blur" | "rise";
  * Splits text into words (or lines with `by="line"`) so each piece can animate
  * on its own. With `enter`, pieces animate on load in pure CSS (no hydration
  * wait); without it they're left for a scroll <Reveal variant="mask"> to drive.
- * Screen readers get the plain string.
+ * Pieces stay in the accessibility tree joined by real spaces, so screen readers
+ * and crawlers read the sentence once (no hidden duplicate copy).
  */
 export default function SplitText({
   text,
@@ -31,8 +32,7 @@ export default function SplitText({
 
   return (
     <span className={className}>
-      <span className="sr-only">{text.replace(/\n/g, " ")}</span>
-      <span aria-hidden="true">
+      <span>
         {pieces.map((p, i) => {
           const inner = (
             <span
@@ -43,7 +43,8 @@ export default function SplitText({
               {p}
             </span>
           );
-          const sep = by === "line" ? (i < pieces.length - 1 ? <br /> : null) : i < pieces.length - 1 ? " " : null;
+          // Lines get a space before the break so the text still reads as separate words when flattened
+          const sep = by === "line" ? (i < pieces.length - 1 ? <>{" "}<br /></> : null) : i < pieces.length - 1 ? " " : null;
           return (
             <span key={i}>
               {masked ? <span className="mask-line">{inner}</span> : inner}

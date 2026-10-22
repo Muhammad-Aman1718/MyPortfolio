@@ -3,9 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import gsap from "gsap";
 import { useIndicator } from "@/lib/use-indicator";
-import { prefersReducedMotion } from "@/lib/motion";
+import { site } from "@/lib/site";
 
 const links = [
   { href: "/", label: "Home" },
@@ -20,13 +19,18 @@ const links = [
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  // Past the hero the desktop bar folds into a compact pill: logo · Hire me · menu
+  const [compact, setCompact] = useState(false);
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const overlayRef = useRef<HTMLDivElement>(null);
   const { ref: navRef, move } = useIndicator<HTMLElement>(pathname);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 8);
+      setCompact(window.scrollY > 160);
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -39,19 +43,13 @@ export default function Navbar() {
     setOpen(false);
   }
 
-  // Overlay: lock scroll, Escape to close, staggered link reveal
+  // Overlay: lock scroll, Escape to close (link stagger is pure CSS via data-enter, so it can't stick hidden)
   useEffect(() => {
     if (!open) return;
-    const items = overlayRef.current?.querySelectorAll("[data-menu-item]");
-    const tween =
-      items && !prefersReducedMotion()
-        ? gsap.fromTo(items, { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: "power3.out", stagger: 0.04 })
-        : null;
     document.body.style.overflow = "hidden";
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
     window.addEventListener("keydown", onKey);
     return () => {
-      tween?.kill();
       document.body.style.overflow = "";
       window.removeEventListener("keydown", onKey);
     };
@@ -67,24 +65,28 @@ export default function Navbar() {
       >
         <div
           data-enter="drop"
-          className={`glass pointer-events-auto flex h-14 w-full max-w-full items-center gap-1 rounded-full border pl-5 pr-2 transition-[box-shadow,border-color] duration-300 lg:w-fit ${
-            scrolled
-              ? "border-line shadow-[0_12px_40px_rgba(0,0,0,0.5)]"
-              : "border-line/70 shadow-[0_4px_24px_rgba(0,0,0,0.25)]"
+          className={`glass pointer-events-auto flex h-14 w-full max-w-full items-center gap-1 rounded-full pl-5 pr-2 transition-shadow duration-300 lg:w-fit ${
+            scrolled ? "shadow-[0_12px_40px_rgba(0,0,0,0.5)]" : "shadow-[0_4px_24px_rgba(0,0,0,0.25)]"
           }`}
         >
           <Link
             href="/"
-            aria-label="Hafiz — home"
-            className="group mr-auto font-[family-name:var(--font-space)] text-xl font-semibold tracking-tight lg:mr-3"
+            aria-label={`${site.name} — home`}
+            className="group mr-auto flex items-baseline gap-2 font-[family-name:var(--font-space)] text-xl font-bold tracking-tight lg:mr-3"
           >
-            H<span className="inline-block text-primary transition-transform duration-300 group-hover:scale-150">.</span>
+            <span aria-hidden="true">
+              MA<span className="inline-block text-primary transition-transform duration-300 group-hover:scale-150">.</span>
+            </span>
+            <span className="whitespace-nowrap text-[15px] font-semibold tracking-normal">{site.name}</span>
           </Link>
 
           <nav
             ref={navRef}
             onMouseLeave={() => move()}
-            className="relative hidden items-center [--ind-fallback:rgb(250_250_250/0.07)] lg:flex"
+            inert={compact}
+            className={`relative hidden items-center overflow-hidden transition-[max-width,opacity] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] [--ind-fallback:rgb(250_250_250/0.07)] lg:flex ${
+              compact ? "max-w-0 opacity-0" : "max-w-[720px] opacity-100"
+            }`}
             aria-label="Main"
           >
             <span data-indicator="" className="indicator rounded-full bg-fg/[0.07]" />
@@ -117,7 +119,9 @@ export default function Navbar() {
             aria-expanded={open}
             aria-controls="mobile-menu"
             onClick={() => setOpen(!open)}
-            className="ml-2 flex h-10 w-10 items-center justify-center rounded-full border border-line transition-colors duration-150 hover:border-accent/60 lg:hidden"
+            className={`ml-2 flex h-10 w-10 items-center justify-center rounded-full bg-surface-hi transition-colors duration-150 hover:bg-[#363636] ${
+              compact || open ? "lg:flex" : "lg:hidden"
+            }`}
           >
             <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
               <path
@@ -138,28 +142,35 @@ export default function Navbar() {
         <div
           id="mobile-menu"
           ref={overlayRef}
-          className="fixed inset-0 z-40 flex flex-col overflow-y-auto bg-background/95 px-6 pb-10 pt-24 backdrop-blur-xl lg:hidden"
+          className="fixed inset-0 z-40 flex flex-col overflow-y-auto bg-background/95 px-6 pb-10 pt-24 backdrop-blur-xl"
         >
-          <nav aria-label="Mobile" className="flex flex-col">
+          <nav aria-label="Mobile" className="mx-auto flex w-full max-w-[720px] flex-col">
             {links.map((l, i) => (
               <Link
                 key={l.href}
                 href={l.href}
-                data-menu-item
+                data-enter="rise"
+                style={{ "--d": i * 40 } as React.CSSProperties}
                 onClick={() => setOpen(false)}
                 aria-current={active(l.href) ? "page" : undefined}
-                className={`flex items-baseline gap-4 border-b border-line/60 py-3 font-[family-name:var(--font-space)] text-[28px] font-medium tracking-tight ${
-                  active(l.href) ? "text-accent" : "text-fg"
+                className={`flex items-baseline gap-4 py-3 font-[family-name:var(--font-space)] text-[32px] font-bold tracking-tight transition-colors duration-200 hover:text-primary ${
+                  active(l.href) ? "text-primary" : "text-fg"
                 }`}
               >
-                <span className="w-6 font-[family-name:var(--font-jetbrains)] text-xs text-muted">
+                <span className="w-6 text-xs font-medium text-subtle">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 {l.label}
               </Link>
             ))}
           </nav>
-          <Link href="/contact" data-menu-item onClick={() => setOpen(false)} className="btn-primary mt-8 self-start">
+          <Link
+            href="/contact"
+            data-enter="rise"
+            style={{ "--d": links.length * 40 } as React.CSSProperties}
+            onClick={() => setOpen(false)}
+            className="btn-primary mx-auto mt-8 w-full max-w-[720px]"
+          >
             Hire me
           </Link>
         </div>

@@ -8,6 +8,7 @@ import Reveal from "@/components/reveal";
 import ReadingProgress from "@/components/reading-progress";
 import ShareButton from "@/components/share-button";
 import JsonLd from "@/components/json-ld";
+import { site } from "@/lib/site";
 import { back, forward } from "@/components/route-transition";
 import { ArrowIcon, ArrowUpRight } from "@/components/icons";
 import { blogPosts, getPost } from "@/lib/content/posts";
@@ -20,9 +21,10 @@ export async function generateMetadata({ params }: PageProps<"/posts/[slug]">): 
   const post = getPost((await params).slug);
   if (!post) return {};
   return {
-    title: `${post.title} — Hafiz`,
+    title: post.title,
+    alternates: { canonical: `/posts/${post.slug}` },
     description: post.excerpt,
-    openGraph: { title: post.title, description: post.excerpt, type: "article", publishedTime: post.isoDate },
+    openGraph: { title: post.title, description: post.excerpt, type: "article", publishedTime: post.isoDate, url: `/posts/${post.slug}`, authors: [site.name] },
   };
 }
 
@@ -45,7 +47,7 @@ export default async function PostPage({ params }: PageProps<"/posts/[slug]">) {
           headline: post.title,
           description: post.excerpt,
           datePublished: post.isoDate,
-          author: { "@type": "Person", name: "Hafiz" },
+          author: { "@type": "Person", name: site.name, url: site.url },
         }}
       />
       <ReadingProgress target="#article" />
@@ -78,11 +80,11 @@ export default async function PostPage({ params }: PageProps<"/posts/[slug]">) {
             <div data-enter="rise" style={d(520)} className="mt-8 flex flex-wrap items-center justify-between gap-4 border-y border-line py-4">
               <div className="flex items-center gap-3">
                 <span className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary font-[family-name:var(--font-space)] font-semibold text-accent">
-                  H.
+                  MA
                 </span>
                 <span className="text-sm">
-                  <span className="block">Hafiz</span>
-                  <span className="text-muted">Senior software engineer</span>
+                  <span className="block">{site.name}</span>
+                  <span className="text-muted">{site.role}</span>
                 </span>
               </div>
               <ShareButton />

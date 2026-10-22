@@ -7,7 +7,7 @@ import { Flip } from "gsap/Flip";
 import Reveal from "./reveal";
 import FilterPills from "./filter-pills";
 import ProjectPreview from "./project-preview";
-import { ArrowIcon, ArrowUpRight } from "./icons";
+import { ArrowUpRight } from "./icons";
 import { forward } from "./route-transition";
 import { allProjects } from "@/lib/data";
 import { prefersReducedMotion } from "@/lib/motion";
@@ -17,15 +17,16 @@ gsap.registerPlugin(Flip);
 const filters = ["All", "Mobile", "Web", "Backend", "Client work"];
 
 /**
- * Filterable grid — on filter change, surviving cards glide to their new slots
- * (FLIP) and new ones fade up. Each card opens its case study; its preview is
- * a shared element that morphs into the case-study hero.
+ * Filterable gallery — big product previews with the details underneath. On
+ * filter change, surviving cards glide to their new slots (FLIP) and new ones
+ * fade up. Each preview is a shared element that morphs into the case-study hero.
  */
 export default function ProjectsGrid() {
   const [filter, setFilter] = useState("All");
   const gridRef = useRef<HTMLDivElement>(null);
   const flipState = useRef<Flip.FlipState | null>(null);
   const visible = allProjects.filter((p) => filter === "All" || p.type === filter);
+  const count = (f: string) => (f === "All" ? allProjects.length : allProjects.filter((p) => p.type === f).length);
 
   const select = (f: string) => {
     if (f === filter) return;
@@ -54,51 +55,70 @@ export default function ProjectsGrid() {
 
   return (
     <>
-      <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
-        <FilterPills options={filters} value={filter} onChange={select} label="Filter projects by type" />
-        <p className="font-[family-name:var(--font-jetbrains)] text-xs text-muted" aria-live="polite">
-          showing {visible.length} / {allProjects.length}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <FilterPills
+          options={filters.filter((f) => count(f) > 0)}
+          value={filter}
+          onChange={select}
+          label="Filter projects by type"
+        />
+        <p className="text-sm text-subtle" aria-live="polite">
+          Showing <span className="font-medium text-fg">{visible.length}</span> of {allProjects.length}
         </p>
       </div>
 
       <div ref={gridRef}>
-        <Reveal variant="clip-up" stagger each={0.08} start="top 92%" className="mt-8 grid gap-5 md:grid-cols-2">
+        <Reveal variant="fade-up" stagger each={0.08} start="top 92%" className="mt-8 grid gap-x-6 gap-y-12 md:grid-cols-2">
           {visible.map((p) => {
             const wide = p.flagship && filter === "All";
+            const n = allProjects.indexOf(p) + 1;
             return (
               <Link
                 key={p.slug}
                 href={`/projects/${p.slug}`}
                 transitionTypes={forward}
                 data-flip-id={p.slug}
-                className={`card card-hover group overflow-hidden ${wide ? "md:col-span-2 md:grid md:grid-cols-12" : ""}`}
+                className={`group flex flex-col gap-5 ${wide ? "md:col-span-2" : ""}`}
               >
-                <ViewTransition name={`project-${p.slug}`} share={{ "nav-forward": "morph", default: "none" }} default="none">
-                  <div className={`relative overflow-hidden border-b border-line ${wide ? "aspect-[16/10] md:col-span-7 md:aspect-auto md:min-h-[340px] md:border-b-0 md:border-r" : "aspect-[16/9]"}`}>
-                    <ProjectPreview name={p.name} type={p.type} tone={p.tone} className="absolute inset-0" />
-                  </div>
-                </ViewTransition>
-                {p.flagship && <span className="pill absolute left-4 top-4">flagship</span>}
-                <span className="absolute right-4 top-4 flex h-9 w-9 translate-y-1 items-center justify-center rounded-full border border-line bg-surface/80 text-accent opacity-0 backdrop-blur transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">
-                  <ArrowUpRight />
-                </span>
-                <div className={`flex flex-col p-6 ${wide ? "justify-center md:col-span-5 md:p-10" : ""}`}>
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="pill-ghost">{p.type}</span>
-                    <span className="font-[family-name:var(--font-jetbrains)] text-xs text-muted">
-                      {p.year} · {p.role}
+                <div className="relative">
+                  <ViewTransition name={`project-${p.slug}`} share={{ "nav-forward": "morph", default: "none" }} default="none">
+                    <div
+                      className={`relative overflow-hidden rounded-[24px] bg-surface transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-1 ${
+                        wide ? "aspect-[4/3] sm:aspect-[16/9] lg:aspect-[21/9]" : "aspect-[4/3]"
+                      }`}
+                    >
+                      <ProjectPreview name={p.name} type={p.type} className="absolute inset-0" />
+                    </div>
+                  </ViewTransition>
+                  <div className="pointer-events-none absolute inset-x-4 top-4 flex items-start justify-between gap-3">
+                    <span className="rounded-full bg-background/80 px-3 py-1 text-xs font-medium backdrop-blur">
+                      {p.flagship ? "Featured · " : ""}
+                      {p.type}
+                    </span>
+                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-background/80 backdrop-blur transition-colors duration-300 group-hover:bg-primary group-hover:text-on-primary">
+                      <ArrowUpRight />
                     </span>
                   </div>
-                  <h2 className={`mt-4 font-[family-name:var(--font-space)] font-semibold tracking-tight transition-colors duration-200 group-hover:text-accent ${wide ? "text-2xl md:text-3xl" : "text-xl"}`}>
-                    {p.name}
-                  </h2>
-                  <p className="mt-2 text-muted">{p.tagline}</p>
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {p.tags.map((t) => (
-                      <span key={t} className="pill">{t}</span>
-                    ))}
+                </div>
+
+                <div className={`flex gap-4 px-1 ${wide ? "md:items-end md:justify-between" : "flex-col"}`}>
+                  <div className="flex gap-4">
+                    <span className="pt-1 text-sm font-medium text-subtle">{String(n).padStart(2, "0")}</span>
+                    <div>
+                      <h2
+                        className={`font-[family-name:var(--font-space)] font-bold tracking-tight transition-colors duration-200 group-hover:text-primary ${
+                          wide ? "text-2xl md:text-[34px]" : "text-2xl"
+                        }`}
+                      >
+                        {p.name}
+                      </h2>
+                      <p className="mt-1.5 max-w-[52ch] leading-relaxed text-muted">{p.tagline}</p>
+                    </div>
                   </div>
-                  <span className="arrow-link mt-5 text-sm">Read case study {ArrowIcon}</span>
+                  <p className={`text-sm text-subtle ${wide ? "pl-9 md:shrink-0 md:pl-0 md:text-right" : "pl-9"}`}>
+                    {p.role} · {p.year}
+                    <span className="block text-subtle/90">{p.tags.join(" · ")}</span>
+                  </p>
                 </div>
               </Link>
             );

@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import { Suspense } from "react";
 import PostsBrowser from "@/components/posts-browser";
 
-export const metadata: Metadata = { title: "Posts — Hafiz" };
+export const metadata: Metadata = pageMeta({
+  title: "Posts & Research",
+  description: "Articles and research notes by Muhammad Aman on React Native, Next.js, performance and building software that scales.",
+  path: "/posts",
+});
 
 export default function Posts() {
   return (

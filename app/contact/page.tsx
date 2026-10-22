@@ -1,52 +1,94 @@
-import type { Metadata } from "next";
 import { Suspense } from "react";
-import Reveal from "@/components/reveal";
 import SectionHeader from "@/components/section-header";
-import SplitText from "@/components/split-text";
-import { ContactForm, Faq } from "@/components/contact-parts";
+import PageHero from "@/components/page-hero";
+import FaqList from "@/components/faq-list";
+import { ContactForm } from "@/components/contact-parts";
+import { ArrowUpRight } from "@/components/icons";
+import { pageMeta } from "@/lib/seo";
+import { site } from "@/lib/site";
 
-export const metadata: Metadata = { title: "Contact — Hafiz" };
+export const metadata = pageMeta({
+  title: "Contact",
+  description:
+    "Contact Muhammad Aman about a web or mobile project — email contact@muhammad-aman.com or message on WhatsApp. Replies within 24 hours.",
+  path: "/contact",
+});
 
 const d = (ms: number) => ({ "--d": ms }) as React.CSSProperties;
 
+const contactFaqs = [
+  {
+    q: "How long until I hear back?",
+    a: "Usually within 24 hours on working days. For anything time-sensitive, WhatsApp is the fastest way to reach me.",
+  },
+  {
+    q: "I haven't heard back yet — what should I do?",
+    a: `Check your spam folder first, then send a short follow-up to ${site.email} or a WhatsApp message. Messages occasionally get lost; a nudge is always welcome.`,
+  },
+  {
+    q: "What should I include in my message?",
+    a: "What you're building, who it's for, your timeline, and anything already in place (designs, an existing codebase, an API). A rough budget range helps me suggest the right scope.",
+  },
+  {
+    q: "Do you work with clients outside Pakistan?",
+    a: `Yes. I'm based in ${site.location.city} (${site.location.timezone}) and work with clients remotely, overlapping with European and Middle-East hours.`,
+  },
+];
+
 export default function Contact() {
+  const channels = [
+    { label: "Email", value: site.email, href: `mailto:${site.email}`, note: "Replies within 24h" },
+    { label: "WhatsApp", value: site.whatsapp.display, href: site.whatsapp.href, note: "Fastest for quick questions", external: true },
+    ...site.socials.map((s) => ({
+      label: s.label,
+      value: s.href.replace(/^https:\/\/(www\.)?/, "").replace(/\/$/, ""),
+      href: s.href,
+      note: s.label === "LinkedIn" ? "Career & updates" : "Code & side projects",
+      external: true,
+    })),
+  ];
+
   return (
     <>
-      <div className="container-site page-top grid gap-10 pb-12 lg:grid-cols-12 lg:gap-14">
-        <div className="lg:col-span-5">
-          <p data-enter="left" className="eyebrow">{"// contact"}</p>
-          <h1 className="h-display mt-4 text-[40px] md:text-[60px]">
-            <SplitText text="Let's build something" enter="mask" step={80} delay={100} />
-          </h1>
-          <p data-enter="left" style={d(400)} className="mt-5 max-w-[46ch] text-muted">
-            Tell me about your project — the honest version, including the messy parts.
-            That&apos;s usually where the interesting work is.
-          </p>
+      <PageHero
+        eyebrow="Contact"
+        title="Let's talk about your project."
+        highlight={["your", "project."]}
+        description="Tell me what you're building — the honest version, including the messy parts. That's usually where the interesting work is."
+      />
 
-          <div data-enter="left" style={d(550)} className="card mt-8 divide-y divide-line">
-            <a href="mailto:admin@behafiz.com" className="group flex items-center justify-between gap-4 p-5 transition-colors duration-150 hover:bg-surface-hi">
-              <span>
-                <span className="block font-[family-name:var(--font-jetbrains)] text-xs text-muted">email</span>
-                <span className="mt-1 block font-[family-name:var(--font-jetbrains)] text-sm text-accent">admin@behafiz.com</span>
+      <div className="container-site grid grid-cols-1 gap-6 pb-6 lg:grid-cols-12">
+        <div className="flex flex-col gap-3 lg:col-span-5">
+          {channels.map((c, i) => (
+            <a
+              key={c.label}
+              href={c.href}
+              {...(c.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+              data-enter="left"
+              style={d(150 + i * 90)}
+              className={`group flex items-center justify-between gap-4 rounded-[24px] p-6 transition-colors duration-200 ${
+                i === 0 ? "bg-primary text-on-primary hover:bg-[var(--primary-hover)]" : "bg-surface hover:bg-surface-hi"
+              }`}
+            >
+              <span className="min-w-0">
+                <span className={`block text-sm ${i === 0 ? "text-white" : "text-subtle"}`}>{c.label}</span>
+                <span className="mt-1 block truncate font-[family-name:var(--font-space)] text-xl font-bold">{c.value}</span>
+                <span className={`mt-1 block text-sm ${i === 0 ? "text-white" : "text-muted"}`}>{c.note}</span>
               </span>
-              <span className="text-xs text-muted">Replies within 24–48h</span>
+              <span
+                className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition-transform duration-300 group-hover:rotate-45 ${
+                  i === 0 ? "bg-black/20" : "bg-surface-hi"
+                }`}
+              >
+                <ArrowUpRight />
+              </span>
             </a>
-            <div className="flex items-center gap-3 p-5">
-              <span className="pulse-dot h-2.5 w-2.5 shrink-0 rounded-full bg-primary" />
-              <span className="text-sm">Available for new projects from September</span>
-            </div>
-            <div className="flex flex-wrap items-center justify-between gap-3 p-5">
-              <div className="flex gap-5">
-                {["GitHub", "LinkedIn", "X"].map((s) => (
-                  <a key={s} href="#" className="link-underline text-sm text-muted hover:text-fg">
-                    {s}
-                  </a>
-                ))}
-              </div>
-              <p className="font-[family-name:var(--font-jetbrains)] text-[12px] text-muted">
-                Karachi, Pakistan — working worldwide (UTC+5)
-              </p>
-            </div>
+          ))}
+          <div data-enter="left" style={d(500)} className="flex items-center gap-3 rounded-[24px] bg-surface p-6">
+            <span className="pulse-dot h-2.5 w-2.5 shrink-0 rounded-full bg-primary" />
+            <span className="text-sm">
+              Available for new projects · {site.location.city}, {site.location.country} ({site.location.timezone})
+            </span>
           </div>
         </div>
 
@@ -57,17 +99,16 @@ export default function Contact() {
         </div>
       </div>
 
-      {/* FAQ — sticky question header beside the accordion */}
       <section className="container-site section">
-        <div className="grid gap-8 md:grid-cols-12 md:gap-12">
-          <div className="md:col-span-4">
-            <div className="md:sticky md:top-28">
-              <SectionHeader eyebrow="faq" title="Common questions" motion="words" />
+        <div className="grid gap-8 lg:grid-cols-12">
+          <div className="lg:col-span-5">
+            <div className="lg:sticky lg:top-28">
+              <SectionHeader eyebrow="FAQ" title="Common questions." highlight={["questions."]} motion="fade" />
             </div>
           </div>
-          <Reveal variant="fade-up" className="md:col-span-8">
-            <Faq />
-          </Reveal>
+          <div className="lg:col-span-7">
+            <FaqList items={contactFaqs} />
+          </div>
         </div>
       </section>
     </>

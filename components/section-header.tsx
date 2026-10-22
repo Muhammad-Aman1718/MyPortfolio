@@ -18,6 +18,7 @@ type HeaderMotion = "words" | "wipe" | "fade" | "blur";
 export default function SectionHeader({
   eyebrow,
   title,
+  highlight,
   description,
   center = false,
   action,
@@ -26,6 +27,8 @@ export default function SectionHeader({
 }: {
   eyebrow: string;
   title: string;
+  /** Words of the title (exact match) set in crimson — the two-tone heading */
+  highlight?: string[];
   description?: string;
   center?: boolean;
   action?: React.ReactNode;
@@ -77,9 +80,18 @@ export default function SectionHeader({
       className={`flex flex-col gap-5 ${center ? "items-center text-center" : "md:flex-row md:items-end md:justify-between"} ${className}`}
     >
       <div className={center ? "flex flex-col items-center" : ""}>
-        <p data-h-eyebrow className="eyebrow">{`// ${eyebrow}`}</p>
+        <p data-h-eyebrow className="eyebrow">{eyebrow}</p>
         <h2 data-h-title className="h-section mt-3 max-w-[22ch]">
-          {motion === "words" ? <SplitText text={title} /> : title}
+          {motion === "words" ? (
+            <SplitText text={title} accent={highlight} />
+          ) : (
+            title.split(" ").map((w, i) => (
+              <span key={i}>
+                {i > 0 && " "}
+                {highlight?.includes(w) ? <em>{w}</em> : w}
+              </span>
+            ))
+          )}
         </h2>
         {description && (
           <p data-h-rest className="mt-3 max-w-[60ch] text-muted">
