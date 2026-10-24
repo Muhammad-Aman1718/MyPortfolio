@@ -1,8 +1,10 @@
 "use client";
 
 import { useId, useState } from "react";
+import Image from "next/image";
+import type { Tool } from "@/lib/data";
 
-type Group = { name: string; context: string; icon: string; items: string[] };
+type Group = { name: string; context: string; icon: string; items: Tool[] };
 
 const monogram = (t: string) =>
   t
@@ -103,17 +105,22 @@ export default function SkillsExplorer({ groups }: { groups: Group[] }) {
           <ul className="stagger-in mt-8 grid grid-cols-2 gap-2.5 sm:grid-cols-3">
             {g.items.map((t, i) => (
               <li
-                key={t}
+                key={t.name}
                 style={{ "--i": i } as React.CSSProperties}
                 className="flex items-center gap-3 rounded-[16px] bg-surface-hi p-3 pr-4"
               >
                 <span
                   aria-hidden="true"
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-background font-[family-name:var(--font-space)] text-[11px] font-bold text-muted"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[11px] bg-background font-[family-name:var(--font-space)] text-[11px] font-bold text-muted"
                 >
-                  {monogram(t)}
+                  {/* Brand logo from Simple Icons (self-hosted in /public/logos); monogram when none exists */}
+                  {t.logo ? (
+                    <Image src={`/logos/${t.logo}.svg`} alt="" width={20} height={20} unoptimized className="h-5 w-5" />
+                  ) : (
+                    monogram(t.name)
+                  )}
                 </span>
-                <span className="min-w-0 text-sm font-medium leading-tight">{t}</span>
+                <span className="min-w-0 text-sm font-medium leading-tight">{t.name}</span>
               </li>
             ))}
           </ul>

@@ -2,6 +2,7 @@ import Link from "next/link";
 import Reveal from "@/components/reveal";
 import SectionHeader from "@/components/section-header";
 import PageHero from "@/components/page-hero";
+import Portrait from "@/components/portrait";
 import CtaPanel from "@/components/cta-panel";
 import { ArrowIcon } from "@/components/icons";
 import { experienceByCompany, stats } from "@/lib/data";
@@ -11,13 +12,13 @@ import { site } from "@/lib/site";
 export const metadata = pageMeta({
   title: "About",
   description:
-    "Muhammad Aman is a full-stack and React Native developer from Faisalabad, Pakistan, building scalable web platforms and cross-platform mobile apps.",
+    "Muhammad Aman is a mobile app developer from Faisalabad, Pakistan, building iOS and Android apps with React Native, Swift and Kotlin.",
   path: "/about",
 });
 
 const facts = [
   { k: "Based in", v: `${site.location.city}, ${site.location.country}` },
-  { k: "Focus", v: "Full-stack web & mobile" },
+  { k: "Focus", v: "iOS & Android apps" },
   { k: "Currently", v: "Mobile App Developer at SIGMAKODE" },
   { k: "Building since", v: "2024" },
 ];
@@ -54,26 +55,21 @@ export default function About() {
     <>
       <PageHero
         eyebrow="About me"
-        title="I build products that scale."
-        highlight={["scale."]}
-        description="Full-stack engineer focused on high-performance web platforms and cross-platform mobile apps — turning complex requirements into products that feel simple."
+        title="I build apps people keep."
+        highlight={["keep."]}
+        description="Mobile app developer focused on fast, reliable iOS and Android apps — turning complex requirements into apps that feel simple in the hand."
       />
 
       {/* Portrait + story */}
       <section className="container-site pb-6">
         <div className="grid gap-6 lg:grid-cols-12">
-          {/* Portrait slot: monogram until a photo is added (swap for next/image) */}
           <div data-enter="left" className="flex flex-col gap-3 lg:col-span-5">
-            <div className="@container relative flex aspect-[16/10] items-end sm:aspect-[16/9] lg:aspect-[4/5] overflow-hidden rounded-[24px] bg-surface p-7">
-              <span
-                aria-hidden="true"
-                className="h-mega pointer-events-none absolute inset-0 flex items-center justify-center pb-16 text-[44cqw]"
-              >
-                MA<span className="text-primary">.</span>
-              </span>
+            <div className="relative flex aspect-square items-end overflow-hidden rounded-[24px] p-7 sm:aspect-[4/3] lg:aspect-[4/5]">
+              <Portrait className="!absolute inset-0" sizes="(min-width: 1024px) 40vw, 92vw" />
+              <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/75 to-transparent" />
               <p className="relative">
                 <span className="block font-[family-name:var(--font-space)] text-2xl font-bold">{site.name}</span>
-                <span className="text-sm text-muted">{site.role}</span>
+                <span className="text-sm text-white/80">{site.role}</span>
               </p>
             </div>
             <dl className="grid grid-cols-2 gap-3">
@@ -89,17 +85,16 @@ export default function About() {
           <div className="flex flex-col gap-6 lg:col-span-7">
             <Reveal variant="fade" stagger each={0.08} start="top 95%" className="rounded-[24px] bg-surface p-7 md:p-10">
               <p className="text-xl leading-relaxed md:text-2xl">
-                I&apos;m {site.name}, a multi-disciplinary developer focused on full-stack engineering and modern app
-                development.
+                I&apos;m {site.name}, a mobile app developer building iOS and Android apps with React Native.
               </p>
               <p className="mt-6 leading-relaxed text-muted">
-                I don&apos;t just write code — I build platforms designed for scale, performance and an uncompromising
-                attention to detail. From mapping out complex workflows to deploying production-ready applications, my
-                work has been shaped by solving real problems.
+                I care about the details users feel: a quick launch, smooth 60fps screens, offline that just works, and
+                a release that sails through store review. From the first screen to the App Store and Google Play, my
+                work is shaped by apps real people use every day.
               </p>
               <p className="mt-4 leading-relaxed text-muted">
-                My experience spans cross-platform mobile apps and optimised web systems, always balancing modern
-                technology with human-centred design. Today I build React Native apps at SIGMAKODE in Faisalabad.
+                I started on the web with React and Next.js, and moved to mobile for good. Today I build React Native
+                apps at SIGMAKODE in Faisalabad — and drop into Swift or Kotlin when a feature needs to go native.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link href="/contact" className="btn-primary">

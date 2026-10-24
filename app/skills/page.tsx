@@ -9,7 +9,7 @@ import { pageMeta } from "@/lib/seo";
 export const metadata = pageMeta({
   title: "Skills",
   description:
-    "The tech stack of Muhammad Aman — React Native, Next.js, React, TypeScript, Node.js, MongoDB, PostgreSQL, Docker and more, across mobile, frontend, backend and DevOps.",
+    "The mobile stack of Muhammad Aman — React Native, Expo, Swift, Kotlin, Redux Toolkit, Firebase and the tools to test and ship iOS and Android apps.",
   path: "/skills",
 });
 

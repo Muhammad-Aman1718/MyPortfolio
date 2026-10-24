@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import SplitText from "@/components/split-text";
 import Prose from "@/components/prose";
@@ -79,9 +80,14 @@ export default async function PostPage({ params }: PageProps<"/posts/[slug]">) {
             </p>
             <div data-enter="rise" style={d(520)} className="mt-8 flex flex-wrap items-center justify-between gap-4 border-y border-line py-4">
               <div className="flex items-center gap-3">
-                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary font-[family-name:var(--font-space)] font-semibold text-accent">
-                  MA
-                </span>
+                <Image
+                  src="/imgs/muhammad-aman.avif"
+                  alt=""
+                  width={1254}
+                  height={1254}
+                  unoptimized
+                  className="h-11 w-11 shrink-0 rounded-full object-cover"
+                />
                 <span className="text-sm">
                   <span className="block">{site.name}</span>
                   <span className="text-muted">{site.role}</span>

@@ -144,9 +144,9 @@ export function ContactForm() {
           Project type
           <select name="type" defaultValue={params.get("service") ?? ""} className={inputCls}>
             <option value="">Select…</option>
-            <option>Mobile App Development</option>
-            <option>Web Application Development</option>
-            <option>Technical Consulting</option>
+            <option>React Native App Development</option>
+            <option>Native iOS &amp; Android Features</option>
+            <option>App Rescue &amp; Performance</option>
             <option>Other</option>
           </select>
         </label>

@@ -7,7 +7,16 @@ import { useEffect, useRef, useState } from "react";
  * prev/next arrows and a counter underneath; from `lg` up it's a plain
  * two-column grid. Children size themselves (e.g. `w-[85%] sm:w-[60%] lg:w-auto`).
  */
-export default function Carousel({ children, label }: { children: React.ReactNode; label: string }) {
+export default function Carousel({
+  children,
+  label,
+  desktopCols = "lg:grid-cols-2",
+}: {
+  children: React.ReactNode;
+  label: string;
+  /** Grid columns from lg up (a literal class so Tailwind sees it) */
+  desktopCols?: string;
+}) {
   const track = useRef<HTMLDivElement>(null);
   const [index, setIndex] = useState(0);
   const [count, setCount] = useState(0);
@@ -61,7 +70,7 @@ export default function Carousel({ children, label }: { children: React.ReactNod
     <div role="region" aria-roledescription="carousel" aria-label={label}>
       <div
         ref={track}
-        className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-5 px-5 pb-1 [scrollbar-width:none] sm:-mx-6 sm:scroll-px-6 sm:px-6 lg:mx-0 lg:grid lg:grid-cols-2 lg:gap-x-6 lg:gap-y-10 lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden"
+        className={`-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-5 px-5 pb-1 [scrollbar-width:none] sm:-mx-6 sm:scroll-px-6 sm:px-6 lg:mx-0 lg:grid ${desktopCols} lg:gap-x-6 lg:gap-y-10 lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden`}
       >
         {children}
       </div>

@@ -27,7 +27,7 @@ export default function Footer() {
           <h2 className="h-display text-[44px] font-bold sm:text-[60px] md:col-span-8 lg:text-[76px]">
             Let&apos;s <RotatingWord words={["design", "build", "ship"]} />
             <br />
-            something people rely on.
+            an app people rely on.
           </h2>
 
           <div className="flex flex-col gap-6 md:col-span-4">
@@ -41,10 +41,6 @@ export default function Footer() {
               <Link href="/contact" className="btn-primary">
                 Book a call
               </Link>
-              <span className="flex items-center gap-2 text-sm text-muted">
-                <span className="pulse-dot inline-block h-2 w-2 rounded-full bg-primary" />
-                Available for projects
-              </span>
             </div>
           </div>
         </div>

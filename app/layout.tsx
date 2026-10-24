@@ -84,7 +84,7 @@ const identity = {
         addressLocality: site.location.city,
         addressCountry: site.location.countryCode,
       },
-      knowsAbout: ["React Native", "Next.js", "React", "TypeScript", "Node.js", "MongoDB", "Mobile app development", "Full-stack web development"],
+      knowsAbout: ["React Native", "Expo", "TypeScript", "Swift", "Kotlin", "iOS development", "Android development", "Mobile app development"],
       sameAs: site.socials.map((s) => s.href),
     },
     {
