@@ -77,7 +77,10 @@ export const SITE: SiteConfig = {
     "Mobile app development",
   ],
   socials: [
-    { label: "LinkedIn", href: "https://www.linkedin.com/in/muhammad-aman1718/" },
+    {
+      label: "LinkedIn",
+      href: "https://www.linkedin.com/in/muhammad-aman1718/",
+    },
     { label: "GitHub", href: "https://github.com/Muhammad-Aman1718" },
   ],
   portrait: "/imgs/muhammad-aman.avif",
@@ -201,7 +204,13 @@ export const UI = {
 /* ═══════════════════════════ Page metadata ═══════════════════════════ */
 
 export const PAGE_META: Record<
-  "about" | "experience" | "skills" | "services" | "contact" | "projects" | "posts",
+  | "about"
+  | "experience"
+  | "skills"
+  | "services"
+  | "contact"
+  | "projects"
+  | "posts",
   PageMetaInput
 > = {
   about: {
@@ -304,7 +313,8 @@ export const COPY = {
       eyebrow: "Services",
       title: "What I help you build…",
       highlight: ["build…"],
-      description: "Three ways to work together — each scoped up front, with a fixed price and weekly builds.",
+      description:
+        "Three ways to work together — each scoped up front, with a fixed price and weekly builds.",
       toolsLabel: "Tools I use",
       compare: "Compare services",
     },
@@ -353,8 +363,16 @@ export const COPY = {
     ],
     primaryCta: "Work with me",
     secondaryCta: "See my experience",
-    journey: { eyebrow: "Journey", title: "How I got here.", highlight: ["here."] },
-    beyond: { eyebrow: "Beyond the code", title: "What keeps me sharp.", highlight: ["sharp."] },
+    journey: {
+      eyebrow: "Journey",
+      title: "How I got here.",
+      highlight: ["here."],
+    },
+    beyond: {
+      eyebrow: "Beyond the code",
+      title: "What keeps me sharp.",
+      highlight: ["sharp."],
+    },
     cta: "Let's collaborate on your next project.",
   },
   experience: {
@@ -362,7 +380,8 @@ export const COPY = {
       eyebrow: "Experience",
       title: "Where I've built.",
       highlight: ["built."],
-      description: "From the web to mobile for good — the teams I've shipped with and what I built there.",
+      description:
+        "From the web to mobile for good — the teams I've shipped with and what I built there.",
     },
     hire: "Hire me",
     current: "Current",
@@ -380,11 +399,16 @@ export const COPY = {
     },
     groupsLabel: "Skill groups",
     tools: "tools",
-    daily: { eyebrow: "Daily stack", title: "What I reach for first.", highlight: ["first."] },
+    daily: {
+      eyebrow: "Daily stack",
+      title: "What I reach for first.",
+      highlight: ["first."],
+    },
     totalLabel: "technologies listed",
     cta: {
       title: "Have a stack in mind?",
-      description: "If your project uses these tools, let's talk about what you're building.",
+      description:
+        "If your project uses these tools, let's talk about what you're building.",
     },
   },
   services: {
@@ -392,14 +416,19 @@ export const COPY = {
       eyebrow: "Services",
       title: "What I can build for you.",
       highlight: ["build", "for", "you."],
-      description: "Three ways to work together — each scoped up front, with a clear price and a working build every week.",
+      description:
+        "Three ways to work together — each scoped up front, with a clear price and a working build every week.",
     },
     featuredBadge: "Most requested",
     includes: "includes",
     starting: "starting",
     discuss: "Discuss this",
     included: "See what's included",
-    process: { eyebrow: "Process", title: "How a project runs.", highlight: ["runs."] },
+    process: {
+      eyebrow: "Process",
+      title: "How a project runs.",
+      highlight: ["runs."],
+    },
     faq: { eyebrow: "FAQ", title: "Before you ask.", highlight: ["ask."] },
   },
   contact: {
@@ -411,7 +440,11 @@ export const COPY = {
         "Tell me what you're building — the honest version, including the messy parts. That's usually where the interesting work is.",
     },
     basedIn: `Based in ${SITE.location.city}, ${SITE.location.country} (${SITE.location.timezone}) — working with clients remotely.`,
-    faq: { eyebrow: "FAQ", title: "Common questions.", highlight: ["questions."] },
+    faq: {
+      eyebrow: "FAQ",
+      title: "Common questions.",
+      highlight: ["questions."],
+    },
   },
   projects: {
     hero: {
@@ -435,13 +468,20 @@ export const COPY = {
     previous: "previous",
     next: "next",
     moreLabel: "More projects",
-    facts: { role: "role", timeline: "timeline", team: "team", platform: "platform" },
-    ctaDescription: "Need something built with the care that went into {name}? Tell me about it.",
+    facts: {
+      role: "role",
+      timeline: "timeline",
+      team: "team",
+      platform: "platform",
+    },
+    ctaDescription:
+      "Need something built with the care that went into {name}? Tell me about it.",
   },
   posts: {
     eyebrow: "writing",
     title: "Posts & research",
-    intro: "Notes from production: mobile performance, architecture decisions, and the business of building software well.",
+    intro:
+      "Notes from production: mobile performance, architecture decisions, and the business of building software well.",
     tabsLabel: "Content type",
     filterLabel: "Filter posts by category",
     featured: "Featured",
@@ -518,14 +558,20 @@ export const CONTACT_FORM = {
   name: { label: "Name", placeholder: "Your name" },
   email: { label: "Email", placeholder: "you@company.com" },
   type: { label: "Project type", placeholder: "Select…" },
-  budget: { label: "Budget range", optional: "(optional)", placeholder: "Select…" },
+  budget: {
+    label: "Budget range",
+    optional: "(optional)",
+    placeholder: "Select…",
+  },
   message: { label: "Message", placeholder: "What are you building?" },
   submit: "Send message",
   sending: "Sending…",
   hint: "I reply within 24 hours on working days.",
-  failed: "Your message couldn't be sent. Check your connection and try again, or email me at",
+  failed:
+    "Your message couldn't be sent. Check your connection and try again, or email me at",
   sentTitle: "Message sent",
-  sentText: "Thanks — your brief is in my inbox and I'll reply within 24 hours on working days. Anything urgent? Email me at",
+  sentText:
+    "Thanks — your brief is in my inbox and I'll reply within 24 hours on working days. Anything urgent? Email me at",
   back: "Send another message",
   subject: "Project enquiry from",
 } as const;
@@ -549,12 +595,14 @@ export const BUDGET_OPTIONS = ["under $2k", "$2–5k", "$5–15k", "$15k+"];
 export const CONTACT_ERRORS = {
   name: "Please enter your name.",
   emailMissing: "Please enter your email so I can reply.",
-  emailInvalid: "That email looks incomplete — use a format like you@company.com.",
+  emailInvalid:
+    "That email looks incomplete — use a format like you@company.com.",
   message: "Tell me a little about the project (at least 10 characters).",
 } as const;
 
 /** Inline markup in long-form text: `code`, **bold** and [label](href). */
-export const INLINE_TOKEN_PATTERN = /(`[^`]+`|\*\*[^*]+\*\*|\[[^\]]+\]\([^)]+\))/g;
+export const INLINE_TOKEN_PATTERN =
+  /(`[^`]+`|\*\*[^*]+\*\*|\[[^\]]+\]\([^)]+\))/g;
 export const INLINE_LINK_PATTERN = /^\[([^\]]+)\]\(([^)]+)\)$/;
 
 export const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -585,7 +633,10 @@ export const EXTRA_TOOL_LOGOS: Record<string, string> = {
 };
 
 export const ABOUT_FACTS: Fact[] = [
-  { label: "Based in", value: `${SITE.location.city}, ${SITE.location.country}` },
+  {
+    label: "Based in",
+    value: `${SITE.location.city}, ${SITE.location.country}`,
+  },
   { label: "Focus", value: "iOS & Android apps" },
   { label: "Currently", value: `${SITE.role} at ${SITE.employer}` },
   { label: "Building since", value: "2024" },
@@ -615,10 +666,22 @@ export const ABOUT_BEYOND: IconCard[] = [
 ];
 
 export const SERVICE_STEPS: ProcessStep[] = [
-  { title: "Discover", text: "A call to understand the problem, constraints, and what success means." },
-  { title: "Scope", text: "Architecture, timeline and a fixed estimate you can hold me to." },
-  { title: "Build", text: "Weekly demos, honest progress reports, production-quality code." },
-  { title: "Support", text: "Launch help and a support window included in every engagement." },
+  {
+    title: "Discover",
+    text: "A call to understand the problem, constraints, and what success means.",
+  },
+  {
+    title: "Scope",
+    text: "Architecture, timeline and a fixed estimate you can hold me to.",
+  },
+  {
+    title: "Build",
+    text: "Weekly demos, honest progress reports, production-quality code.",
+  },
+  {
+    title: "Support",
+    text: "Launch help and a support window included in every engagement.",
+  },
 ];
 
 export const CONTACT_FAQS: Faq[] = [
@@ -656,7 +719,12 @@ export const NOT_FOUND_ROUTES: RouteCard[] = [
 ];
 
 /** Arrow keys → tab step (WAI-ARIA tabs pattern). */
-export const TAB_KEY_STEPS: Record<string, number> = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 };
+export const TAB_KEY_STEPS: Record<string, number> = {
+  ArrowDown: 1,
+  ArrowRight: 1,
+  ArrowUp: -1,
+  ArrowLeft: -1,
+};
 
 /** First filter of each list shows everything. */
 export const FILTER_ALL = "All";
@@ -666,9 +734,21 @@ export const POSTS_TABS: PostsTab[] = ["blog", "research"];
 /** Anchor of the citation section on a research page. */
 export const PAPER_CITE_ID = "cite";
 
-export const BLOG_FILTERS =["All", "Technical", "Tutorials", "Case Study", "Notes"];
+export const BLOG_FILTERS = [
+  "All",
+  "Technical",
+  "Tutorials",
+  "Case Study",
+  "Notes",
+];
 
-export const PROJECT_FILTERS = ["All", "Mobile", "Web", "Backend", "Client work"];
+export const PROJECT_FILTERS = [
+  "All",
+  "Mobile",
+  "Web",
+  "Backend",
+  "Client work",
+];
 
 /* ═══════════════════════════ Project preview mock-ups ═══════════════════════════ */
 
@@ -697,7 +777,9 @@ export const ICONS: Record<IconName, IconDefinition> = {
   link: {
     path: "M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1",
   },
-  mail: { path: "M5 5h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm-1 2 8 6 8-6" },
+  mail: {
+    path: "M5 5h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm-1 2 8 6 8-6",
+  },
   calendar: {
     path: "M5 5h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zM3 10h18M8 3v4M16 3v4",
   },
@@ -719,10 +801,34 @@ const SHOWN = { autoAlpha: 1, x: 0, y: 0 };
 
 /** Scroll-reveal presets — each section picks the one that fits its content. */
 export const REVEAL_PRESETS: Record<RevealVariant, RevealPreset> = {
-  "fade-up": { from: { autoAlpha: 0, y: 24 }, to: SHOWN, duration: 0.7, ease: "power3.out", stagger: 0.05 },
-  fade: { from: { autoAlpha: 0 }, to: { autoAlpha: 1 }, duration: 0.8, ease: "power1.out", stagger: 0.05 },
-  "slide-left": { from: { autoAlpha: 0, x: -36 }, to: SHOWN, duration: 0.75, ease: "power3.out", stagger: 0.05 },
-  "slide-right": { from: { autoAlpha: 0, x: 36 }, to: SHOWN, duration: 0.75, ease: "power3.out", stagger: 0.05 },
+  "fade-up": {
+    from: { autoAlpha: 0, y: 24 },
+    to: SHOWN,
+    duration: 0.7,
+    ease: "power3.out",
+    stagger: 0.05,
+  },
+  fade: {
+    from: { autoAlpha: 0 },
+    to: { autoAlpha: 1 },
+    duration: 0.8,
+    ease: "power1.out",
+    stagger: 0.05,
+  },
+  "slide-left": {
+    from: { autoAlpha: 0, x: -36 },
+    to: SHOWN,
+    duration: 0.75,
+    ease: "power3.out",
+    stagger: 0.05,
+  },
+  "slide-right": {
+    from: { autoAlpha: 0, x: 36 },
+    to: SHOWN,
+    duration: 0.75,
+    ease: "power3.out",
+    stagger: 0.05,
+  },
   scale: {
     from: { autoAlpha: 0, scale: 0.92, y: 16 },
     to: { ...SHOWN, scale: 1 },
@@ -752,13 +858,25 @@ export const REVEAL_PRESETS: Record<RevealVariant, RevealPreset> = {
     stagger: 0.08,
   },
   tilt: {
-    from: { autoAlpha: 0, y: 40, rotateX: -16, transformPerspective: 1000, transformOrigin: "50% 0%" },
+    from: {
+      autoAlpha: 0,
+      y: 40,
+      rotateX: -16,
+      transformPerspective: 1000,
+      transformOrigin: "50% 0%",
+    },
     to: { ...SHOWN, rotateX: 0 },
     duration: 0.9,
     ease: "power3.out",
     stagger: 0.06,
   },
-  mask: { from: { yPercent: 110 }, to: { yPercent: 0 }, duration: 0.9, ease: "power4.out", stagger: 0.04 },
+  mask: {
+    from: { yPercent: 110 },
+    to: { yPercent: 0 },
+    duration: 0.9,
+    ease: "power4.out",
+    stagger: 0.04,
+  },
   blur: {
     from: { autoAlpha: 0, y: 24, filter: "blur(10px)" },
     to: { ...SHOWN, filter: "blur(0px)" },
@@ -774,7 +892,10 @@ const EMAIL_LINK = `[${SITE.email}](mailto:${SITE.email})`;
 const SITE_HOST = SITE.url.replace("https://", "");
 const LEGAL_UPDATED = "October 22, 2026";
 
-export const LEGAL_PAGES: Record<"privacy" | "terms" | "refund", LegalPageContent> = {
+export const LEGAL_PAGES: Record<
+  "privacy" | "terms" | "refund",
+  LegalPageContent
+> = {
   privacy: {
     title: "Privacy Policy",
     highlight: ["Policy"],
