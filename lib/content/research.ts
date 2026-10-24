@@ -23,7 +23,7 @@ export const research: Paper[] = [
   {
     slug: "offline-first-sync-low-connectivity",
     title: "Offline-first data synchronization patterns in low-connectivity regions",
-    authors: "H. Ahmed",
+    authors: "M. Aman",
     year: "2026",
     isoDate: "2026-02-01",
     venue: "Preprint",
@@ -100,12 +100,12 @@ export const research: Paper[] = [
       },
     ],
     bibtex:
-      "@misc{ahmed2026offline,\n  title  = {Offline-first data synchronization patterns in low-connectivity regions},\n  author = {Ahmed, H.},\n  year   = {2026},\n  note   = {Preprint}\n}",
+      "@misc{aman2026offline,\n  title  = {Offline-first data synchronization patterns in low-connectivity regions},\n  author = {Aman, M.},\n  year   = {2026},\n  note   = {Preprint}\n}",
   },
   {
     slug: "perceived-performance-mobile-onboarding",
     title: "Perceived performance budgets for mobile onboarding flows",
-    authors: "H. Ahmed",
+    authors: "M. Aman",
     year: "2025",
     isoDate: "2025-09-01",
     venue: "Preprint",
@@ -169,7 +169,7 @@ export const research: Paper[] = [
       },
     ],
     bibtex:
-      "@misc{ahmed2025perceived,\n  title  = {Perceived performance budgets for mobile onboarding flows},\n  author = {Ahmed, H.},\n  year   = {2025},\n  note   = {Preprint}\n}",
+      "@misc{aman2025perceived,\n  title  = {Perceived performance budgets for mobile onboarding flows},\n  author = {Aman, M.},\n  year   = {2025},\n  note   = {Preprint}\n}",
   },
 ];
 

@@ -13,50 +13,120 @@ export const stats = [
 /** Teams Aman has shipped with — the "worked with" strip under the hero. */
 export const companies = ["SIGMAKODE", "TECHLOSET", "CodeeTechs"];
 
-/** Skill groups as listed on muhammad-aman.com/skills. `context` is one line on how each is used. */
-export const skillGroups = [
+/** A tool, with its Simple Icons slug when one exists (SVG served from /logos/<slug>.svg). */
+export type Tool = { name: string; logo?: string };
+
+/** The mobile stack, grouped. Mobile app development is the whole focus of this portfolio. */
+export const skillGroups: { name: string; context: string; icon: string; items: Tool[] }[] = [
   {
-    name: "Mobile",
-    context: "Cross-platform apps with React Native — my day-to-day work at SIGMAKODE.",
+    name: "Cross-platform",
+    context: "React Native is my main stack — one codebase that feels native on iOS and Android.",
     icon: "M7 2h10a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zM11 19h2",
-    items: ["React Native", "Expo", "React Native CLI", "Native APIs", "RTK Query", "Mobile UI optimisation"],
+    items: [
+      { name: "React Native", logo: "react" },
+      { name: "Expo", logo: "expo" },
+      { name: "Expo Router", logo: "expo" },
+      { name: "React Native CLI", logo: "react" },
+      { name: "TypeScript", logo: "typescript" },
+      { name: "JavaScript", logo: "javascript" },
+      { name: "Flutter", logo: "flutter" },
+      { name: "Dart", logo: "dart" },
+    ],
   },
   {
-    name: "Frontend",
-    context: "Fast, accessible interfaces in React and Next.js.",
-    icon: "M4 5h16v11H4zM8 21h8M12 16v5",
-    items: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Redux Toolkit", "Zustand", "Framer Motion", "shadcn/ui", "SCSS / Sass", "HTML5", "CSS3"],
+    name: "iOS",
+    context: "Native modules, signing and getting through App Store review.",
+    icon: "M16.4 12.7c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9-.7 0-1.8-.8-3-.8-1.5 0-3 .9-3.8 2.3-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7c1.3 0 2.1-1.1 2.8-2.3.9-1.3 1.3-2.6 1.3-2.6s-2.5-1-2.5-3.8zM14.1 5.9c.6-.8 1.1-1.9 1-3-.9 0-2.1.6-2.7 1.4-.6.7-1.1 1.8-1 2.9 1 .1 2.1-.5 2.7-1.3z",
+    items: [
+      { name: "Swift", logo: "swift" },
+      { name: "SwiftUI", logo: "swift" },
+      { name: "Xcode", logo: "xcode" },
+      { name: "iOS SDK", logo: "ios" },
+      { name: "CocoaPods", logo: "cocoapods" },
+      { name: "TestFlight", logo: "apple" },
+      { name: "App Store Connect", logo: "appstore" },
+    ],
   },
   {
-    name: "Backend",
-    context: "APIs and services that the apps above talk to.",
-    icon: "M5 8h14M5 12h14M5 16h14M7 4h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z",
-    items: ["Node.js", "Express.js", "REST APIs", "GraphQL", "Authentication", "Prisma ORM", "Mongoose"],
+    name: "Android",
+    context: "Kotlin modules, Gradle builds and Play Store releases.",
+    icon: "M7 10h10v8a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1zM7 9a5 5 0 0 1 10 0zM9.5 6.5h.01M14.5 6.5h.01M5 11v5M19 11v5M8 4 9 5.5M16 4l-1 1.5",
+    items: [
+      { name: "Kotlin", logo: "kotlin" },
+      { name: "Jetpack Compose", logo: "jetpackcompose" },
+      { name: "Java", logo: "openjdk" },
+      { name: "Android SDK", logo: "android" },
+      { name: "Android Studio", logo: "androidstudio" },
+      { name: "Gradle", logo: "gradle" },
+      { name: "Google Play Console", logo: "googleplay" },
+    ],
   },
   {
-    name: "Database",
-    context: "Schema design and data stores, SQL and NoSQL.",
+    name: "State & data",
+    context: "Predictable state, cached server data and fast local storage — online or off.",
     icon: "M12 3c4.4 0 8 1.3 8 3s-3.6 3-8 3-8-1.3-8-3 3.6-3 8-3zM4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6",
-    items: ["MongoDB", "PostgreSQL", "MySQL", "Redis", "Firebase / Firestore", "Database design"],
+    items: [
+      { name: "Redux Toolkit", logo: "redux" },
+      { name: "RTK Query", logo: "redux" },
+      { name: "TanStack Query", logo: "reactquery" },
+      { name: "Zustand" },
+      { name: "SQLite", logo: "sqlite" },
+      { name: "MMKV" },
+      { name: "AsyncStorage" },
+    ],
   },
   {
-    name: "DevOps",
-    context: "Version control, pipelines and deployment.",
-    icon: "M6 19a4 4 0 0 1 0-8 6 6 0 0 1 11.3-2A5 5 0 0 1 18 19H6z",
-    items: ["Git", "GitHub", "GitHub Actions", "Docker", "Docker Compose", "CI/CD", "AWS", "Vercel"],
+    name: "Backend & services",
+    context: "The APIs, auth, push and payments a mobile app talks to.",
+    icon: "M5 8h14M5 12h14M5 16h14M7 4h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z",
+    items: [
+      { name: "Firebase", logo: "firebase" },
+      { name: "Supabase", logo: "supabase" },
+      { name: "Node.js", logo: "nodedotjs" },
+      { name: "REST APIs" },
+      { name: "GraphQL", logo: "graphql" },
+      { name: "Push notifications (FCM / APNs)", logo: "firebase" },
+      { name: "In-app purchases", logo: "appstore" },
+    ],
   },
   {
-    name: "Foundations",
-    context: "The languages and computer-science basics underneath it all.",
+    name: "UI & motion",
+    context: "Smooth 60fps screens, gestures and navigation that feel native.",
+    icon: "M4 5h16v11H4zM8 21h8M12 16v5",
+    items: [
+      { name: "Reanimated" },
+      { name: "Gesture Handler" },
+      { name: "React Navigation", logo: "react" },
+      { name: "NativeWind", logo: "tailwindcss" },
+      { name: "Lottie", logo: "lottiefiles" },
+      { name: "Figma", logo: "figma" },
+    ],
+  },
+  {
+    name: "Testing & release",
+    context: "Automated builds, tests and crash reporting from first commit to store.",
     icon: "M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17v3h3l5.3-5.3a4 4 0 0 0 5.4-5.4l-2.4 2.4-2.4-2.4 2.4-2.4z",
-    items: ["JavaScript", "TypeScript", "Python", "Data structures", "Algorithms", "System design basics", "Performance optimisation", "Clean architecture"],
+    items: [
+      { name: "Jest", logo: "jest" },
+      { name: "Detox" },
+      { name: "EAS Build", logo: "expo" },
+      { name: "Fastlane", logo: "fastlane" },
+      { name: "Sentry", logo: "sentry" },
+      { name: "GitHub Actions", logo: "githubactions" },
+      { name: "Git", logo: "git" },
+    ],
   },
 ];
 
+/** Simple Icons slug for a tool name — from the skill groups, plus the store names used in short lists. */
+export const toolLogo = (name: string): string | undefined =>
+  skillGroups.flatMap((g) => g.items).find((t) => t.name === name)?.logo ??
+  ({ "App Store": "appstore", "Google Play": "googleplay" } as Record<string, string>)[name];
+
 /** Most-used tools, for tickers and short lists. */
 export const coreTools = [
-  "React Native", "TypeScript", "Next.js", "React", "Redux Toolkit", "RTK Query", "Expo",
-  "Node.js", "Express.js", "MongoDB", "PostgreSQL", "Tailwind CSS", "Prisma", "Docker", "Git",
+  "React Native", "Expo", "TypeScript", "Swift", "Kotlin", "Redux Toolkit", "RTK Query",
+  "Reanimated", "React Navigation", "Firebase", "Jest", "Fastlane", "Sentry", "App Store", "Google Play",
 ];
 
 /** Work history from muhammad-aman.com/experience, newest first. */
@@ -172,24 +242,24 @@ export const testimonials = [
 
 export const services = [
   {
-    name: "Mobile App Development",
-    description: "React Native apps built for reliability, performance, and store approval on the first try.",
-    items: ["Architecture & setup", "UI implementation", "Native modules", "Store submission", "3 months support"],
+    name: "React Native App Development",
+    description: "One codebase, two stores — iOS and Android apps built for reliability, performance and approval on the first try.",
+    items: ["Architecture & setup", "UI implementation", "API integration", "Store submission", "3 months support"],
     engagement: "fixed scope",
     from: "from $8k",
     featured: true,
   },
   {
-    name: "Web Application Development",
-    description: "Next.js products from landing page to full SaaS, deployed and monitored.",
-    items: ["Full-stack build", "Database design", "Auth & payments", "SEO & analytics", "Deployment"],
+    name: "Native iOS & Android Features",
+    description: "Swift and Kotlin modules for what JavaScript can't reach — camera, payments, background work, widgets.",
+    items: ["Native modules", "Push notifications", "In-app purchases", "Deep links", "Device APIs"],
     engagement: "fixed scope / weekly",
     from: "from $5k",
   },
   {
-    name: "Technical Consulting",
-    description: "Audits, performance rescue, and architecture reviews for existing products.",
-    items: ["Codebase audit", "Performance profiling", "Written report", "Roadmap session", "Follow-up call"],
+    name: "App Rescue & Performance",
+    description: "Audits and fixes for existing apps — crashes, slow start-up, janky screens and failed store reviews.",
+    items: ["Codebase audit", "Performance profiling", "Crash fixing", "Upgrade to latest RN", "Written report"],
     engagement: "weekly",
     from: "from $2k",
   },

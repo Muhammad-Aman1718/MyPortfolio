@@ -71,98 +71,133 @@ export default function PostsBrowser() {
             <FilterPills options={blogFilters} value={filter} onChange={setFilter} label="Filter posts by category" />
           </div>
 
-          <div key={filter} className="stagger-in mt-8 grid gap-4 md:grid-cols-2">
+          {/* Editorial list — a featured spread, then magazine rows with a date column.
+              Deliberately unlike the research tab's two-up paper cards. */}
+          <div key={filter} className="stagger-in mt-8 flex flex-col gap-3">
             {featured && (
               <Link
                 href={`/posts/${featured.slug}`}
                 transitionTypes={forward}
                 style={idx(0)}
-                className="card card-hover ring-gradient group relative overflow-hidden p-7 md:col-span-2 md:p-10"
+                className="group grid overflow-hidden rounded-[24px] bg-surface transition-colors duration-300 hover:bg-surface-hi md:grid-cols-12"
               >
-                <div className="bg-grid pointer-events-none absolute inset-0 opacity-50" aria-hidden="true" />
-                <div className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-primary/20 blur-[80px]" aria-hidden="true" />
-                <div className="relative grid gap-6 md:grid-cols-12 md:items-end">
-                  <div className="md:col-span-9">
-                    <div className="flex flex-wrap items-center gap-3">
-                      <span className="pill">{featured.category}</span>
-                      <span className="font-[family-name:var(--font-jetbrains)] text-xs text-accent">featured</span>
-                    </div>
-                    <h2 className="mt-5 font-[family-name:var(--font-space)] text-[26px] font-semibold leading-tight tracking-tight md:text-[36px]">
-                      {featured.title}
-                    </h2>
-                    <p className="mt-3 max-w-[60ch] text-muted">{featured.excerpt}</p>
-                  </div>
-                  <div className="flex items-center justify-between gap-4 md:col-span-3 md:flex-col md:items-end">
-                    <p className="font-[family-name:var(--font-jetbrains)] text-xs text-muted">
-                      {featured.date} · {featured.readingTime} read
-                    </p>
-                    <span className="flex h-11 w-11 items-center justify-center rounded-full border border-line text-muted transition-all duration-300 group-hover:rotate-45 group-hover:border-accent group-hover:text-accent">
-                      <ArrowUpRight />
+                {/* Cover panel — solid primary, the read time as the big number */}
+                <div className="flex flex-col justify-between gap-6 bg-primary p-6 text-on-primary md:col-span-3 md:p-7">
+                  <span className="flex items-center justify-between gap-3 text-sm font-medium">
+                    <span className="rounded-full bg-black/20 px-3 py-1">Featured</span>
+                    {featured.category}
+                  </span>
+                  <span>
+                    <span className="block font-[family-name:var(--font-space)] text-[48px] font-bold leading-none tracking-tight md:text-[56px]">
+                      {parseInt(featured.readingTime, 10)}
+                      <span className="ml-1 text-xl md:text-2xl">min</span>
                     </span>
-                  </div>
-                </div>
-              </Link>
-            )}
-
-            {rest.map((p, i) => (
-              <Link
-                key={p.slug}
-                href={`/posts/${p.slug}`}
-                transitionTypes={forward}
-                style={idx(i + 1)}
-                className="card card-hover spotlight group flex flex-col p-6"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="pill">{p.category}</span>
-                  <span className="text-muted transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent">
-                    <ArrowUpRight />
+                    <span className="mt-2 block text-sm">read · {featured.date}</span>
                   </span>
                 </div>
-                <h2 className="mt-4 font-[family-name:var(--font-space)] text-xl font-medium leading-snug transition-colors duration-200 group-hover:text-accent">
-                  {p.title}
-                </h2>
-                <p className="mt-2 text-sm text-muted">{p.excerpt}</p>
-                <p className="mt-auto pt-5 font-[family-name:var(--font-jetbrains)] text-xs text-muted">
-                  {p.date} · {p.readingTime} read
-                </p>
+                <div className="flex flex-col justify-center p-6 md:col-span-9 md:p-8">
+                  <h2 className="font-[family-name:var(--font-space)] text-[24px] font-bold leading-tight tracking-tight transition-colors duration-200 group-hover:text-primary md:text-[30px]">
+                    {featured.title}
+                  </h2>
+                  <p className="mt-3 max-w-[60ch] leading-relaxed text-muted">{featured.excerpt}</p>
+                  <span className="mt-6 inline-flex items-center gap-2 self-start rounded-full bg-background/60 px-5 py-2.5 text-sm font-medium transition-colors duration-300 group-hover:bg-primary group-hover:text-on-primary">
+                    Read article {ArrowIcon}
+                  </span>
+                </div>
               </Link>
-            ))}
-
-            {!visible.length && (
-              <p className="py-10 text-center text-muted md:col-span-2">Nothing in this category yet.</p>
             )}
+
+            <ul className="mt-3 flex flex-col">
+              {rest.map((p, i) => {
+                const d = new Date(p.isoDate);
+                return (
+                  <li key={p.slug} style={idx(i + 1)}>
+                    {/* Visible hairline between posts (the theme 'line' grey is too close to the page) */}
+                    {i > 0 && <span aria-hidden="true" className="mx-3 block h-px bg-fg/15 sm:mx-6" />}
+                    <Link
+                      href={`/posts/${p.slug}`}
+                      transitionTypes={forward}
+                      className="group my-1.5 grid grid-cols-[auto_1fr] items-start gap-5 rounded-[20px] px-3 py-5 transition-colors duration-300 hover:bg-surface sm:grid-cols-[auto_1fr_auto] sm:gap-8 sm:px-6"
+                    >
+                      {/* Date column */}
+                      <span className="flex w-14 flex-col items-center rounded-[14px] bg-surface py-2.5 transition-colors duration-300 group-hover:bg-primary group-hover:text-on-primary sm:w-16">
+                        <span className="font-[family-name:var(--font-space)] text-2xl font-bold leading-none sm:text-[28px]">
+                          {String(d.getUTCDate()).padStart(2, "0")}
+                        </span>
+                        <span className="mt-1 text-[11px] font-medium uppercase tracking-wider">
+                          {d.toLocaleString("en", { month: "short", timeZone: "UTC" })}
+                        </span>
+                      </span>
+                      <span className="min-w-0">
+                        <span className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-subtle">
+                          <span className="font-medium text-primary">{p.category}</span>
+                          <span aria-hidden="true">·</span>
+                          {p.readingTime} read
+                        </span>
+                        <span className="mt-2 block font-[family-name:var(--font-space)] text-xl font-bold leading-snug tracking-tight sm:text-2xl">
+                          {p.title}
+                        </span>
+                        <span className="mt-1.5 block leading-relaxed text-muted">{p.excerpt}</span>
+                      </span>
+                      <span className="hidden h-11 w-11 items-center justify-center self-center rounded-full bg-surface text-muted transition-all duration-300 group-hover:rotate-45 group-hover:bg-primary group-hover:text-on-primary sm:flex">
+                        <ArrowUpRight />
+                      </span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+
+            {!visible.length && <p className="py-10 text-center text-muted">Nothing in this category yet.</p>}
           </div>
         </div>
       ) : (
-        <div key="research" id="panel-research" role="tabpanel" aria-labelledby="tab-research" className="stagger-in mt-8 flex flex-col gap-4">
+        <div key="research" id="panel-research" role="tabpanel" aria-labelledby="tab-research" className="stagger-in mt-8 grid gap-4 lg:grid-cols-2">
+          {/* Paper cards: meta line, title, a clamped abstract, then the findings as big numbers */}
           {research.map((r, i) => (
             <Link
               key={r.slug}
               href={`/posts/research/${r.slug}`}
               transitionTypes={forward}
               style={idx(i)}
-              className="card card-hover group grid gap-6 overflow-hidden p-7 md:grid-cols-12 md:p-10"
+              className="group flex flex-col rounded-[24px] bg-surface p-7 transition-colors duration-300 hover:bg-surface-hi md:p-9"
             >
-              <div className="md:col-span-4 md:border-r md:border-line md:pr-8">
-                <p className="font-[family-name:var(--font-jetbrains)] text-xs text-accent">paper {String(i + 1).padStart(2, "0")}</p>
-                <h2 className="mt-3 font-[family-name:var(--font-space)] text-xl font-semibold leading-snug tracking-tight md:text-2xl">
-                  {r.title}
-                </h2>
-                <p className="mt-3 font-[family-name:var(--font-jetbrains)] text-[13px] text-muted">
-                  {r.authors} · {r.year}
-                </p>
-              </div>
-              <div className="flex flex-col md:col-span-8">
-                <p className="max-w-[75ch] text-sm leading-relaxed text-muted">
-                  <span className="font-[family-name:var(--font-jetbrains)] text-accent">ABSTRACT — </span>
-                  {r.abstract}
-                </p>
-                <div className="mt-auto flex flex-wrap items-center gap-2 pt-6">
+              <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-subtle">
+                <span className="rounded-full bg-primary px-2.5 py-0.5 text-xs font-semibold text-on-primary">
+                  Paper {String(i + 1).padStart(2, "0")}
+                </span>
+                {r.venue} · {r.year}
+              </p>
+              <h2 className="mt-5 font-[family-name:var(--font-space)] text-2xl font-bold leading-tight tracking-tight transition-colors duration-200 group-hover:text-primary md:text-[28px]">
+                {r.title}
+              </h2>
+              <p className="mt-4 line-clamp-3 leading-relaxed text-muted">{r.abstract}</p>
+
+              <dl className="mt-7 grid grid-cols-3 gap-2">
+                {r.findings.slice(0, 3).map((f) => (
+                  <div key={f.label} className="rounded-[16px] bg-background/60 p-3.5">
+                    <dt className="sr-only">{f.label}</dt>
+                    <dd>
+                      <span className="block font-[family-name:var(--font-space)] text-2xl font-bold leading-none">
+                        {f.prefix}
+                        {f.value}
+                        {f.suffix}
+                      </span>
+                      <span className="mt-1.5 line-clamp-2 block text-xs leading-snug text-subtle">{f.label}</span>
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+
+              <div className="mt-auto flex flex-wrap items-center justify-between gap-4 pt-8">
+                <span className="flex flex-wrap gap-1.5">
                   {r.tags.map((t) => (
                     <span key={t} className="pill">{t}</span>
                   ))}
-                  <span className="arrow-link text-sm sm:ml-auto">Read paper {ArrowIcon}</span>
-                </div>
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-background/60 px-4 py-2 text-sm font-medium transition-colors duration-300 group-hover:bg-primary group-hover:text-on-primary">
+                  Read paper {ArrowIcon}
+                </span>
               </div>
             </Link>
           ))}

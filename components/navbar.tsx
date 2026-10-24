@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useIndicator } from "@/lib/use-indicator";
@@ -72,12 +73,30 @@ export default function Navbar() {
           <Link
             href="/"
             aria-label={`${site.name} — home`}
-            className="group mr-auto flex items-baseline gap-2 font-[family-name:var(--font-space)] text-xl font-bold tracking-tight lg:mr-3"
+            className="group -ml-3 mr-auto flex items-center font-[family-name:var(--font-space)] lg:mr-6"
           >
-            <span aria-hidden="true">
-              MA<span className="inline-block text-primary transition-transform duration-300 group-hover:scale-150">.</span>
+            {/* Avatar — the full portrait served as-is (unoptimized): the browser scales the
+                original down, which stays sharp where a 64px optimised copy went blurry */}
+            <span className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full">
+              <Image
+                src="/imgs/muhammad-aman.avif"
+                alt=""
+                width={1254}
+                height={1254}
+                unoptimized
+                priority
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+              />
             </span>
-            <span className="whitespace-nowrap text-[15px] font-semibold tracking-normal">{site.name}</span>
+            {/* Name only where the page links aren't showing: always on phones/tablets,
+                and on desktop once the bar folds into the compact pill */}
+            <span
+              className={`overflow-hidden whitespace-nowrap text-[15px] font-bold tracking-tight transition-[max-width,opacity,margin] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ml-3 max-w-[180px] opacity-100 ${
+                compact ? "" : "lg:ml-0 lg:max-w-0 lg:opacity-0"
+              }`}
+            >
+              {site.name}
+            </span>
           </Link>
 
           <nav
@@ -104,9 +123,14 @@ export default function Navbar() {
                 }`}
               >
                 {l.label}
-                {active(l.href) && (
-                  <span className="absolute bottom-0.5 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-accent" aria-hidden="true" />
-                )}
+                {/* Active marker: a short line under every link, shown only for the current page —
+                    on navigation the old one fades and shrinks while the new one grows in */}
+                <span
+                  aria-hidden="true"
+                  className={`absolute bottom-0.5 left-1/2 h-[2px] w-5 -translate-x-1/2 rounded-full bg-primary transition-[opacity,transform] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                    active(l.href) ? "scale-x-100 opacity-100" : "scale-x-0 opacity-0"
+                  }`}
+                />
               </Link>
             ))}
           </nav>

@@ -42,3 +42,6 @@ next-env.d.ts
 
 # python bytecode (skill scripts)
 __pycache__/
+
+# Source photos and design references (not served)
+/design-refs

@@ -1,11 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { prefersReducedMotion } from "@/lib/motion";
 
-/** Cycles through words in place; screen readers get the full list once. */
-export default function RotatingWord({ words, interval = 2200 }: { words: string[]; interval?: number }) {
+/**
+ * Slot-machine word: words are stacked in a clipped window and roll up one
+ * line at a time, while the window's width eases to the next word's width so
+ * the rest of the sentence slides along instead of jumping.
+ * Screen readers get the full list once.
+ */
+export default function RotatingWord({ words, interval = 2400 }: { words: string[]; interval?: number }) {
   const [i, setI] = useState(0);
+  const [width, setWidth] = useState<number>();
+  const refs = useRef<(HTMLSpanElement | null)[]>([]);
 
   useEffect(() => {
     if (prefersReducedMotion()) return;
@@ -13,20 +20,37 @@ export default function RotatingWord({ words, interval = 2200 }: { words: string
     return () => clearInterval(t);
   }, [words.length, interval]);
 
+  // Measure the active word so the window can animate its width
+  useLayoutEffect(() => {
+    const el = refs.current[i];
+    if (el) setWidth(el.offsetWidth);
+  }, [i]);
+
   return (
-    <span className="relative inline-grid align-bottom">
+    <span
+      className="relative inline-block h-[1.18em] overflow-hidden align-[-0.24em] transition-[width] duration-700 ease-[cubic-bezier(0.76,0,0.24,1)]"
+      style={{ width }}
+    >
       <span className="sr-only">{words.join(", ")}</span>
-      {words.map((w, n) => (
-        <span
-          key={w}
-          aria-hidden="true"
-          className={`col-start-1 row-start-1 text-primary transition-[opacity,transform,filter] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-            n === i ? "translate-y-0 opacity-100 blur-0" : n === (i + words.length - 1) % words.length ? "-translate-y-1/2 opacity-0 blur-sm" : "translate-y-1/2 opacity-0 blur-sm"
-          }`}
-        >
-          {w}
-        </span>
-      ))}
+      <span
+        aria-hidden="true"
+        className="flex flex-col transition-transform duration-700 ease-[cubic-bezier(0.76,0,0.24,1)]"
+        style={{ transform: `translateY(-${i * 1.18}em)` }}
+      >
+        {words.map((w, n) => (
+          <span
+            key={w}
+            ref={(el) => {
+              refs.current[n] = el;
+            }}
+            className={`block w-max whitespace-nowrap leading-[1.18em] text-primary transition-opacity duration-500 ${
+              n === i ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            {w}
+          </span>
+        ))}
+      </span>
     </span>
   );
 }

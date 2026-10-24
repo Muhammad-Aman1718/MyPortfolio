@@ -13,7 +13,7 @@ import { site } from "@/lib/site";
 export const metadata = pageMeta({
   title: "Services",
   description:
-    "Hire Muhammad Aman for React Native mobile app development, Next.js web application development and technical consulting — fixed scope, weekly builds.",
+    "Hire Muhammad Aman for React Native app development, native iOS and Android features, and app performance rescue — fixed scope, weekly builds.",
   path: "/services",
 });
 

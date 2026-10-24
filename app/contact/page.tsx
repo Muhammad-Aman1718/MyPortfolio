@@ -84,12 +84,9 @@ export default function Contact() {
               </span>
             </a>
           ))}
-          <div data-enter="left" style={d(500)} className="flex items-center gap-3 rounded-[24px] bg-surface p-6">
-            <span className="pulse-dot h-2.5 w-2.5 shrink-0 rounded-full bg-primary" />
-            <span className="text-sm">
-              Available for new projects · {site.location.city}, {site.location.country} ({site.location.timezone})
-            </span>
-          </div>
+          <p data-enter="left" style={d(500)} className="rounded-[24px] bg-surface p-6 text-sm text-muted">
+            Based in {site.location.city}, {site.location.country} ({site.location.timezone}) — working with clients remotely.
+          </p>
         </div>
 
         <div data-enter="card" style={d(300)} className="lg:col-span-7">

@@ -92,9 +92,21 @@ function BlockView({ b }: { b: Block }) {
 /** Renders content sections; each section rises in as it scrolls into view. */
 export default function Prose({ sections, numbered = false }: { sections: Section[]; numbered?: boolean }) {
   return (
-    <div className="flex flex-col gap-14">
+    <div className="flex flex-col gap-12">
       {sections.map((s, i) => (
         <section key={s.id} id={s.id} className="scroll-mt-28">
+          {/* Divider between sections: hairline, three quiet dots, hairline */}
+          {i > 0 && (
+            <div className="mb-12 flex items-center gap-4" aria-hidden="true">
+              <span className="h-px flex-1 bg-line" />
+              <span className="flex gap-1.5">
+                {[0, 1, 2].map((n) => (
+                  <span key={n} className="h-1 w-1 rounded-full bg-subtle/60" />
+                ))}
+              </span>
+              <span className="h-px flex-1 bg-line" />
+            </div>
+          )}
           <Reveal variant="fade-up" start="top 90%">
             <h2 className="flex items-baseline gap-3 font-[family-name:var(--font-space)] text-2xl font-semibold tracking-tight md:text-[28px]">
               {numbered && <span className="font-[family-name:var(--font-jetbrains)] text-sm text-accent">{i + 1}</span>}
