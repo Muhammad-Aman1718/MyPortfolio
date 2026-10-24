@@ -17,10 +17,16 @@ export const companies = ["SIGMAKODE", "TECHLOSET", "CodeeTechs"];
 export type Tool = { name: string; logo?: string };
 
 /** The mobile stack, grouped. Mobile app development is the whole focus of this portfolio. */
-export const skillGroups: { name: string; context: string; icon: string; items: Tool[] }[] = [
+export const skillGroups: {
+  name: string;
+  context: string;
+  icon: string;
+  items: Tool[];
+}[] = [
   {
     name: "Cross-platform",
-    context: "React Native is my main stack — one codebase that feels native on iOS and Android.",
+    context:
+      "React Native is my main stack — one codebase that feels native on iOS and Android.",
     icon: "M7 2h10a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zM11 19h2",
     items: [
       { name: "React Native", logo: "react" },
@@ -63,7 +69,8 @@ export const skillGroups: { name: string; context: string; icon: string; items: 
   },
   {
     name: "State & data",
-    context: "Predictable state, cached server data and fast local storage — online or off.",
+    context:
+      "Predictable state, cached server data and fast local storage — online or off.",
     icon: "M12 3c4.4 0 8 1.3 8 3s-3.6 3-8 3-8-1.3-8-3 3.6-3 8-3zM4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6",
     items: [
       { name: "Redux Toolkit", logo: "redux" },
@@ -104,7 +111,8 @@ export const skillGroups: { name: string; context: string; icon: string; items: 
   },
   {
     name: "Testing & release",
-    context: "Automated builds, tests and crash reporting from first commit to store.",
+    context:
+      "Automated builds, tests and crash reporting from first commit to store.",
     icon: "M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17v3h3l5.3-5.3a4 4 0 0 0 5.4-5.4l-2.4 2.4-2.4-2.4 2.4-2.4z",
     items: [
       { name: "Jest", logo: "jest" },
@@ -121,12 +129,30 @@ export const skillGroups: { name: string; context: string; icon: string; items: 
 /** Simple Icons slug for a tool name — from the skill groups, plus the store names used in short lists. */
 export const toolLogo = (name: string): string | undefined =>
   skillGroups.flatMap((g) => g.items).find((t) => t.name === name)?.logo ??
-  ({ "App Store": "appstore", "Google Play": "googleplay" } as Record<string, string>)[name];
+  (
+    { "App Store": "appstore", "Google Play": "googleplay" } as Record<
+      string,
+      string
+    >
+  )[name];
 
 /** Most-used tools, for tickers and short lists. */
 export const coreTools = [
-  "React Native", "Expo", "TypeScript", "Swift", "Kotlin", "Redux Toolkit", "RTK Query",
-  "Reanimated", "React Navigation", "Firebase", "Jest", "Fastlane", "Sentry", "App Store", "Google Play",
+  "React Native",
+  "Expo",
+  "TypeScript",
+  "Swift",
+  "Kotlin",
+  "Redux Toolkit",
+  "RTK Query",
+  "Reanimated",
+  "React Navigation",
+  "Firebase",
+  "Jest",
+  "Fastlane",
+  "Sentry",
+  "App Store",
+  "Google Play",
 ];
 
 /** Work history from muhammad-aman.com/experience, newest first. */
@@ -142,7 +168,15 @@ export const experience = [
       "Building scalable features, integrating REST APIs, and managing state with Redux Toolkit and RTK Query.",
       "Working with the team to ship production-ready apps with a strong focus on performance and user experience.",
     ],
-    tags: ["TypeScript", "React Native", "Expo", "React Native CLI", "Redux Toolkit", "RTK Query", "REST APIs"],
+    tags: [
+      "TypeScript",
+      "React Native",
+      "Expo",
+      "React Native CLI",
+      "Redux Toolkit",
+      "RTK Query",
+      "REST APIs",
+    ],
   },
   {
     years: "May — Jul 2026",
@@ -168,7 +202,15 @@ export const experience = [
       "Built full-stack systems and cross-platform mobile apps with React Native.",
       "Improved site speed and SEO through custom WordPress plugin engineering and optimised API structures.",
     ],
-    tags: ["TypeScript", "React", "Next.js", "MongoDB", "REST APIs", "React Native", "Redux"],
+    tags: [
+      "TypeScript",
+      "React",
+      "Next.js",
+      "MongoDB",
+      "REST APIs",
+      "React Native",
+      "Redux",
+    ],
   },
   {
     years: "2024",
@@ -196,7 +238,13 @@ const companyPeriods: Record<string, string> = {
  * roles — internship then junior — appears once with its roles beneath.
  */
 export const experienceByCompany = experience.reduce<
-  { company: string; location: string; period: string; current: boolean; roles: typeof experience }[]
+  {
+    company: string;
+    location: string;
+    period: string;
+    current: boolean;
+    roles: typeof experience;
+  }[]
 >((groups, role) => {
   const group = groups.find((g) => g.company === role.company);
   if (group) {
@@ -224,17 +272,20 @@ export const testimonials = [
     featured: true,
   },
   {
-    quote: "The rare engineer who pushes back on bad ideas and delivers better ones.",
+    quote:
+      "The rare engineer who pushes back on bad ideas and delivers better ones.",
     name: "Omar Farooq",
     role: "Founder, Ledgerly",
   },
   {
-    quote: "Clear communication, honest estimates, and production-quality code from day one.",
+    quote:
+      "Clear communication, honest estimates, and production-quality code from day one.",
     name: "Anna Keller",
     role: "PM, TechVentures",
   },
   {
-    quote: "Our store rating went from 3.8 to 4.7 after his performance overhaul.",
+    quote:
+      "Our store rating went from 3.8 to 4.7 after his performance overhaul.",
     name: "David Chen",
     role: "Product Lead, Digital Studio Co",
   },
@@ -243,23 +294,44 @@ export const testimonials = [
 export const services = [
   {
     name: "React Native App Development",
-    description: "One codebase, two stores — iOS and Android apps built for reliability, performance and approval on the first try.",
-    items: ["Architecture & setup", "UI implementation", "API integration", "Store submission", "3 months support"],
+    description:
+      "One codebase, two stores — iOS and Android apps built for reliability, performance and approval on the first try.",
+    items: [
+      "Architecture & setup",
+      "UI implementation",
+      "API integration",
+      "Store submission",
+      "3 months support",
+    ],
     engagement: "fixed scope",
     from: "from $8k",
     featured: true,
   },
   {
     name: "Native iOS & Android Features",
-    description: "Swift and Kotlin modules for what JavaScript can't reach — camera, payments, background work, widgets.",
-    items: ["Native modules", "Push notifications", "In-app purchases", "Deep links", "Device APIs"],
+    description:
+      "Swift and Kotlin modules for what JavaScript can't reach — camera, payments, background work, widgets.",
+    items: [
+      "Native modules",
+      "Push notifications",
+      "In-app purchases",
+      "Deep links",
+      "Device APIs",
+    ],
     engagement: "fixed scope / weekly",
     from: "from $5k",
   },
   {
     name: "App Rescue & Performance",
-    description: "Audits and fixes for existing apps — crashes, slow start-up, janky screens and failed store reviews.",
-    items: ["Codebase audit", "Performance profiling", "Crash fixing", "Upgrade to latest RN", "Written report"],
+    description:
+      "Audits and fixes for existing apps — crashes, slow start-up, janky screens and failed store reviews.",
+    items: [
+      "Codebase audit",
+      "Performance profiling",
+      "Crash fixing",
+      "Upgrade to latest RN",
+      "Written report",
+    ],
     engagement: "weekly",
     from: "from $2k",
   },
@@ -300,10 +372,65 @@ export const allProjects: {
   tone: string;
   flagship?: boolean;
 }[] = [
-  { slug: "quran-companion", name: "Quran Companion", type: "Mobile", year: "2025", role: "Solo build", tagline: "Offline-first Quran app with 100k+ daily readers.", tags: ["React Native", "SQLite", "Reanimated"], tone: "from-primary/30", flagship: true },
-  { slug: "fleetpulse-dashboard", name: "FleetPulse Dashboard", type: "Web", year: "2025", role: "Lead engineer", tagline: "Real-time logistics tracking that cut dispatch errors by 60%.", tags: ["Next.js", "WebSockets", "Redis"], tone: "from-accent/20" },
-  { slug: "ledgerly", name: "Ledgerly", type: "Web", year: "2024", role: "Full-stack", tagline: "Accounting automation for freelancers.", tags: ["Next.js", "tRPC", "Stripe"], tone: "from-secondary" },
-  { slug: "banklite", name: "BankLite", type: "Mobile", year: "2023", role: "Team lead", tagline: "Fintech app serving 250k customers at 0.3% crash rate.", tags: ["React Native", "Kotlin", "GraphQL"], tone: "from-primary/20" },
-  { slug: "orderflow-api", name: "OrderFlow API", type: "Backend", year: "2023", role: "Architect", tagline: "Order-processing backbone handling 2M requests a day.", tags: ["NestJS", "PostgreSQL", "Docker"], tone: "from-accent/15" },
-  { slug: "studiosite-cms", name: "StudioSite CMS", type: "Client work", year: "2022", role: "Full-stack", tagline: "Custom CMS powering 12 agency client sites.", tags: ["React", "Node.js", "PostgreSQL"], tone: "from-secondary" },
+  {
+    slug: "quran-companion",
+    name: "Quran Companion",
+    type: "Mobile",
+    year: "2025",
+    role: "Solo build",
+    tagline: "Offline-first Quran app with 100k+ daily readers.",
+    tags: ["React Native", "SQLite", "Reanimated"],
+    tone: "from-primary/30",
+    flagship: true,
+  },
+  {
+    slug: "fleetpulse-dashboard",
+    name: "FleetPulse Dashboard",
+    type: "Web",
+    year: "2025",
+    role: "Lead engineer",
+    tagline: "Real-time logistics tracking that cut dispatch errors by 60%.",
+    tags: ["Next.js", "WebSockets", "Redis"],
+    tone: "from-accent/20",
+  },
+  {
+    slug: "ledgerly",
+    name: "Ledgerly",
+    type: "Web",
+    year: "2024",
+    role: "Full-stack",
+    tagline: "Accounting automation for freelancers.",
+    tags: ["Next.js", "tRPC", "Stripe"],
+    tone: "from-secondary",
+  },
+  {
+    slug: "banklite",
+    name: "BankLite",
+    type: "Mobile",
+    year: "2023",
+    role: "Team lead",
+    tagline: "Fintech app serving 250k customers at 0.3% crash rate.",
+    tags: ["React Native", "Kotlin", "GraphQL"],
+    tone: "from-primary/20",
+  },
+  {
+    slug: "orderflow-api",
+    name: "OrderFlow API",
+    type: "Backend",
+    year: "2023",
+    role: "Architect",
+    tagline: "Order-processing backbone handling 2M requests a day.",
+    tags: ["NestJS", "PostgreSQL", "Docker"],
+    tone: "from-accent/15",
+  },
+  {
+    slug: "studiosite-cms",
+    name: "StudioSite CMS",
+    type: "Client work",
+    year: "2022",
+    role: "Full-stack",
+    tagline: "Custom CMS powering 12 agency client sites.",
+    tags: ["React", "Node.js", "PostgreSQL"],
+    tone: "from-secondary",
+  },
 ];

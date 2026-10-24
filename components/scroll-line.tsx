@@ -50,13 +50,16 @@ export default function ScrollLine({
   }, [axis, scrub]);
 
   return (
-    <span aria-hidden="true" className={`pointer-events-none absolute overflow-hidden bg-line ${className}`}>
+    <span
+      aria-hidden="true"
+      className={`pointer-events-none absolute overflow-hidden bg-line ${className}`}
+    >
       <span
         ref={fillRef}
         className={`absolute inset-0 ${
           axis === "y"
-            ? "origin-top bg-gradient-to-b from-accent via-primary to-primary/30"
-            : "origin-left bg-gradient-to-r from-accent via-primary to-primary/30"
+            ? "origin-top bg-linear-to-b from-accent via-primary to-primary/30"
+            : "origin-left bg-linear-to-r from-accent via-primary to-primary/30"
         }`}
         style={{ transform: axis === "y" ? "scaleY(0)" : "scaleX(0)" }}
       />

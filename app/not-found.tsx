@@ -51,7 +51,7 @@ export default function NotFound() {
             className="group flex items-center justify-between gap-4 rounded-[20px] bg-surface p-5 transition-colors duration-200 hover:bg-surface-hi"
           >
             <span>
-              <span className="block font-[family-name:var(--font-space)] text-lg font-bold">{r.label}</span>
+              <span className="block font-(family-name:--font-space) text-lg font-bold">{r.label}</span>
               <span className="text-sm text-subtle">{r.note}</span>
             </span>
             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface-hi transition-[background-color,transform] duration-300 group-hover:rotate-45 group-hover:bg-primary group-hover:text-on-primary">

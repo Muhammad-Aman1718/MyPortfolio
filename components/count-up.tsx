@@ -8,7 +8,10 @@ gsap.registerPlugin(ScrollTrigger);
 
 /** Keeps the value's own precision (0.3 stays 0.3) and groups thousands. */
 const format = (n: number, decimals: number) =>
-  n.toLocaleString("en-US", { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+  n.toLocaleString("en-US", {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  });
 
 /**
  * Numbers count up once when they scroll into view (tabular figures, ease-out).
@@ -33,7 +36,9 @@ export default function CountUp({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
     // Matches the trigger line below: anything already past it would flash to 0
     const onScreen = el.getBoundingClientRect().top < window.innerHeight * 0.9;
     if (reduced || onScreen) {

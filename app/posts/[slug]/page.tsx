@@ -18,14 +18,23 @@ export function generateStaticParams() {
   return blogPosts.map((p) => ({ slug: p.slug }));
 }
 
-export async function generateMetadata({ params }: PageProps<"/posts/[slug]">): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps<"/posts/[slug]">): Promise<Metadata> {
   const post = getPost((await params).slug);
   if (!post) return {};
   return {
     title: post.title,
     alternates: { canonical: `/posts/${post.slug}` },
     description: post.excerpt,
-    openGraph: { title: post.title, description: post.excerpt, type: "article", publishedTime: post.isoDate, url: `/posts/${post.slug}`, authors: [site.name] },
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      type: "article",
+      publishedTime: post.isoDate,
+      url: `/posts/${post.slug}`,
+      authors: [site.name],
+    },
   };
 }
 
@@ -37,7 +46,10 @@ export default async function PostPage({ params }: PageProps<"/posts/[slug]">) {
   if (!post) notFound();
 
   const i = blogPosts.findIndex((p) => p.slug === slug);
-  const more = [blogPosts[(i + 1) % blogPosts.length], blogPosts[(i + 2) % blogPosts.length]];
+  const more = [
+    blogPosts[(i + 1) % blogPosts.length],
+    blogPosts[(i + 2) % blogPosts.length],
+  ];
 
   return (
     <>
@@ -55,7 +67,7 @@ export default async function PostPage({ params }: PageProps<"/posts/[slug]">) {
 
       <article id="article" className="container-site page-top pb-16">
         {/* One reading column (header + body share its left edge); contents sit beside it on wide screens */}
-        <div className="mx-auto grid max-w-[720px] gap-x-16 xl:max-w-[1000px] xl:grid-cols-[minmax(0,720px)_200px] xl:justify-between">
+        <div className="mx-auto grid max-w-180 gap-x-16 xl:max-w-250 xl:grid-cols-[minmax(0,720px)_200px] xl:justify-between">
           {/* Header — title rises word by word */}
           <header className="xl:col-start-1 xl:row-start-1">
             <Link
@@ -63,22 +75,37 @@ export default async function PostPage({ params }: PageProps<"/posts/[slug]">) {
               transitionTypes={back}
               className="group inline-flex items-center gap-2 text-sm text-muted transition-colors duration-150 hover:text-fg"
             >
-              <span className="inline-block rotate-180 transition-transform duration-200 group-hover:-translate-x-1">{ArrowIcon}</span>
+              <span className="inline-block rotate-180 transition-transform duration-200 group-hover:-translate-x-1">
+                {ArrowIcon}
+              </span>
               All posts
             </Link>
-            <p data-enter="rise" className="mt-8 flex flex-wrap items-center gap-3 font-[family-name:var(--font-jetbrains)] text-xs text-muted">
+            <p
+              data-enter="rise"
+              className="mt-8 flex flex-wrap items-center gap-3 font-(family-name:--font-jetbrains) text-xs text-muted"
+            >
               <span className="pill">{post.category}</span>
               <time dateTime={post.isoDate}>{post.date}</time>
-              <span className="text-fg/30" aria-hidden="true">·</span>
+              <span className="text-fg/30" aria-hidden="true">
+                ·
+              </span>
               <span>{post.readingTime} read</span>
             </p>
             <h1 className="h-display mt-5 text-[36px] md:text-[54px]">
               <SplitText text={post.title} enter="mask" step={45} delay={80} />
             </h1>
-            <p data-enter="rise" style={d(420)} className="mt-5 text-xl leading-relaxed text-muted">
+            <p
+              data-enter="rise"
+              style={d(420)}
+              className="mt-5 text-xl leading-relaxed text-muted"
+            >
               {post.excerpt}
             </p>
-            <div data-enter="rise" style={d(520)} className="mt-8 flex flex-wrap items-center justify-between gap-4 border-y border-line py-4">
+            <div
+              data-enter="rise"
+              style={d(520)}
+              className="mt-8 flex flex-wrap items-center justify-between gap-4 border-y border-line py-4"
+            >
               <div className="flex items-center gap-3">
                 <Image
                   src="/imgs/muhammad-aman.avif"
@@ -103,17 +130,29 @@ export default async function PostPage({ params }: PageProps<"/posts/[slug]">) {
           </div>
           <aside className="mt-12 hidden xl:col-start-2 xl:row-start-2 xl:block">
             <div className="sticky top-28">
-              <Toc items={post.sections.map((s) => ({ id: s.id, title: s.title }))} />
+              <Toc
+                items={post.sections.map((s) => ({ id: s.id, title: s.title }))}
+              />
             </div>
           </aside>
         </div>
 
         {/* Keep reading */}
-        <section aria-labelledby="more" className="mx-auto mt-20 max-w-[1000px] border-t border-line pt-10">
-          <h2 id="more" className="font-[family-name:var(--font-space)] text-2xl font-semibold tracking-tight">
+        <section
+          aria-labelledby="more"
+          className="mx-auto mt-20 max-w-250 border-t border-line pt-10"
+        >
+          <h2
+            id="more"
+            className="font-(family-name:--font-space) text-2xl font-semibold tracking-tight"
+          >
             Keep reading
           </h2>
-          <Reveal variant="fade-up" stagger className="mt-6 grid gap-4 md:grid-cols-2">
+          <Reveal
+            variant="fade-up"
+            stagger
+            className="mt-6 grid gap-4 md:grid-cols-2"
+          >
             {more.map((m) => (
               <Link
                 key={m.slug}
@@ -127,9 +166,11 @@ export default async function PostPage({ params }: PageProps<"/posts/[slug]">) {
                     <ArrowUpRight />
                   </span>
                 </div>
-                <span className="mt-4 font-[family-name:var(--font-space)] text-xl font-medium leading-snug">{m.title}</span>
+                <span className="mt-4 font-(family-name:--font-space) text-xl font-medium leading-snug">
+                  {m.title}
+                </span>
                 <span className="mt-2 text-sm text-muted">{m.excerpt}</span>
-                <span className="mt-auto pt-5 font-[family-name:var(--font-jetbrains)] text-xs text-muted">
+                <span className="mt-auto pt-5 font-(family-name:--font-jetbrains) text-xs text-muted">
                   {m.date} · {m.readingTime} read
                 </span>
               </Link>

@@ -37,13 +37,25 @@ const contactFaqs = [
 
 export default function Contact() {
   const channels = [
-    { label: "Email", value: site.email, href: `mailto:${site.email}`, note: "Replies within 24h" },
-    { label: "WhatsApp", value: site.whatsapp.display, href: site.whatsapp.href, note: "Fastest for quick questions", external: true },
+    {
+      label: "Email",
+      value: site.email,
+      href: `mailto:${site.email}`,
+      note: "Replies within 24h",
+    },
+    {
+      label: "WhatsApp",
+      value: site.whatsapp.display,
+      href: site.whatsapp.href,
+      note: "Fastest for quick questions",
+      external: true,
+    },
     ...site.socials.map((s) => ({
       label: s.label,
       value: s.href.replace(/^https:\/\/(www\.)?/, "").replace(/\/$/, ""),
       href: s.href,
-      note: s.label === "LinkedIn" ? "Career & updates" : "Code & side projects",
+      note:
+        s.label === "LinkedIn" ? "Career & updates" : "Code & side projects",
       external: true,
     })),
   ];
@@ -63,17 +75,31 @@ export default function Contact() {
             <a
               key={c.label}
               href={c.href}
-              {...(c.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+              {...(c.external
+                ? { target: "_blank", rel: "noopener noreferrer" }
+                : {})}
               data-enter="left"
               style={d(150 + i * 90)}
-              className={`group flex items-center justify-between gap-4 rounded-[24px] p-6 transition-colors duration-200 ${
-                i === 0 ? "bg-primary text-on-primary hover:bg-[var(--primary-hover)]" : "bg-surface hover:bg-surface-hi"
+              className={`group flex items-center justify-between gap-4 rounded-3xl p-6 transition-colors duration-200 ${
+                i === 0
+                  ? "bg-primary text-on-primary hover:bg-(--primary-hover)"
+                  : "bg-surface hover:bg-surface-hi"
               }`}
             >
               <span className="min-w-0">
-                <span className={`block text-sm ${i === 0 ? "text-white" : "text-subtle"}`}>{c.label}</span>
-                <span className="mt-1 block truncate font-[family-name:var(--font-space)] text-xl font-bold">{c.value}</span>
-                <span className={`mt-1 block text-sm ${i === 0 ? "text-white" : "text-muted"}`}>{c.note}</span>
+                <span
+                  className={`block text-sm ${i === 0 ? "text-white" : "text-subtle"}`}
+                >
+                  {c.label}
+                </span>
+                <span className="mt-1 block truncate font-(family-name:--font-space) text-xl font-bold">
+                  {c.value}
+                </span>
+                <span
+                  className={`mt-1 block text-sm ${i === 0 ? "text-white" : "text-muted"}`}
+                >
+                  {c.note}
+                </span>
               </span>
               <span
                 className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition-transform duration-300 group-hover:rotate-45 ${
@@ -84,8 +110,13 @@ export default function Contact() {
               </span>
             </a>
           ))}
-          <p data-enter="left" style={d(500)} className="rounded-[24px] bg-surface p-6 text-sm text-muted">
-            Based in {site.location.city}, {site.location.country} ({site.location.timezone}) — working with clients remotely.
+          <p
+            data-enter="left"
+            style={d(500)}
+            className="rounded-3xl bg-surface p-6 text-sm text-muted"
+          >
+            Based in {site.location.city}, {site.location.country} (
+            {site.location.timezone}) — working with clients remotely.
           </p>
         </div>
 
@@ -100,7 +131,12 @@ export default function Contact() {
         <div className="grid gap-8 lg:grid-cols-12">
           <div className="lg:col-span-5">
             <div className="lg:sticky lg:top-28">
-              <SectionHeader eyebrow="FAQ" title="Common questions." highlight={["questions."]} motion="fade" />
+              <SectionHeader
+                eyebrow="FAQ"
+                title="Common questions."
+                highlight={["questions."]}
+                motion="fade"
+              />
             </div>
           </div>
           <div className="lg:col-span-7">

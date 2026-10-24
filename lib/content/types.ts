@@ -13,7 +13,12 @@ export type Block =
 
 export type Section = { id: string; title: string; blocks: Block[] };
 
-export type Metric = { value: number; prefix?: string; suffix?: string; label: string };
+export type Metric = {
+  value: number;
+  prefix?: string;
+  suffix?: string;
+  label: string;
+};
 
 export const slugify = (s: string) =>
   s

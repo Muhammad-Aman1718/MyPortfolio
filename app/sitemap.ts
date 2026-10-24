@@ -8,7 +8,11 @@ import { absolute } from "@/lib/site";
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
-  const pages: [string, number, MetadataRoute.Sitemap[number]["changeFrequency"]][] = [
+  const pages: [
+    string,
+    number,
+    MetadataRoute.Sitemap[number]["changeFrequency"],
+  ][] = [
     ["/", 1, "monthly"],
     ["/about", 0.8, "monthly"],
     ["/experience", 0.8, "monthly"],
@@ -23,9 +27,29 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ];
 
   return [
-    ...pages.map(([path, priority, changeFrequency]) => ({ url: absolute(path), lastModified: now, changeFrequency, priority })),
-    ...projects.map((p) => ({ url: absolute(`/projects/${p.slug}`), lastModified: now, changeFrequency: "yearly" as const, priority: 0.7 })),
-    ...blogPosts.map((p) => ({ url: absolute(`/posts/${p.slug}`), lastModified: new Date(p.isoDate), changeFrequency: "yearly" as const, priority: 0.6 })),
-    ...research.map((r) => ({ url: absolute(`/posts/research/${r.slug}`), lastModified: new Date(r.isoDate), changeFrequency: "yearly" as const, priority: 0.6 })),
+    ...pages.map(([path, priority, changeFrequency]) => ({
+      url: absolute(path),
+      lastModified: now,
+      changeFrequency,
+      priority,
+    })),
+    ...projects.map((p) => ({
+      url: absolute(`/projects/${p.slug}`),
+      lastModified: now,
+      changeFrequency: "yearly" as const,
+      priority: 0.7,
+    })),
+    ...blogPosts.map((p) => ({
+      url: absolute(`/posts/${p.slug}`),
+      lastModified: new Date(p.isoDate),
+      changeFrequency: "yearly" as const,
+      priority: 0.6,
+    })),
+    ...research.map((r) => ({
+      url: absolute(`/posts/research/${r.slug}`),
+      lastModified: new Date(r.isoDate),
+      changeFrequency: "yearly" as const,
+      priority: 0.6,
+    })),
   ];
 }

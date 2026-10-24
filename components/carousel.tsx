@@ -31,7 +31,11 @@ export default function Carousel({
       const left = el.scrollLeft;
       let best = 0;
       items.forEach((item, i) => {
-        if (Math.abs(item.offsetLeft - el.offsetLeft - left) < Math.abs(items[best].offsetLeft - el.offsetLeft - left)) best = i;
+        if (
+          Math.abs(item.offsetLeft - el.offsetLeft - left) <
+          Math.abs(items[best].offsetLeft - el.offsetLeft - left)
+        )
+          best = i;
       });
       setIndex(best);
     };
@@ -49,7 +53,10 @@ export default function Carousel({
     if (!el) return;
     const items = Array.from(el.children) as HTMLElement[];
     const target = items[Math.min(Math.max(index + dir, 0), items.length - 1)];
-    el.scrollTo({ left: target.offsetLeft - el.offsetLeft, behavior: "smooth" });
+    el.scrollTo({
+      left: target.offsetLeft - el.offsetLeft,
+      behavior: "smooth",
+    });
   };
 
   const arrow = (dir: -1 | 1) => (
@@ -60,7 +67,16 @@ export default function Carousel({
       aria-label={dir === -1 ? "Previous project" : "Next project"}
       className="flex h-12 w-12 items-center justify-center rounded-full bg-surface text-fg transition-colors duration-200 hover:bg-primary hover:text-on-primary disabled:pointer-events-none disabled:opacity-35"
     >
-      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <svg
+        viewBox="0 0 24 24"
+        className="h-5 w-5"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
         <path d={dir === -1 ? "M15 6l-6 6 6 6" : "M9 6l6 6-6 6"} />
       </svg>
     </button>
@@ -70,13 +86,14 @@ export default function Carousel({
     <div role="region" aria-roledescription="carousel" aria-label={label}>
       <div
         ref={track}
-        className={`-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-5 px-5 pb-1 [scrollbar-width:none] sm:-mx-6 sm:scroll-px-6 sm:px-6 lg:mx-0 lg:grid ${desktopCols} lg:gap-x-6 lg:gap-y-10 lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden`}
+        className={`-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-5 px-5 pb-1 scrollbar-none sm:-mx-6 sm:scroll-px-6 sm:px-6 lg:mx-0 lg:grid ${desktopCols} lg:gap-x-6 lg:gap-y-10 lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden`}
       >
         {children}
       </div>
       <div className="mt-6 flex items-center justify-between lg:hidden">
         <p className="text-sm font-medium text-subtle" aria-live="polite">
-          <span className="text-fg">{String(index + 1).padStart(2, "0")}</span> / {String(count).padStart(2, "0")}
+          <span className="text-fg">{String(index + 1).padStart(2, "0")}</span>{" "}
+          / {String(count).padStart(2, "0")}
         </p>
         <div className="flex gap-2">
           {arrow(-1)}

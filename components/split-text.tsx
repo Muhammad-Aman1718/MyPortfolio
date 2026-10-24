@@ -37,14 +37,28 @@ export default function SplitText({
           const inner = (
             <span
               data-enter={enter}
-              style={enter ? ({ "--d": delay + i * step } as React.CSSProperties) : undefined}
+              style={
+                enter
+                  ? ({ "--d": delay + i * step } as React.CSSProperties)
+                  : undefined
+              }
               className={`inline-block ${accent?.includes(p) ? "text-accent" : ""}`}
             >
               {p}
             </span>
           );
           // Lines get a space before the break so the text still reads as separate words when flattened
-          const sep = by === "line" ? (i < pieces.length - 1 ? <>{" "}<br /></> : null) : i < pieces.length - 1 ? " " : null;
+          const sep =
+            by === "line" ? (
+              i < pieces.length - 1 ? (
+                <>
+                  {" "}
+                  <br />
+                </>
+              ) : null
+            ) : i < pieces.length - 1 ? (
+              " "
+            ) : null;
           return (
             <span key={i}>
               {masked ? <span className="mask-line">{inner}</span> : inner}

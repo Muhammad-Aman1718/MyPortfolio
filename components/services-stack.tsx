@@ -57,26 +57,35 @@ export default function ServicesStack({ services }: { services: Service[] }) {
           <li
             key={s.name}
             style={{ top: `calc(7rem + ${i * 1.25}rem)` }}
-            className={`sticky flex min-h-[300px] flex-col justify-between rounded-[24px] p-7 transition-colors duration-500 md:p-9 ${
+            className={`sticky flex min-h-75 flex-col justify-between rounded-3xl p-7 transition-colors duration-500 md:p-9 ${
               on ? "bg-primary text-on-primary" : "bg-surface text-fg"
             }`}
           >
             <div className="flex items-start justify-between gap-6">
-              <span className={`text-sm font-medium transition-colors duration-500 ${on ? "text-white" : "text-subtle"}`}>
+              <span
+                className={`text-sm font-medium transition-colors duration-500 ${on ? "text-white" : "text-subtle"}`}
+              >
                 {String(i + 1).padStart(2, "0")}
               </span>
-              <span className={`text-sm transition-colors duration-500 ${on ? "text-white" : "text-subtle"}`}>
+              <span
+                className={`text-sm transition-colors duration-500 ${on ? "text-white" : "text-subtle"}`}
+              >
                 {s.from}
               </span>
             </div>
             <div className="mt-10">
-              <h3 className="font-[family-name:var(--font-space)] text-[28px] font-bold leading-tight tracking-tight md:text-[34px]">
+              <h3 className="font-(family-name:--font-space) text-[28px] font-bold leading-tight tracking-tight md:text-[34px]">
                 {s.name}
               </h3>
-              <p className={`mt-3 max-w-[46ch] leading-relaxed transition-colors duration-500 ${on ? "text-white" : "text-muted"}`}>
+              <p
+                className={`mt-3 max-w-[46ch] leading-relaxed transition-colors duration-500 ${on ? "text-white" : "text-muted"}`}
+              >
                 {s.description}
               </p>
-              <ul className="mt-6 flex flex-wrap gap-2" aria-label={`${s.name} includes`}>
+              <ul
+                className="mt-6 flex flex-wrap gap-2"
+                aria-label={`${s.name} includes`}
+              >
                 {s.items.map((it) => (
                   <li
                     key={it}
@@ -91,7 +100,9 @@ export default function ServicesStack({ services }: { services: Service[] }) {
               <Link
                 href="/services"
                 className={`mt-7 inline-flex items-center gap-1.5 text-sm font-medium transition-colors duration-300 ${
-                  on ? "text-white underline-offset-4 hover:underline" : "text-fg hover:text-muted"
+                  on
+                    ? "text-white underline-offset-4 hover:underline"
+                    : "text-fg hover:text-muted"
                 }`}
               >
                 See what&apos;s included <ArrowUpRight />

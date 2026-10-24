@@ -26,20 +26,30 @@ export default function LegalPage({
 }) {
   return (
     <>
-      <PageHero eyebrow={eyebrow} title={title} highlight={highlight} description={`Last updated ${updated}.`} />
+      <PageHero
+        eyebrow={eyebrow}
+        title={title}
+        highlight={highlight}
+        description={`Last updated ${updated}.`}
+      />
 
       <div className="container-site grid grid-cols-1 gap-6 pb-6 lg:grid-cols-12">
         <aside className="lg:col-span-4">
-          <nav aria-label="On this page" className="rounded-[24px] bg-surface p-6 lg:sticky lg:top-28">
+          <nav
+            aria-label="On this page"
+            className="rounded-3xl bg-surface p-6 lg:sticky lg:top-28"
+          >
             <p className="eyebrow">On this page</p>
             <ol className="mt-4 flex flex-col gap-1">
               {sections.map((s, i) => (
                 <li key={s.id}>
                   <a
                     href={`#${s.id}`}
-                    className="flex gap-3 rounded-[12px] px-3 py-2 text-sm text-muted transition-colors duration-150 hover:bg-surface-hi hover:text-fg"
+                    className="flex gap-3 rounded-xl px-3 py-2 text-sm text-muted transition-colors duration-150 hover:bg-surface-hi hover:text-fg"
                   >
-                    <span className="text-subtle">{String(i + 1).padStart(2, "0")}</span>
+                    <span className="text-subtle">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
                     {s.title}
                   </a>
                 </li>
@@ -49,21 +59,38 @@ export default function LegalPage({
         </aside>
 
         <article className="flex flex-col gap-4 lg:col-span-8">
-          <div className="rounded-[24px] bg-surface-hi p-7 text-lg leading-relaxed md:p-9">{summary}</div>
+          <div className="rounded-3xl bg-surface-hi p-7 text-lg leading-relaxed md:p-9">
+            {summary}
+          </div>
           {sections.map((s, i) => (
-            <section key={s.id} id={s.id} className="scroll-mt-28 rounded-[24px] bg-surface p-7 md:p-9">
-              <p className="text-sm font-medium text-subtle">{String(i + 1).padStart(2, "0")}</p>
-              <h2 className="mt-2 font-[family-name:var(--font-space)] text-2xl font-bold tracking-tight">{s.title}</h2>
-              <div className="legal-body mt-4 flex flex-col gap-4 leading-relaxed text-muted">{s.body}</div>
+            <section
+              key={s.id}
+              id={s.id}
+              className="scroll-mt-28 rounded-3xl bg-surface p-7 md:p-9"
+            >
+              <p className="text-sm font-medium text-subtle">
+                {String(i + 1).padStart(2, "0")}
+              </p>
+              <h2 className="mt-2 font-(family-name:--font-space) text-2xl font-bold tracking-tight">
+                {s.title}
+              </h2>
+              <div className="legal-body mt-4 flex flex-col gap-4 leading-relaxed text-muted">
+                {s.body}
+              </div>
             </section>
           ))}
 
-          <div className="flex flex-col gap-6 rounded-[24px] bg-primary p-7 text-on-primary md:flex-row md:items-center md:justify-between md:p-9">
+          <div className="flex flex-col gap-6 rounded-3xl bg-primary p-7 text-on-primary md:flex-row md:items-center md:justify-between md:p-9">
             <div>
-              <p className="font-[family-name:var(--font-space)] text-2xl font-bold">Questions about this policy?</p>
+              <p className="font-(family-name:--font-space) text-2xl font-bold">
+                Questions about this policy?
+              </p>
               <p className="mt-1 text-white">
                 Email{" "}
-                <a href={`mailto:${site.email}`} className="underline underline-offset-4">
+                <a
+                  href={`mailto:${site.email}`}
+                  className="underline underline-offset-4"
+                >
                   {site.email}
                 </a>{" "}
                 — I reply within a few working days.

@@ -56,7 +56,8 @@ export default function Navbar() {
     };
   }, [open]);
 
-  const active = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
+  const active = (href: string) =>
+    href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
     <>
@@ -67,13 +68,15 @@ export default function Navbar() {
         <div
           data-enter="drop"
           className={`glass pointer-events-auto flex h-14 w-full max-w-full items-center gap-1 rounded-full pl-5 pr-2 transition-shadow duration-300 lg:w-fit ${
-            scrolled ? "shadow-[0_12px_40px_rgba(0,0,0,0.5)]" : "shadow-[0_4px_24px_rgba(0,0,0,0.25)]"
+            scrolled
+              ? "shadow-[0_12px_40px_rgba(0,0,0,0.5)]"
+              : "shadow-[0_4px_24px_rgba(0,0,0,0.25)]"
           }`}
         >
           <Link
             href="/"
             aria-label={`${site.name} — home`}
-            className="group -ml-3 mr-auto flex items-center font-[family-name:var(--font-space)] lg:mr-6"
+            className="group -ml-3 mr-auto flex items-center font-(family-name:--font-space) lg:mr-6"
           >
             {/* Avatar — the full portrait served as-is (unoptimized): the browser scales the
                 original down, which stays sharp where a 64px optimised copy went blurry */}
@@ -91,7 +94,7 @@ export default function Navbar() {
             {/* Name only where the page links aren't showing: always on phones/tablets,
                 and on desktop once the bar folds into the compact pill */}
             <span
-              className={`overflow-hidden whitespace-nowrap text-[15px] font-bold tracking-tight transition-[max-width,opacity,margin] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ml-3 max-w-[180px] opacity-100 ${
+              className={`overflow-hidden whitespace-nowrap text-[15px] font-bold tracking-tight transition-[max-width,opacity,margin] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ml-3 max-w-45 opacity-100 ${
                 compact ? "" : "lg:ml-0 lg:max-w-0 lg:opacity-0"
               }`}
             >
@@ -104,11 +107,14 @@ export default function Navbar() {
             onMouseLeave={() => move()}
             inert={compact}
             className={`relative hidden items-center overflow-hidden transition-[max-width,opacity] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] [--ind-fallback:rgb(250_250_250/0.07)] lg:flex ${
-              compact ? "max-w-0 opacity-0" : "max-w-[720px] opacity-100"
+              compact ? "max-w-0 opacity-0" : "max-w-180 opacity-100"
             }`}
             aria-label="Main"
           >
-            <span data-indicator="" className="indicator rounded-full bg-fg/[0.07]" />
+            <span
+              data-indicator=""
+              className="indicator rounded-full bg-fg/[0.07]"
+            />
             {links.map((l) => (
               <Link
                 key={l.href}
@@ -127,15 +133,20 @@ export default function Navbar() {
                     on navigation the old one fades and shrinks while the new one grows in */}
                 <span
                   aria-hidden="true"
-                  className={`absolute bottom-0.5 left-1/2 h-[2px] w-5 -translate-x-1/2 rounded-full bg-primary transition-[opacity,transform] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                    active(l.href) ? "scale-x-100 opacity-100" : "scale-x-0 opacity-0"
+                  className={`absolute bottom-0.5 left-1/2 h-0.5 w-5 -translate-x-1/2 rounded-full bg-primary transition-[opacity,transform] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                    active(l.href)
+                      ? "scale-x-100 opacity-100"
+                      : "scale-x-0 opacity-0"
                   }`}
                 />
               </Link>
             ))}
           </nav>
 
-          <Link href="/contact" className="btn-primary ml-3 hidden !h-10 !rounded-full !px-5 text-sm lg:inline-flex">
+          <Link
+            href="/contact"
+            className="btn-primary ml-3 hidden h-10! rounded-full! px-5! text-sm lg:inline-flex"
+          >
             Hire me
           </Link>
           <button
@@ -147,7 +158,14 @@ export default function Navbar() {
               compact || open ? "lg:flex" : "lg:hidden"
             }`}
           >
-            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+            <svg
+              viewBox="0 0 24 24"
+              className="h-5 w-5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+            >
               <path
                 d={open ? "M6 6l12 12" : "M4 8h16"}
                 className="transition-all duration-300"
@@ -168,7 +186,10 @@ export default function Navbar() {
           ref={overlayRef}
           className="fixed inset-0 z-40 flex flex-col overflow-y-auto bg-background/95 px-6 pb-10 pt-24 backdrop-blur-xl"
         >
-          <nav aria-label="Mobile" className="mx-auto flex w-full max-w-[720px] flex-col">
+          <nav
+            aria-label="Mobile"
+            className="mx-auto flex w-full max-w-180 flex-col"
+          >
             {links.map((l, i) => (
               <Link
                 key={l.href}
@@ -177,7 +198,7 @@ export default function Navbar() {
                 style={{ "--d": i * 40 } as React.CSSProperties}
                 onClick={() => setOpen(false)}
                 aria-current={active(l.href) ? "page" : undefined}
-                className={`flex items-baseline gap-4 py-3 font-[family-name:var(--font-space)] text-[32px] font-bold tracking-tight transition-colors duration-200 hover:text-primary ${
+                className={`flex items-baseline gap-4 py-3 font-(family-name:--font-space) text-[32px] font-bold tracking-tight transition-colors duration-200 hover:text-primary ${
                   active(l.href) ? "text-primary" : "text-fg"
                 }`}
               >
@@ -193,7 +214,7 @@ export default function Navbar() {
             data-enter="rise"
             style={{ "--d": links.length * 40 } as React.CSSProperties}
             onClick={() => setOpen(false)}
-            className="btn-primary mx-auto mt-8 w-full max-w-[720px]"
+            className="btn-primary mx-auto mt-8 w-full max-w-180"
           >
             Hire me
           </Link>

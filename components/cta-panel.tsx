@@ -16,11 +16,22 @@ export default function CtaPanel({
 }) {
   return (
     <section className="container-site section">
-      <Reveal variant="clip-up" className="relative overflow-hidden rounded-[24px] bg-primary text-on-primary">
+      <Reveal
+        variant="clip-up"
+        className="relative overflow-hidden rounded-3xl bg-primary text-on-primary"
+      >
         <div className="relative flex flex-col items-center px-6 py-14 text-center md:py-16">
-          <p className="text-[13px] font-medium uppercase tracking-[0.08em] text-white">Next step</p>
-          <h2 className="h-display mt-4 max-w-[18ch] text-[34px] font-bold md:text-[52px]">{title}</h2>
-          {description && <p className="mx-auto mt-4 max-w-[46ch] text-white">{description}</p>}
+          <p className="text-[13px] font-medium uppercase tracking-[0.08em] text-white">
+            Next step
+          </p>
+          <h2 className="h-display mt-4 max-w-[18ch] text-[34px] font-bold md:text-[52px]">
+            {title}
+          </h2>
+          {description && (
+            <p className="mx-auto mt-4 max-w-[46ch] text-white">
+              {description}
+            </p>
+          )}
           <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
             <Magnetic>
               <Link
@@ -31,7 +42,10 @@ export default function CtaPanel({
               </Link>
             </Magnetic>
             {email && (
-              <a href={`mailto:${site.email}`} className="link-underline text-sm font-medium text-white">
+              <a
+                href={`mailto:${site.email}`}
+                className="link-underline text-sm font-medium text-white"
+              >
                 {site.email}
               </a>
             )}

@@ -28,10 +28,34 @@ type Preset = {
 const SHOWN = { autoAlpha: 1, x: 0, y: 0 };
 
 export const revealPresets: Record<RevealVariant, Preset> = {
-  "fade-up": { from: { autoAlpha: 0, y: 24 }, to: SHOWN, duration: 0.7, ease: "power3.out", stagger: 0.05 },
-  fade: { from: { autoAlpha: 0 }, to: { autoAlpha: 1 }, duration: 0.8, ease: "power1.out", stagger: 0.05 },
-  "slide-left": { from: { autoAlpha: 0, x: -36 }, to: SHOWN, duration: 0.75, ease: "power3.out", stagger: 0.05 },
-  "slide-right": { from: { autoAlpha: 0, x: 36 }, to: SHOWN, duration: 0.75, ease: "power3.out", stagger: 0.05 },
+  "fade-up": {
+    from: { autoAlpha: 0, y: 24 },
+    to: SHOWN,
+    duration: 0.7,
+    ease: "power3.out",
+    stagger: 0.05,
+  },
+  fade: {
+    from: { autoAlpha: 0 },
+    to: { autoAlpha: 1 },
+    duration: 0.8,
+    ease: "power1.out",
+    stagger: 0.05,
+  },
+  "slide-left": {
+    from: { autoAlpha: 0, x: -36 },
+    to: SHOWN,
+    duration: 0.75,
+    ease: "power3.out",
+    stagger: 0.05,
+  },
+  "slide-right": {
+    from: { autoAlpha: 0, x: 36 },
+    to: SHOWN,
+    duration: 0.75,
+    ease: "power3.out",
+    stagger: 0.05,
+  },
   scale: {
     // ui-ux-pro-max "Stagger List" preset (bento / tiles)
     from: { autoAlpha: 0, scale: 0.92, y: 16 },
@@ -62,13 +86,25 @@ export const revealPresets: Record<RevealVariant, Preset> = {
     stagger: 0.08,
   },
   tilt: {
-    from: { autoAlpha: 0, y: 40, rotateX: -16, transformPerspective: 1000, transformOrigin: "50% 0%" },
+    from: {
+      autoAlpha: 0,
+      y: 40,
+      rotateX: -16,
+      transformPerspective: 1000,
+      transformOrigin: "50% 0%",
+    },
     to: { ...SHOWN, rotateX: 0 },
     duration: 0.9,
     ease: "power3.out",
     stagger: 0.06,
   },
-  mask: { from: { yPercent: 110 }, to: { yPercent: 0 }, duration: 0.9, ease: "power4.out", stagger: 0.04 },
+  mask: {
+    from: { yPercent: 110 },
+    to: { yPercent: 0 },
+    duration: 0.9,
+    ease: "power4.out",
+    stagger: 0.04,
+  },
   blur: {
     from: { autoAlpha: 0, y: 24, filter: "blur(10px)" },
     to: { ...SHOWN, filter: "blur(0px)" },
@@ -79,7 +115,9 @@ export const revealPresets: Record<RevealVariant, Preset> = {
 };
 
 export const prefersReducedMotion = () =>
-  typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  typeof window !== "undefined" &&
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 export const canHover = () =>
-  typeof window !== "undefined" && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  typeof window !== "undefined" &&
+  window.matchMedia("(hover: hover) and (pointer: fine)").matches;

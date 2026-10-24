@@ -6,7 +6,8 @@ import CtaPanel from "@/components/cta-panel";
 
 export const metadata: Metadata = pageMeta({
   title: "Projects",
-  description: "Mobile apps by Muhammad Aman — React Native, iOS and Android projects with case studies on the problem, the build and the result.",
+  description:
+    "Mobile apps by Muhammad Aman — React Native, iOS and Android projects with case studies on the problem, the build and the result.",
   path: "/projects",
 });
 

@@ -7,8 +7,16 @@ import { ViewTransition } from "react";
  * anything untagged gets a quick depart + gentle arrive. Browsers without
  * view transitions fall back to the CSS `.page-enter` fade.
  */
-export default function RouteTransition({ children }: { children: React.ReactNode }) {
-  const types = { "nav-forward": "nav-forward", "nav-back": "nav-back", default: "page-fade" };
+export default function RouteTransition({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const types = {
+    "nav-forward": "nav-forward",
+    "nav-back": "nav-back",
+    default: "page-fade",
+  };
   return (
     <ViewTransition enter={types} exit={types} default="none">
       <div className="page-enter">{children}</div>

@@ -33,14 +33,25 @@ export default function Skills() {
 
       {/* Daily stack — the tools reached for most, set as big editorial type */}
       <section className="container-site section">
-        <SectionHeader eyebrow="Daily stack" title="What I reach for first." highlight={["first."]} motion="fade" />
-        <Reveal variant="fade" className="mt-8 rounded-[24px] bg-surface p-6 sm:p-9">
-          <p className="font-[family-name:var(--font-space)] text-[26px] font-bold leading-[1.25] tracking-tight sm:text-[34px] lg:text-[42px]">
+        <SectionHeader
+          eyebrow="Daily stack"
+          title="What I reach for first."
+          highlight={["first."]}
+          motion="fade"
+        />
+        <Reveal
+          variant="fade"
+          className="mt-8 rounded-3xl bg-surface p-6 sm:p-9"
+        >
+          <p className="font-(family-name:--font-space) text-[26px] font-bold leading-tight tracking-tight sm:text-[34px] lg:text-[42px]">
             {coreTools.map((t, i) => (
               <span key={t} className={i % 4 === 0 ? "text-fg" : "text-muted"}>
                 {t}
                 {i < coreTools.length - 1 && (
-                  <span aria-hidden="true" className="mx-2 text-primary sm:mx-3">
+                  <span
+                    aria-hidden="true"
+                    className="mx-2 text-primary sm:mx-3"
+                  >
                     /
                   </span>
                 )}{" "}
@@ -48,9 +59,12 @@ export default function Skills() {
             ))}
           </p>
           <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {[{ value: total, suffix: "", label: "technologies listed" }, ...stats.slice(0, 3)].map((s) => (
-              <div key={s.label} className="rounded-[16px] bg-surface-hi p-4">
-                <p className="font-[family-name:var(--font-space)] text-[28px] font-bold leading-none">
+            {[
+              { value: total, suffix: "", label: "technologies listed" },
+              ...stats.slice(0, 3),
+            ].map((s) => (
+              <div key={s.label} className="rounded-2xl bg-surface-hi p-4">
+                <p className="font-(family-name:--font-space) text-[28px] font-bold leading-none">
                   {s.value}
                   {s.suffix}
                 </p>
@@ -61,7 +75,10 @@ export default function Skills() {
         </Reveal>
       </section>
 
-      <CtaPanel title="Have a stack in mind?" description="If your project uses these tools, let's talk about what you're building." />
+      <CtaPanel
+        title="Have a stack in mind?"
+        description="If your project uses these tools, let's talk about what you're building."
+      />
     </>
   );
 }

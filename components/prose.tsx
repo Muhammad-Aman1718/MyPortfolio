@@ -10,7 +10,10 @@ function Inline({ text }: { text: string }) {
     <>
       {parts.map((p, i) =>
         p.startsWith("`") ? (
-          <code key={i} className="rounded-md border border-line bg-surface px-1.5 py-0.5 font-[family-name:var(--font-jetbrains)] text-[0.88em] text-fg">
+          <code
+            key={i}
+            className="rounded-md border border-line bg-surface px-1.5 py-0.5 font-(family-name:--font-jetbrains) text-[0.88em] text-fg"
+          >
             {p.slice(1, -1)}
           </code>
         ) : p.startsWith("**") ? (
@@ -34,7 +37,11 @@ function BlockView({ b }: { b: Block }) {
         </p>
       );
     case "h3":
-      return <h3 className="pt-2 font-[family-name:var(--font-space)] text-xl font-semibold tracking-tight">{b.text}</h3>;
+      return (
+        <h3 className="pt-2 font-(family-name:--font-space) text-xl font-semibold tracking-tight">
+          {b.text}
+        </h3>
+      );
     case "list": {
       const Tag = b.ordered ? "ol" : "ul";
       return (
@@ -42,11 +49,14 @@ function BlockView({ b }: { b: Block }) {
           {b.items.map((it, i) => (
             <li key={i} className="flex gap-3 leading-[1.7]">
               {b.ordered ? (
-                <span className="mt-[3px] w-5 shrink-0 font-[family-name:var(--font-jetbrains)] text-xs text-accent">
+                <span className="mt-0.75 w-5 shrink-0 font-(family-name:--font-jetbrains) text-xs text-accent">
                   {String(i + 1).padStart(2, "0")}
                 </span>
               ) : (
-                <span className="mt-[11px] h-1.5 w-1.5 shrink-0 rounded-full bg-accent" aria-hidden="true" />
+                <span
+                  className="mt-2.75 h-1.5 w-1.5 shrink-0 rounded-full bg-accent"
+                  aria-hidden="true"
+                />
               )}
               <span>
                 <Inline text={it} />
@@ -60,10 +70,12 @@ function BlockView({ b }: { b: Block }) {
       return (
         <figure className="overflow-hidden rounded-[14px] border border-line bg-[#0c0c0d]">
           <div className="flex items-center justify-between border-b border-line px-4 py-2">
-            <span className="font-[family-name:var(--font-jetbrains)] text-xs text-muted">{b.caption ?? b.lang}</span>
+            <span className="font-(family-name:--font-jetbrains) text-xs text-muted">
+              {b.caption ?? b.lang}
+            </span>
             <CopyButton text={b.code} label="Copy code" />
           </div>
-          <pre className="overflow-x-auto p-4 font-[family-name:var(--font-jetbrains)] text-[13px] leading-[1.7] text-fg/85">
+          <pre className="overflow-x-auto p-4 font-(family-name:--font-jetbrains) text-[13px] leading-[1.7] text-fg/85">
             <code>{b.code}</code>
           </pre>
         </figure>
@@ -71,16 +83,22 @@ function BlockView({ b }: { b: Block }) {
     case "quote":
       return (
         <figure className="border-l-2 border-accent py-1 pl-6">
-          <blockquote className="font-[family-name:var(--font-space)] text-xl font-medium leading-snug tracking-tight md:text-2xl">
+          <blockquote className="font-(family-name:--font-space) text-xl font-medium leading-snug tracking-tight md:text-2xl">
             &ldquo;{b.text}&rdquo;
           </blockquote>
-          {b.cite && <figcaption className="mt-3 text-sm text-muted">— {b.cite}</figcaption>}
+          {b.cite && (
+            <figcaption className="mt-3 text-sm text-muted">
+              — {b.cite}
+            </figcaption>
+          )}
         </figure>
       );
     case "callout":
       return (
-        <aside className="card ring-gradient bg-gradient-to-br from-secondary/60 to-surface p-5 md:p-6">
-          <p className="font-[family-name:var(--font-jetbrains)] text-xs text-accent">{b.title}</p>
+        <aside className="card ring-gradient bg-linear-to-br from-secondary/60 to-surface p-5 md:p-6">
+          <p className="font-(family-name:--font-jetbrains) text-xs text-accent">
+            {b.title}
+          </p>
           <p className="mt-2 leading-[1.7] text-fg/85">
             <Inline text={b.text} />
           </p>
@@ -90,7 +108,13 @@ function BlockView({ b }: { b: Block }) {
 }
 
 /** Renders content sections; each section rises in as it scrolls into view. */
-export default function Prose({ sections, numbered = false }: { sections: Section[]; numbered?: boolean }) {
+export default function Prose({
+  sections,
+  numbered = false,
+}: {
+  sections: Section[];
+  numbered?: boolean;
+}) {
   return (
     <div className="flex flex-col gap-12">
       {sections.map((s, i) => (
@@ -108,8 +132,12 @@ export default function Prose({ sections, numbered = false }: { sections: Sectio
             </div>
           )}
           <Reveal variant="fade-up" start="top 90%">
-            <h2 className="flex items-baseline gap-3 font-[family-name:var(--font-space)] text-2xl font-semibold tracking-tight md:text-[28px]">
-              {numbered && <span className="font-[family-name:var(--font-jetbrains)] text-sm text-accent">{i + 1}</span>}
+            <h2 className="flex items-baseline gap-3 font-(family-name:--font-space) text-2xl font-semibold tracking-tight md:text-[28px]">
+              {numbered && (
+                <span className="font-(family-name:--font-jetbrains) text-sm text-accent">
+                  {i + 1}
+                </span>
+              )}
               {s.title}
             </h2>
           </Reveal>

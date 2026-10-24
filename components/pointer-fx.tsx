@@ -12,7 +12,9 @@ export function SpotlightTracker() {
   useEffect(() => {
     if (!canHover()) return;
     const onMove = (e: PointerEvent) => {
-      const card = (e.target as Element | null)?.closest?.<HTMLElement>(".spotlight");
+      const card = (e.target as Element | null)?.closest?.<HTMLElement>(
+        ".spotlight",
+      );
       if (!card) return;
       const r = card.getBoundingClientRect();
       card.style.setProperty("--mx", `${e.clientX - r.left}px`);
@@ -25,7 +27,13 @@ export function SpotlightTracker() {
 }
 
 /** Pulls its child slightly toward the cursor. Used on primary CTAs only. */
-export function Magnetic({ children, strength = 0.3 }: { children: React.ReactNode; strength?: number }) {
+export function Magnetic({
+  children,
+  strength = 0.3,
+}: {
+  children: React.ReactNode;
+  strength?: number;
+}) {
   const ref = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
@@ -59,15 +67,29 @@ export function Magnetic({ children, strength = 0.3 }: { children: React.ReactNo
 }
 
 /** Subtle 3D tilt toward the cursor (hero visual). */
-export function Tilt({ children, className = "", max = 6 }: { children: React.ReactNode; className?: string; max?: number }) {
+export function Tilt({
+  children,
+  className = "",
+  max = 6,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  max?: number;
+}) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const el = ref.current;
     if (!el || !canHover() || prefersReducedMotion()) return;
     gsap.set(el, { transformPerspective: 1100 });
-    const rx = gsap.quickTo(el, "rotationX", { duration: 0.8, ease: "power3.out" });
-    const ry = gsap.quickTo(el, "rotationY", { duration: 0.8, ease: "power3.out" });
+    const rx = gsap.quickTo(el, "rotationX", {
+      duration: 0.8,
+      ease: "power3.out",
+    });
+    const ry = gsap.quickTo(el, "rotationY", {
+      duration: 0.8,
+      ease: "power3.out",
+    });
     const move = (e: PointerEvent) => {
       const r = el.getBoundingClientRect();
       const px = (e.clientX - r.left) / r.width - 0.5;

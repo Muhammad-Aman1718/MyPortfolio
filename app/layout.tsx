@@ -57,7 +57,12 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
-    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
   formatDetection: { telephone: false },
 };
@@ -84,7 +89,16 @@ const identity = {
         addressLocality: site.location.city,
         addressCountry: site.location.countryCode,
       },
-      knowsAbout: ["React Native", "Expo", "TypeScript", "Swift", "Kotlin", "iOS development", "Android development", "Mobile app development"],
+      knowsAbout: [
+        "React Native",
+        "Expo",
+        "TypeScript",
+        "Swift",
+        "Kotlin",
+        "iOS development",
+        "Android development",
+        "Mobile app development",
+      ],
       sameAs: site.socials.map((s) => s.href),
     },
     {
@@ -109,19 +123,29 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <head>
         {/* Lets CSS hide scroll-reveal content before first paint only when JS will animate it */}
-        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: "document.documentElement.classList.add('js')",
+          }}
+        />
         <JsonLd data={identity} />
       </head>
       {/* Extensions (e.g. ColorZilla's cz-shortcut-listen) add attributes to <body> before React hydrates */}
-      <body id="top" className="min-h-full flex flex-col" suppressHydrationWarning>
+      <body
+        id="top"
+        className="min-h-full flex flex-col"
+        suppressHydrationWarning
+      >
         <a
           href="#content"
-          className="sr-only z-[60] rounded-md bg-primary px-4 py-2 text-on-primary focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+          className="sr-only z-60 rounded-md bg-primary px-4 py-2 text-on-primary focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
         >
           Skip to content
         </a>
         <Navbar />
-        <main id="content" className="flex-1">{children}</main>
+        <main id="content" className="flex-1">
+          {children}
+        </main>
         <Footer />
         <ContactDock />
         <SpotlightTracker />

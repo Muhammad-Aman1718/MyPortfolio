@@ -83,8 +83,8 @@ export default function ProjectsGrid() {
                 <div className="relative">
                   <ViewTransition name={`project-${p.slug}`} share={{ "nav-forward": "morph", default: "none" }} default="none">
                     <div
-                      className={`relative overflow-hidden rounded-[24px] bg-surface transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-1 ${
-                        wide ? "aspect-[4/3] sm:aspect-[16/9] lg:aspect-[21/9]" : "aspect-[4/3]"
+                      className={`relative overflow-hidden rounded-3xl bg-surface transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-1 ${
+                        wide ? "aspect-4/3 sm:aspect-video lg:aspect-21/9" : "aspect-4/3"
                       }`}
                     >
                       <ProjectPreview name={p.name} type={p.type} className="absolute inset-0" />
@@ -106,7 +106,7 @@ export default function ProjectsGrid() {
                     <span className="pt-1 text-sm font-medium text-subtle">{String(n).padStart(2, "0")}</span>
                     <div>
                       <h2
-                        className={`font-[family-name:var(--font-space)] font-bold tracking-tight transition-colors duration-200 group-hover:text-primary ${
+                        className={`font-(family-name:--font-space) font-bold tracking-tight transition-colors duration-200 group-hover:text-primary ${
                           wide ? "text-2xl md:text-[34px]" : "text-2xl"
                         }`}
                       >

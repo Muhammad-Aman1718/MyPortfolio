@@ -8,7 +8,12 @@ export const site = {
   url: "https://muhammad-aman.com",
   email: "contact@muhammad-aman.com",
   role: "Mobile App Developer",
-  location: { city: "Faisalabad", country: "Pakistan", countryCode: "PK", timezone: "UTC+5" },
+  location: {
+    city: "Faisalabad",
+    country: "Pakistan",
+    countryCode: "PK",
+    timezone: "UTC+5",
+  },
   whatsapp: {
     display: "+92 328 1199135",
     href: "https://wa.me/923281199135?text=Hello%20Muhammad%20Aman%2C%20I%27d%20like%20to%20discuss%20a%20project.",
@@ -27,7 +32,10 @@ export const site = {
     "Faisalabad",
   ],
   socials: [
-    { label: "LinkedIn", href: "https://www.linkedin.com/in/muhammad-aman1718/" },
+    {
+      label: "LinkedIn",
+      href: "https://www.linkedin.com/in/muhammad-aman1718/",
+    },
     { label: "GitHub", href: "https://github.com/Muhammad-Aman1718" },
   ],
   legal: [

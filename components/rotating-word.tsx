@@ -9,7 +9,13 @@ import { prefersReducedMotion } from "@/lib/motion";
  * the rest of the sentence slides along instead of jumping.
  * Screen readers get the full list once.
  */
-export default function RotatingWord({ words, interval = 2400 }: { words: string[]; interval?: number }) {
+export default function RotatingWord({
+  words,
+  interval = 2400,
+}: {
+  words: string[];
+  interval?: number;
+}) {
   const [i, setI] = useState(0);
   const [width, setWidth] = useState<number>();
   const refs = useRef<(HTMLSpanElement | null)[]>([]);

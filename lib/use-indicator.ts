@@ -14,7 +14,8 @@ export function useIndicator<T extends HTMLElement>(activeKey: unknown) {
     const root = ref.current;
     const ind = root?.querySelector<HTMLElement>("[data-indicator]");
     if (!root || !ind) return;
-    const el = target ?? root.querySelector<HTMLElement>("[data-active='true']");
+    const el =
+      target ?? root.querySelector<HTMLElement>("[data-active='true']");
     if (!el) {
       ind.style.opacity = "0";
       return;
@@ -24,7 +25,8 @@ export function useIndicator<T extends HTMLElement>(activeKey: unknown) {
     ind.style.transform = `translate(${el.offsetLeft}px, ${el.offsetTop}px)`;
     ind.style.opacity = "1";
     // Enable transitions only after the first placement so it doesn't fly in from 0,0
-    if (!ind.dataset.ready) requestAnimationFrame(() => (ind.dataset.ready = "true"));
+    if (!ind.dataset.ready)
+      requestAnimationFrame(() => (ind.dataset.ready = "true"));
   }, []);
 
   useLayoutEffect(() => {

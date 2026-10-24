@@ -22,7 +22,8 @@ export type Paper = {
 export const research: Paper[] = [
   {
     slug: "offline-first-sync-low-connectivity",
-    title: "Offline-first data synchronization patterns in low-connectivity regions",
+    title:
+      "Offline-first data synchronization patterns in low-connectivity regions",
     authors: "M. Aman",
     year: "2026",
     isoDate: "2026-02-01",
@@ -31,7 +32,11 @@ export const research: Paper[] = [
       "A comparative study of CRDT and operational-transform approaches for mobile applications operating under intermittent connectivity, with benchmarks from a production deployment serving 100k daily active users across South Asia.",
     tags: ["distributed systems", "mobile", "CRDTs"],
     findings: [
-      { value: 100, suffix: "k", label: "daily active users in the deployment studied" },
+      {
+        value: 100,
+        suffix: "k",
+        label: "daily active users in the deployment studied",
+      },
       { value: 2, label: "sync strategies compared" },
       { value: 0, label: "server round-trips needed to read or write locally" },
     ],

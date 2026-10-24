@@ -3,7 +3,11 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { prefersReducedMotion, revealPresets, type RevealVariant } from "@/lib/motion";
+import {
+  prefersReducedMotion,
+  revealPresets,
+  type RevealVariant,
+} from "@/lib/motion";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -74,7 +78,11 @@ export default function Reveal({
         duration: duration ?? preset.duration,
         ease: preset.ease,
         delay,
-        stagger: { each: each ?? preset.stagger, from, ...(grid ? { grid: "auto" as const } : {}) },
+        stagger: {
+          each: each ?? preset.stagger,
+          from,
+          ...(grid ? { grid: "auto" as const } : {}),
+        },
         clearProps: "transform,filter,clipPath",
         scrollTrigger: { trigger: el, start, once: true },
       });

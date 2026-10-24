@@ -13,7 +13,7 @@ function Chrome({ label }: { label: string }) {
       <span className="h-2 w-2 rounded-full bg-fg/15" />
       <span className="h-2 w-2 rounded-full bg-fg/15" />
       <span className="h-2 w-2 rounded-full bg-primary/70" />
-      <span className="ml-3 truncate rounded-full bg-fg/[0.06] px-3 py-0.5 font-[family-name:var(--font-jetbrains)] text-[10px] text-muted">
+      <span className="ml-3 truncate rounded-full bg-fg/6 px-3 py-0.5 font-(family-name:--font-jetbrains) text-[10px] text-muted">
         {label}
       </span>
     </div>
@@ -22,16 +22,23 @@ function Chrome({ label }: { label: string }) {
 
 function Phone({ name }: { name: string }) {
   return (
-    <div className="flex aspect-[9/18] h-[82%] flex-col overflow-hidden rounded-[26px] bg-background p-2 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.7)]">
+    <div className="flex aspect-9/18 h-[82%] flex-col overflow-hidden rounded-[26px] bg-background p-2 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.7)]">
       <div className="mx-auto mb-2 h-1.5 w-12 rounded-full bg-fg/15" />
       <div className="rounded-[14px] bg-primary p-3">
-        <p className="font-[family-name:var(--font-space)] text-[11px] font-semibold leading-tight text-fg">{name}</p>
+        <p className="font-(family-name:--font-space) text-[11px] font-semibold leading-tight text-fg">
+          {name}
+        </p>
         <div className="mt-2 h-1 w-2/3 rounded-full bg-fg/30" />
       </div>
       <div className="mt-2 flex flex-1 flex-col gap-1.5">
         {[0, 1, 2, 3].map((i) => (
-          <div key={i} className="flex items-center gap-2 rounded-[10px] bg-fg/[0.04] p-2">
-            <span className={`h-5 w-5 shrink-0 rounded-md ${i === 0 ? "bg-primary" : "bg-fg/10"}`} />
+          <div
+            key={i}
+            className="flex items-center gap-2 rounded-[10px] bg-fg/4 p-2"
+          >
+            <span
+              className={`h-5 w-5 shrink-0 rounded-md ${i === 0 ? "bg-primary" : "bg-fg/10"}`}
+            />
             <span className="flex flex-1 flex-col gap-1">
               <span className="h-1 w-4/5 rounded-full bg-fg/20" />
               <span className="h-1 w-1/2 rounded-full bg-fg/10" />
@@ -41,7 +48,10 @@ function Phone({ name }: { name: string }) {
       </div>
       <div className="mt-2 flex justify-around pt-2">
         {[0, 1, 2].map((i) => (
-          <span key={i} className={`h-1.5 w-1.5 rounded-full ${i === 0 ? "bg-primary" : "bg-fg/20"}`} />
+          <span
+            key={i}
+            className={`h-1.5 w-1.5 rounded-full ${i === 0 ? "bg-primary" : "bg-fg/20"}`}
+          />
         ))}
       </div>
     </div>
@@ -50,25 +60,31 @@ function Phone({ name }: { name: string }) {
 
 function Browser({ name }: { name: string }) {
   return (
-    <div className="flex h-[78%] w-[86%] flex-col overflow-hidden rounded-[12px] bg-background shadow-[0_30px_60px_-20px_rgba(0,0,0,0.7)]">
+    <div className="flex h-[78%] w-[86%] flex-col overflow-hidden rounded-xl bg-background shadow-[0_30px_60px_-20px_rgba(0,0,0,0.7)]">
       <Chrome label={`${slug(name)}.app`} />
       <div className="flex flex-1 gap-3 p-3">
         <div className="hidden w-1/5 flex-col gap-1.5 sm:flex">
           <span className="h-1.5 w-3/4 rounded-full bg-primary" />
           {[0, 1, 2, 3].map((i) => (
-            <span key={i} className="h-1.5 rounded-full bg-fg/10" style={{ width: `${90 - i * 12}%` }} />
+            <span
+              key={i}
+              className="h-1.5 rounded-full bg-fg/10"
+              style={{ width: `${90 - i * 12}%` }}
+            />
           ))}
         </div>
         <div className="flex flex-1 flex-col gap-2">
           <div className="grid grid-cols-3 gap-2">
             {[0, 1, 2].map((i) => (
-              <div key={i} className="rounded-md bg-fg/[0.05] p-2">
+              <div key={i} className="rounded-md bg-fg/5 p-2">
                 <span className="block h-1 w-1/2 rounded-full bg-fg/15" />
-                <span className={`mt-1.5 block h-2 w-3/4 rounded-full ${i === 0 ? "bg-primary" : "bg-fg/25"}`} />
+                <span
+                  className={`mt-1.5 block h-2 w-3/4 rounded-full ${i === 0 ? "bg-primary" : "bg-fg/25"}`}
+                />
               </div>
             ))}
           </div>
-          <div className="flex flex-1 items-end gap-1.5 rounded-md bg-fg/[0.03] p-2">
+          <div className="flex flex-1 items-end gap-1.5 rounded-md bg-fg/3 p-2">
             {bars.map((h, i) => (
               <span
                 key={i}
@@ -92,11 +108,13 @@ function Terminal({ name }: { name: string }) {
     { t: "→ 2,000,000 req/day", c: "text-fg/80" },
   ];
   return (
-    <div className="flex h-[74%] w-[84%] flex-col overflow-hidden rounded-[12px] bg-background shadow-[0_30px_60px_-20px_rgba(0,0,0,0.7)]">
+    <div className="flex h-[74%] w-[84%] flex-col overflow-hidden rounded-xl bg-background shadow-[0_30px_60px_-20px_rgba(0,0,0,0.7)]">
       <Chrome label="zsh — prod" />
-      <div className="flex flex-1 flex-col gap-1.5 p-4 font-[family-name:var(--font-jetbrains)] text-[11px] leading-tight">
+      <div className="flex flex-1 flex-col gap-1.5 p-4 font-(family-name:--font-jetbrains) text-[11px] leading-tight">
         {lines.map((l) => (
-          <p key={l.t} className={`truncate ${l.c}`}>{l.t}</p>
+          <p key={l.t} className={`truncate ${l.c}`}>
+            {l.t}
+          </p>
         ))}
         <span className="mt-1 h-3 w-1.5 animate-pulse bg-primary" />
       </div>
@@ -124,7 +142,13 @@ export default function ProjectPreview({
         aria-hidden="true"
         className="relative flex h-full w-full items-center justify-center transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-1.5 group-hover:scale-[1.03]"
       >
-        {type === "Mobile" ? <Phone name={name} /> : type === "Backend" ? <Terminal name={name} /> : <Browser name={name} />}
+        {type === "Mobile" ? (
+          <Phone name={name} />
+        ) : type === "Backend" ? (
+          <Terminal name={name} />
+        ) : (
+          <Browser name={name} />
+        )}
       </div>
     </div>
   );

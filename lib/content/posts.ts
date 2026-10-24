@@ -256,7 +256,8 @@ export const blogPosts: Post[] = [
     slug: "gsap-scrolltrigger-nextjs-app-router",
     category: "Tutorials",
     title: "GSAP ScrollTrigger in Next.js App Router, properly",
-    excerpt: "Cleanup, hydration, and reduced-motion — the parts tutorials skip.",
+    excerpt:
+      "Cleanup, hydration, and reduced-motion — the parts tutorials skip.",
     date: "Apr 2026",
     isoDate: "2026-04-21",
     readingTime: "11 min",
@@ -267,13 +268,13 @@ export const blogPosts: Post[] = [
         blocks: [
           {
             type: "p",
-            text: "GSAP touches the DOM, so any component that animates needs `\"use client\"`. Keep those components small — a reveal wrapper, a counter — and let pages stay Server Components that render them.",
+            text: 'GSAP touches the DOM, so any component that animates needs `"use client"`. Keep those components small — a reveal wrapper, a counter — and let pages stay Server Components that render them.',
           },
           {
             type: "code",
             lang: "tsx",
             caption: "components/reveal.tsx",
-            code: "\"use client\";\nimport { useEffect, useRef } from \"react\";\nimport gsap from \"gsap\";\nimport { ScrollTrigger } from \"gsap/ScrollTrigger\";\ngsap.registerPlugin(ScrollTrigger);\n\nexport function Reveal({ children }: { children: React.ReactNode }) {\n  const ref = useRef<HTMLDivElement>(null);\n  useEffect(() => {\n    const ctx = gsap.context(() => {\n      gsap.from(ref.current, {\n        autoAlpha: 0, y: 24, duration: 0.7,\n        scrollTrigger: { trigger: ref.current, start: \"top 88%\", once: true },\n      });\n    }, ref);\n    return () => ctx.revert(); // kills tweens AND their ScrollTriggers\n  }, []);\n  return <div ref={ref}>{children}</div>;\n}",
+            code: '"use client";\nimport { useEffect, useRef } from "react";\nimport gsap from "gsap";\nimport { ScrollTrigger } from "gsap/ScrollTrigger";\ngsap.registerPlugin(ScrollTrigger);\n\nexport function Reveal({ children }: { children: React.ReactNode }) {\n  const ref = useRef<HTMLDivElement>(null);\n  useEffect(() => {\n    const ctx = gsap.context(() => {\n      gsap.from(ref.current, {\n        autoAlpha: 0, y: 24, duration: 0.7,\n        scrollTrigger: { trigger: ref.current, start: "top 88%", once: true },\n      });\n    }, ref);\n    return () => ctx.revert(); // kills tweens AND their ScrollTriggers\n  }, []);\n  return <div ref={ref}>{children}</div>;\n}',
           },
         ],
       },
@@ -322,7 +323,7 @@ export const blogPosts: Post[] = [
           {
             type: "code",
             lang: "ts",
-            code: "const mm = gsap.matchMedia();\nmm.add(\"(prefers-reduced-motion: no-preference)\", () => {\n  gsap.from(\".tile\", { autoAlpha: 0, y: 16, stagger: 0.06 });\n});\n// later: mm.revert();",
+            code: 'const mm = gsap.matchMedia();\nmm.add("(prefers-reduced-motion: no-preference)", () => {\n  gsap.from(".tile", { autoAlpha: 0, y: 16, stagger: 0.06 });\n});\n// later: mm.revert();',
           },
         ],
       },
@@ -378,7 +379,7 @@ export const blogPosts: Post[] = [
           {
             type: "code",
             lang: "ts",
-            code: "const migrations = [\n  `CREATE TABLE notes (id INTEGER PRIMARY KEY, body TEXT NOT NULL)`,\n  `ALTER TABLE notes ADD COLUMN updated_at INTEGER`,\n];\n\nconst [{ user_version }] = await db.getAllAsync(\"PRAGMA user_version\");\nfor (let v = user_version; v < migrations.length; v++) {\n  await db.withTransactionAsync(async () => {\n    await db.execAsync(migrations[v]);\n    await db.execAsync(`PRAGMA user_version = ${v + 1}`);\n  });\n}",
+            code: 'const migrations = [\n  `CREATE TABLE notes (id INTEGER PRIMARY KEY, body TEXT NOT NULL)`,\n  `ALTER TABLE notes ADD COLUMN updated_at INTEGER`,\n];\n\nconst [{ user_version }] = await db.getAllAsync("PRAGMA user_version");\nfor (let v = user_version; v < migrations.length; v++) {\n  await db.withTransactionAsync(async () => {\n    await db.execAsync(migrations[v]);\n    await db.execAsync(`PRAGMA user_version = ${v + 1}`);\n  });\n}',
           },
           {
             type: "p",

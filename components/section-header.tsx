@@ -50,9 +50,18 @@ export default function SectionHeader({
         defaults: { ease: "power3.out" },
         scrollTrigger: { trigger: el, start: "top 88%", once: true },
       });
-      tl.fromTo(q("[data-h-eyebrow]"), { autoAlpha: 0, x: -14 }, { autoAlpha: 1, x: 0, duration: 0.6 });
+      tl.fromTo(
+        q("[data-h-eyebrow]"),
+        { autoAlpha: 0, x: -14 },
+        { autoAlpha: 1, x: 0, duration: 0.6 },
+      );
       if (motion === "words") {
-        tl.fromTo(q(".mask-line > span"), { yPercent: 110 }, { yPercent: 0, duration: 0.9, ease: "power4.out", stagger: 0.06 }, "<0.05");
+        tl.fromTo(
+          q(".mask-line > span"),
+          { yPercent: 110 },
+          { yPercent: 0, duration: 0.9, ease: "power4.out", stagger: 0.06 },
+          "<0.05",
+        );
       } else if (motion === "wipe") {
         tl.fromTo(
           q("[data-h-title]"),
@@ -61,13 +70,32 @@ export default function SectionHeader({
           "<0.05",
         );
       } else if (motion === "blur") {
-        tl.fromTo(q("[data-h-title]"), { autoAlpha: 0, filter: "blur(8px)" }, { autoAlpha: 1, filter: "blur(0px)", duration: 0.9 }, "<0.05");
+        tl.fromTo(
+          q("[data-h-title]"),
+          { autoAlpha: 0, filter: "blur(8px)" },
+          { autoAlpha: 1, filter: "blur(0px)", duration: 0.9 },
+          "<0.05",
+        );
       } else {
-        tl.fromTo(q("[data-h-title]"), { autoAlpha: 0, y: 18 }, { autoAlpha: 1, y: 0, duration: 0.8 }, "<0.05");
+        tl.fromTo(
+          q("[data-h-title]"),
+          { autoAlpha: 0, y: 18 },
+          { autoAlpha: 1, y: 0, duration: 0.8 },
+          "<0.05",
+        );
       }
       const rest = q("[data-h-rest]");
-      if (rest.length) tl.fromTo(rest, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.6, stagger: 0.08 }, "-=0.55");
-      tl.set(q("[data-h-title], [data-h-eyebrow], [data-h-rest], .mask-line > span"), { clearProps: "transform,filter,clipPath" });
+      if (rest.length)
+        tl.fromTo(
+          rest,
+          { autoAlpha: 0, y: 10 },
+          { autoAlpha: 1, y: 0, duration: 0.6, stagger: 0.08 },
+          "-=0.55",
+        );
+      tl.set(
+        q("[data-h-title], [data-h-eyebrow], [data-h-rest], .mask-line > span"),
+        { clearProps: "transform,filter,clipPath" },
+      );
       gsap.set(el, { visibility: "visible" });
     }, el);
     return () => ctx.revert();
@@ -80,7 +108,9 @@ export default function SectionHeader({
       className={`flex flex-col gap-5 ${center ? "items-center text-center" : "md:flex-row md:items-end md:justify-between"} ${className}`}
     >
       <div className={center ? "flex flex-col items-center" : ""}>
-        <p data-h-eyebrow className="eyebrow">{eyebrow}</p>
+        <p data-h-eyebrow className="eyebrow">
+          {eyebrow}
+        </p>
         <h2 data-h-title className="h-section mt-3 max-w-[22ch]">
           {motion === "words" ? (
             <SplitText text={title} accent={highlight} />

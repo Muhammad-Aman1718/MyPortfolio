@@ -29,7 +29,14 @@ const caseStudies: Record<string, CaseStudy> = {
       { value: 0, label: "network calls needed to read" },
       { value: 4.8, suffix: "★", label: "average store rating" },
     ],
-    stack: ["React Native", "TypeScript", "SQLite", "Reanimated", "Expo", "FTS5"],
+    stack: [
+      "React Native",
+      "TypeScript",
+      "SQLite",
+      "Reanimated",
+      "Expo",
+      "FTS5",
+    ],
     sections: [
       {
         id: "overview",
@@ -112,7 +119,14 @@ const caseStudies: Record<string, CaseStudy> = {
       { value: 3, label: "tools replaced by one screen" },
       { value: 8, suffix: " mo", label: "in production without a crash" },
     ],
-    stack: ["Next.js", "TypeScript", "PostgreSQL", "WebSockets", "Redis", "Mapbox"],
+    stack: [
+      "Next.js",
+      "TypeScript",
+      "PostgreSQL",
+      "WebSockets",
+      "Redis",
+      "Mapbox",
+    ],
     quote: {
       text: "Aman rebuilt our app in half the estimated time and it hasn't crashed once in eight months. Worth every dollar.",
       name: "Sarah Mitchell",
@@ -332,7 +346,14 @@ const caseStudies: Record<string, CaseStudy> = {
       { value: 99.9, suffix: "%", label: "monthly availability target met" },
       { value: 4, label: "sales channels on one API" },
     ],
-    stack: ["NestJS", "PostgreSQL", "Docker", "Redis", "BullMQ", "OpenTelemetry"],
+    stack: [
+      "NestJS",
+      "PostgreSQL",
+      "Docker",
+      "Redis",
+      "BullMQ",
+      "OpenTelemetry",
+    ],
     sections: [
       {
         id: "overview",
@@ -456,6 +477,10 @@ const caseStudies: Record<string, CaseStudy> = {
 
 export type Project = (typeof allProjects)[number] & CaseStudy;
 
-export const projects: Project[] = allProjects.map((p) => ({ ...p, ...caseStudies[p.slug] }));
+export const projects: Project[] = allProjects.map((p) => ({
+  ...p,
+  ...caseStudies[p.slug],
+}));
 
-export const getProject = (slug: string) => projects.find((p) => p.slug === slug);
+export const getProject = (slug: string) =>
+  projects.find((p) => p.slug === slug);

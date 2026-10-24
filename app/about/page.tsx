@@ -64,11 +64,19 @@ export default function About() {
       <section className="container-site pb-6">
         <div className="grid gap-6 lg:grid-cols-12">
           <div data-enter="left" className="flex flex-col gap-3 lg:col-span-5">
-            <div className="relative flex aspect-square items-end overflow-hidden rounded-[24px] p-7 sm:aspect-[4/3] lg:aspect-[4/5]">
-              <Portrait className="!absolute inset-0" sizes="(min-width: 1024px) 40vw, 92vw" />
-              <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/75 to-transparent" />
+            <div className="relative flex aspect-square items-end overflow-hidden rounded-3xl p-7 sm:aspect-4/3 lg:aspect-4/5">
+              <Portrait
+                className="absolute! inset-0"
+                sizes="(min-width: 1024px) 40vw, 92vw"
+              />
+              <span
+                aria-hidden="true"
+                className="absolute inset-x-0 bottom-0 h-1/2 bg-linear-to-t from-black/75 to-transparent"
+              />
               <p className="relative">
-                <span className="block font-[family-name:var(--font-space)] text-2xl font-bold">{site.name}</span>
+                <span className="block font-(family-name:--font-space) text-2xl font-bold">
+                  {site.name}
+                </span>
                 <span className="text-sm text-white/80">{site.role}</span>
               </p>
             </div>
@@ -83,18 +91,29 @@ export default function About() {
           </div>
 
           <div className="flex flex-col gap-6 lg:col-span-7">
-            <Reveal variant="fade" stagger each={0.08} start="top 95%" className="rounded-[24px] bg-surface p-7 md:p-10">
+            <Reveal
+              variant="fade"
+              stagger
+              each={0.08}
+              start="top 95%"
+              className="rounded-3xl bg-surface p-7 md:p-10"
+            >
               <p className="text-xl leading-relaxed md:text-2xl">
-                I&apos;m {site.name}, a mobile app developer building iOS and Android apps with React Native.
+                I&apos;m {site.name}, a mobile app developer building iOS and
+                Android apps with React Native.
               </p>
               <p className="mt-6 leading-relaxed text-muted">
-                I care about the details users feel: a quick launch, smooth 60fps screens, offline that just works, and
-                a release that sails through store review. From the first screen to the App Store and Google Play, my
-                work is shaped by apps real people use every day.
+                I care about the details users feel: a quick launch, smooth
+                60fps screens, offline that just works, and a release that sails
+                through store review. From the first screen to the App Store and
+                Google Play, my work is shaped by apps real people use every
+                day.
               </p>
               <p className="mt-4 leading-relaxed text-muted">
-                I started on the web with React and Next.js, and moved to mobile for good. Today I build React Native
-                apps at SIGMAKODE in Faisalabad — and drop into Swift or Kotlin when a feature needs to go native.
+                I started on the web with React and Next.js, and moved to mobile
+                for good. Today I build React Native apps at SIGMAKODE in
+                Faisalabad — and drop into Swift or Kotlin when a feature needs
+                to go native.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link href="/contact" className="btn-primary">
@@ -106,10 +125,14 @@ export default function About() {
               </div>
             </Reveal>
 
-            <Reveal variant="scale" stagger className="grid grid-cols-2 gap-3 md:grid-cols-4">
+            <Reveal
+              variant="scale"
+              stagger
+              className="grid grid-cols-2 gap-3 md:grid-cols-4"
+            >
               {stats.map((s) => (
                 <div key={s.label} className="rounded-[20px] bg-surface p-5">
-                  <p className="font-[family-name:var(--font-space)] text-[34px] font-bold leading-none tracking-tight">
+                  <p className="font-(family-name:--font-space) text-[34px] font-bold leading-none tracking-tight">
                     {s.value}
                     {s.suffix}
                   </p>
@@ -123,26 +146,47 @@ export default function About() {
 
       {/* Journey — oldest to newest; the current role is the crimson card */}
       <section className="container-site section">
-        <SectionHeader eyebrow="Journey" title="How I got here." highlight={["here."]} />
-        <Reveal as="ol" variant="fade-up" stagger each={0.08} className="mt-10 grid gap-3 md:grid-cols-3">
+        <SectionHeader
+          eyebrow="Journey"
+          title="How I got here."
+          highlight={["here."]}
+        />
+        <Reveal
+          as="ol"
+          variant="fade-up"
+          stagger
+          each={0.08}
+          className="mt-10 grid gap-3 md:grid-cols-3"
+        >
           {journey.map((c, i) => (
             <li
               key={c.company}
-              className={`flex min-h-[200px] flex-col justify-between gap-8 rounded-[24px] p-6 ${
+              className={`flex min-h-50 flex-col justify-between gap-8 rounded-3xl p-6 ${
                 c.current ? "bg-primary text-on-primary" : "bg-surface"
               }`}
             >
-              <span className={`text-sm font-medium ${c.current ? "text-white" : "text-subtle"}`}>
+              <span
+                className={`text-sm font-medium ${c.current ? "text-white" : "text-subtle"}`}
+              >
                 {String(i + 1).padStart(2, "0")} · {c.period}
               </span>
               <span>
-                <span className="block font-[family-name:var(--font-space)] text-2xl font-bold leading-tight">{c.company}</span>
+                <span className="block font-(family-name:--font-space) text-2xl font-bold leading-tight">
+                  {c.company}
+                </span>
                 {/* Roles at the same company listed beneath it, earliest first */}
                 <span className="mt-3 flex flex-col gap-1.5">
                   {[...c.roles].reverse().map((r) => (
-                    <span key={r.role} className={`flex flex-wrap justify-between gap-x-3 text-sm ${c.current ? "text-white" : "text-muted"}`}>
+                    <span
+                      key={r.role}
+                      className={`flex flex-wrap justify-between gap-x-3 text-sm ${c.current ? "text-white" : "text-muted"}`}
+                    >
                       <span className="font-medium">{r.role}</span>
-                      <span className={c.current ? "text-white" : "text-subtle"}>{r.years}</span>
+                      <span
+                        className={c.current ? "text-white" : "text-subtle"}
+                      >
+                        {r.years}
+                      </span>
                     </span>
                   ))}
                 </span>
@@ -154,18 +198,40 @@ export default function About() {
 
       {/* Beyond client work */}
       <section className="container-site section">
-        <SectionHeader eyebrow="Beyond the code" title="What keeps me sharp." highlight={["sharp."]} motion="blur" />
-        <Reveal variant="scale" stagger className="mt-10 grid gap-3 sm:grid-cols-2">
+        <SectionHeader
+          eyebrow="Beyond the code"
+          title="What keeps me sharp."
+          highlight={["sharp."]}
+          motion="blur"
+        />
+        <Reveal
+          variant="scale"
+          stagger
+          className="mt-10 grid gap-3 sm:grid-cols-2"
+        >
           {beyond.map((b) => (
             <div key={b.title} className="card spotlight flex gap-5 p-6 md:p-7">
               <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-surface-hi text-fg">
-                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <svg
+                  viewBox="0 0 24 24"
+                  className="h-5 w-5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
                   <path d={b.icon} />
                 </svg>
               </span>
               <span>
-                <span className="block font-[family-name:var(--font-space)] text-lg font-bold">{b.title}</span>
-                <span className="mt-1 block leading-relaxed text-muted">{b.text}</span>
+                <span className="block font-(family-name:--font-space) text-lg font-bold">
+                  {b.title}
+                </span>
+                <span className="mt-1 block leading-relaxed text-muted">
+                  {b.text}
+                </span>
               </span>
             </div>
           ))}
