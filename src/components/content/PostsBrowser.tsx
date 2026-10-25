@@ -1,21 +1,46 @@
 "use client";
 
-import { BLOG_FILTERS, COPY, POSTS_TABS, RESEARCH } from "@/constants/constant";
+import { COPY, POSTS_TABS } from "@/constants/constant";
 import usePostsBrowser from "@/hooks/usePostsBrowser";
-import { postsTabCount } from "@/utils/content";
+import { fillTemplate } from "@/utils/format";
 import { cn, staggerStyle } from "@/utils/style";
 import FilterPills from "@/components/ui/FilterPills";
+import Icon from "@/components/ui/Icon";
+import SearchField from "@/components/ui/SearchField";
 import FeaturedPost from "./FeaturedPost";
-import PaperCard from "./PaperCard";
+import PaperList from "./PaperList";
 import PostRow from "./PostRow";
+import type { PostsBrowserProps } from "@/types/types";
 
 /**
- * Blog / research switcher. Tabs slide an underline; panels and filtered lists
- * re-stagger in CSS. The blog is an editorial list, deliberately unlike the
- * research tab's two-up paper cards.
+ * Blog / research switcher. Tabs slide an underline; the blog has search,
+ * category and topic filters, a sort toggle and "load more"; research is a
+ * two-up grid of paper cards. Lists re-stagger in CSS when they change.
  */
-export default function PostsBrowser() {
-  const { tab, setTab, filter, setFilter, tabsRef, visible, featured, rest } = usePostsBrowser();
+export default function PostsBrowser({ posts, papers }: PostsBrowserProps) {
+  const {
+    tab,
+    setTab,
+    tabsRef,
+    query,
+    setSearch,
+    setCategory,
+    setSubcategory,
+    clearTag,
+    sortLabel,
+    setSortLabel,
+    clearFilters,
+    filtered,
+    categories,
+    subcategories,
+    featured,
+    rows,
+    shown,
+    total,
+    canLoadMore,
+    loadMore,
+  } = usePostsBrowser(posts);
+  const counts = { blog: posts.length, research: papers.length };
 
   return (
     <>
@@ -44,7 +69,7 @@ export default function PostsBrowser() {
               )}
             >
               {name}
-              <span className="font-mono text-xs text-muted">{postsTabCount(name)}</span>
+              <span className="font-mono text-xs text-muted">{counts[name]}</span>
             </button>
           );
         })}
@@ -52,15 +77,63 @@ export default function PostsBrowser() {
 
       {tab === "blog" ? (
         <div key="blog" id="panel-blog" role="tabpanel" aria-labelledby="tab-blog" className="panel-in">
-          <div className="mt-6">
-            <FilterPills options={BLOG_FILTERS} value={filter} onChange={setFilter} label={COPY.posts.filterLabel} />
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <SearchField
+              value={query.search}
+              onChange={setSearch}
+              label={COPY.posts.searchLabel}
+              placeholder={COPY.posts.searchPlaceholder}
+            />
+            <FilterPills
+              options={[COPY.posts.sortNewest, COPY.posts.sortOldest]}
+              value={sortLabel}
+              onChange={setSortLabel}
+              label={COPY.posts.sortLabel}
+            />
           </div>
 
-          <div key={filter} className="stagger-in mt-8 flex flex-col gap-3">
+          <div className="mt-3 flex flex-col gap-3">
+            <FilterPills
+              options={categories}
+              value={query.category}
+              onChange={setCategory}
+              label={COPY.posts.filterLabel}
+            />
+            {subcategories.length > 0 && (
+              <FilterPills
+                options={subcategories}
+                value={query.subcategory}
+                onChange={setSubcategory}
+                label={COPY.posts.subcategoryLabel}
+              />
+            )}
+          </div>
+
+          <div className="mt-5 flex min-h-8 flex-wrap items-center justify-between gap-3 text-sm text-subtle">
+            <p aria-live="polite">
+              {fillTemplate(COPY.posts.showing, { shown: String(shown), total: String(total) })}
+            </p>
+            {query.tag && (
+              <button
+                type="button"
+                onClick={clearTag}
+                aria-label={`${COPY.posts.removeTag}: ${query.tag}`}
+                className="inline-flex items-center gap-2 rounded-full bg-surface py-1 pl-3 pr-2 text-fg transition-colors duration-150 hover:bg-surface-hi"
+              >
+                {COPY.posts.taggedWith}: {query.tag}
+                <Icon name="close" className="h-3.5 w-3.5 text-subtle" />
+              </button>
+            )}
+          </div>
+
+          <div
+            key={`${query.category}|${query.subcategory}|${query.tag}|${query.sort}`}
+            className="stagger-in mt-5 flex flex-col gap-3"
+          >
             {featured && <FeaturedPost post={featured} />}
 
             <ul className="mt-3 flex flex-col">
-              {rest.map((post, i) => (
+              {rows.map((post, i) => (
                 <li key={post.slug} style={staggerStyle(i + 1)}>
                   {/* Visible hairline between posts (the theme 'line' grey is too close to the page) */}
                   {i > 0 && <span aria-hidden="true" className="mx-3 block h-px bg-fg/15 sm:mx-6" />}
@@ -69,20 +142,27 @@ export default function PostsBrowser() {
               ))}
             </ul>
 
-            {!visible.length && <p className="py-10 text-center text-muted">{COPY.posts.empty}</p>}
+            {total === 0 && (
+              <div className="flex flex-col items-center gap-4 py-12 text-center">
+                <p className="text-muted">{COPY.posts.empty}</p>
+                {filtered && (
+                  <button type="button" onClick={clearFilters} className="btn-secondary h-10! px-5! text-sm">
+                    {COPY.posts.clearFilters}
+                  </button>
+                )}
+              </div>
+            )}
+
+            {canLoadMore && (
+              <button type="button" onClick={loadMore} className="btn-secondary mx-auto mt-4">
+                {COPY.posts.loadMore}
+              </button>
+            )}
           </div>
         </div>
       ) : (
-        <div
-          key="research"
-          id="panel-research"
-          role="tabpanel"
-          aria-labelledby="tab-research"
-          className="stagger-in mt-8 grid gap-4 lg:grid-cols-2"
-        >
-          {RESEARCH.map((paper, i) => (
-            <PaperCard key={paper.slug} paper={paper} index={i} />
-          ))}
+        <div key="research" id="panel-research" role="tabpanel" aria-labelledby="tab-research">
+          <PaperList papers={papers} />
         </div>
       )}
     </>

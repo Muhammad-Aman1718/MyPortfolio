@@ -2,7 +2,7 @@
  * Every shared type and interface in the app. Components, hooks, utils and
  * constants import from here — no type declarations live anywhere else.
  */
-import type { ChangeEvent, CSSProperties, FocusEvent, ReactNode } from "react";
+import type { ChangeEvent, ComponentProps, CSSProperties, FocusEvent, ReactNode } from "react";
 import type { MetadataRoute } from "next";
 
 /* ─────────────────────────── Site & navigation ─────────────────────────── */
@@ -55,6 +55,15 @@ export interface PageMetaInput {
 
 export interface ArticleMetaInput extends PageMetaInput {
   publishedTime?: string;
+  modifiedTime?: string;
+  authors?: string[];
+  tags?: string[];
+  /** Social card image (absolute URL or site path); the shared card is used when absent */
+  image?: string;
+  /** Overrides the canonical URL (for articles first published elsewhere) */
+  canonical?: string;
+  /** Drafts previewed locally are kept out of search engines */
+  noIndex?: boolean;
 }
 
 export type ChangeFrequency = MetadataRoute.Sitemap[number]["changeFrequency"];
@@ -104,32 +113,132 @@ export interface TocItem {
   title: string;
 }
 
-export type PostCategory = "Technical" | "Tutorials" | "Case Study" | "Notes";
+/* ─────────────────────────── MDX articles ─────────────────────────── */
 
-export interface Post {
-  slug: string;
-  category: PostCategory;
+/** Drafts never reach the public site (listing, static params, sitemap, search). */
+export type ContentStatus = "draft" | "published";
+
+/** Validated frontmatter of a blog post (content/posts/*.mdx). */
+export interface PostFrontmatter {
   title: string;
+  slug: string;
   excerpt: string;
-  date: string;
-  isoDate: string;
-  readingTime: string;
-  featured?: boolean;
-  sections: Section[];
+  /** ISO date, YYYY-MM-DD */
+  publishedAt: string;
+  updatedAt?: string;
+  author: string;
+  category: string;
+  subcategory?: string;
+  tags: string[];
+  featured: boolean;
+  /** Lower comes first among featured posts */
+  featuredOrder?: number;
+  coverImage?: string;
+  coverImageAlt?: string;
+  /** Minutes; calculated from the body when omitted */
+  readingTime?: number;
+  status: ContentStatus;
+  seoTitle?: string;
+  seoDescription?: string;
+  canonicalUrl?: string;
+  ogImage?: string;
+  series?: string;
+  seriesOrder?: number;
+  /** Slugs of hand-picked related posts */
+  relatedPosts: string[];
+  allowComments: boolean;
 }
 
-export interface Paper {
-  slug: string;
+/** What listings need: the frontmatter plus derived values, never the body. */
+export interface PostSummary extends PostFrontmatter {
+  readingMinutes: number;
+}
+
+/** A post ready to render: summary + MDX source + its contents. */
+export interface PostDocument extends PostSummary {
+  body: string;
+  toc: TocItem[];
+}
+
+/** Validated frontmatter of a research paper (content/research/*.mdx). */
+export interface PaperFrontmatter {
   title: string;
-  authors: string;
+  slug: string;
+  authors: string[];
+  publishedAt: string;
   year: string;
-  isoDate: string;
   venue: string;
   abstract: string;
   tags: string[];
+  status: ContentStatus;
+  doi?: string;
+  paperUrl?: string;
+  pdfUrl?: string;
+  coverImage?: string;
+  coverImageAlt?: string;
   findings: Metric[];
-  sections: Section[];
   bibtex: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  relatedResearch: string[];
+}
+
+export interface PaperSummary extends PaperFrontmatter {
+  /** Position in the research list, newest first ("paper 01") */
+  number: number;
+}
+
+export interface PaperDocument extends PaperSummary {
+  body: string;
+  toc: TocItem[];
+}
+
+/** A parsed MDX file before validation. */
+export interface RawMdxFile {
+  file: string;
+  data: Record<string, unknown>;
+  body: string;
+}
+
+/** A content file whose frontmatter passed validation; its slug is the file name. */
+export interface ValidMdxFile<T> {
+  file: RawMdxFile;
+  meta: T;
+  slug: string;
+}
+
+export type PostSort = "newest" | "oldest";
+
+/** Everything that narrows the blog list. */
+export interface PostQuery {
+  search: string;
+  category: string;
+  subcategory: string;
+  tag: string;
+  sort: PostSort;
+}
+
+/** A post's position in its series. */
+export interface SeriesInfo {
+  name: string;
+  posts: PostSummary[];
+  index: number;
+}
+
+export type CalloutType = "info" | "tip" | "warning" | "danger";
+
+export interface CalloutStyle {
+  icon: IconName;
+  label: string;
+  className: string;
+  accentClassName: string;
+}
+
+/** Options parsed from a fenced code block's meta string. */
+export interface CodeMeta {
+  title?: string;
+  highlightLines: Set<number>;
+  lineNumbers: boolean;
 }
 
 export type ProjectType = "Mobile" | "Web" | "Backend" | "Client work";
@@ -328,6 +437,10 @@ export type IconName =
   | "mail"
   | "calendar"
   | "plus"
+  | "info"
+  | "lightbulb"
+  | "warning"
+  | "search"
   | "menu"
   | "close"
   | "alert"
@@ -537,8 +650,13 @@ export interface TagListProps {
 
 export interface CodeBlockProps {
   code: string;
-  caption: string;
+  /** Filename or caption shown in the header */
+  caption?: string;
+  /** Language label, e.g. "TypeScript" */
+  language?: string;
   copyLabel: string;
+  /** Highlighted <pre>; plain text is rendered when absent */
+  children?: ReactNode;
 }
 
 export interface MetricGridProps {
@@ -621,23 +739,24 @@ export interface ProjectTileProps {
 }
 
 export interface PostRowProps {
-  post: Post;
+  post: PostSummary;
 }
 
 export interface FeaturedPostProps {
-  post: Post;
+  post: PostSummary;
 }
 
 export interface PostCardProps {
-  post: Post;
+  post: PostSummary;
 }
 
 export interface BlogListProps {
-  posts: Post[];
+  posts: PostSummary[];
 }
 
 export interface PaperCardProps {
-  paper: Paper;
+  paper: PaperSummary;
+  /** Position in the grid, for the CSS stagger */
   index: number;
 }
 
@@ -762,10 +881,102 @@ export interface ProjectQuoteProps {
 }
 
 export interface PaperProps {
-  paper: Paper;
+  paper: PaperDocument;
 }
 
 export interface RouteCardLinkProps {
   route: RouteCard;
   delay: number;
 }
+
+/** Name of a custom analytics event. */
+export type AnalyticsEvent = "contact_form_submitted" | "contact_form_failed";
+
+/* ─────────────────────────── Blog & research UI ─────────────────────────── */
+
+export interface PostHeaderProps {
+  post: PostDocument;
+}
+
+export interface PostsBrowserProps {
+  posts: PostSummary[];
+  papers: PaperSummary[];
+}
+
+export interface SeriesNavProps {
+  series: SeriesInfo;
+}
+
+export interface PaperListProps {
+  papers: PaperSummary[];
+}
+
+export interface MdxContentProps {
+  source: string;
+  /** Research papers number their sections */
+  numbered?: boolean;
+}
+
+export interface CalloutProps {
+  type?: CalloutType;
+  title?: string;
+  children: ReactNode;
+}
+
+export interface QuoteProps {
+  cite?: string;
+  children: ReactNode;
+}
+
+export interface FigureProps {
+  src: string;
+  alt: string;
+  caption?: string;
+  width?: number;
+  height?: number;
+}
+
+export interface ArticleImageProps {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  priority?: boolean;
+  className?: string;
+  sizes?: string;
+}
+
+export interface YouTubeProps {
+  id: string;
+  title: string;
+}
+
+export interface SearchFieldProps {
+  value: string;
+  onChange: (value: string) => void;
+  label: string;
+  placeholder: string;
+}
+
+export interface MdxPreProps extends ComponentProps<"pre"> {
+  /** Set by the highlighting plugin: the code as written, for the copy button */
+  "data-raw"?: string;
+  "data-language"?: string;
+  "data-title"?: string;
+  "data-line-numbers"?: string;
+}
+
+export interface MdxHeadingProps extends ComponentProps<"h2"> {
+  level: 2 | 3;
+}
+
+export interface HeadingAnchorProps {
+  id: string;
+  title: string;
+}
+
+export type MdxLinkProps = ComponentProps<"a">;
+
+export type MdxImageProps = ComponentProps<"img">;
+
+export type MdxTableProps = ComponentProps<"table">;

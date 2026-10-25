@@ -1,8 +1,10 @@
 import type { MetadataRoute } from "next";
-import { BLOG_POSTS, PROJECTS, RESEARCH, SITEMAP_DETAIL, SITEMAP_PAGES } from "@/constants/constant";
+import { PROJECTS, SITEMAP_DETAIL, SITEMAP_PAGES } from "@/constants/constant";
+import { getPosts } from "@/lib/content/posts";
+import { getPapers } from "@/lib/content/research";
 import { absoluteUrl } from "@/utils/content";
 
-/** /sitemap.xml — every public page, with articles dated by publish date. */
+/** /sitemap.xml — every public page; articles dated by their last update. Drafts never appear, even in a draft preview. */
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
@@ -19,15 +21,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: SITEMAP_DETAIL.changeFrequency,
       priority: SITEMAP_DETAIL.project,
     })),
-    ...BLOG_POSTS.map((p) => ({
+    ...getPosts()
+      .filter((p) => p.status === "published")
+      .map((p) => ({
       url: absoluteUrl(`/posts/${p.slug}`),
-      lastModified: new Date(p.isoDate),
+      lastModified: new Date(p.updatedAt ?? p.publishedAt),
       changeFrequency: SITEMAP_DETAIL.changeFrequency,
       priority: SITEMAP_DETAIL.article,
     })),
-    ...RESEARCH.map((r) => ({
+    ...getPapers()
+      .filter((r) => r.status === "published")
+      .map((r) => ({
       url: absoluteUrl(`/posts/research/${r.slug}`),
-      lastModified: new Date(r.isoDate),
+      lastModified: new Date(r.publishedAt),
       changeFrequency: SITEMAP_DETAIL.changeFrequency,
       priority: SITEMAP_DETAIL.article,
     })),

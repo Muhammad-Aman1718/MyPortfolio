@@ -6,7 +6,7 @@ import type { PostRowProps } from "@/types/types";
 
 /** Magazine row: a date badge, the category and read time, title and excerpt. */
 export default function PostRow({ post }: PostRowProps) {
-  const { day, month } = dayMonth(post.isoDate);
+  const { day, month } = dayMonth(post.publishedAt);
 
   return (
     <Link
@@ -22,7 +22,7 @@ export default function PostRow({ post }: PostRowProps) {
         <span className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-subtle">
           <span className="font-medium text-primary">{post.category}</span>
           <span aria-hidden="true">·</span>
-          {post.readingTime} {COPY.posts.read}
+          {post.readingMinutes} {COPY.posts.minutes} {COPY.posts.read}
         </span>
         <span className="mt-2 block font-display text-xl font-bold leading-snug tracking-tight sm:text-2xl">
           {post.title}

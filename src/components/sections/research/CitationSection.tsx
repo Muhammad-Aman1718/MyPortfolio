@@ -9,7 +9,7 @@ export default function CitationSection({ paper }: PaperProps) {
   return (
     <section id={PAPER_CITE_ID} className="mt-14 scroll-mt-28">
       <h2 className="flex items-baseline gap-3 font-display text-2xl font-semibold tracking-tight md:text-[28px]">
-        <span className="font-mono text-sm text-accent">{paper.sections.length + 1}</span>
+        <span className="font-mono text-sm text-accent">{paper.toc.length + 1}</span>
         {research.citeTitle}
       </h2>
       <div className="mt-5">

@@ -3,7 +3,8 @@
 import { useState } from "react";
 import type { ChangeEvent, FocusEvent, FormEvent } from "react";
 import { useSearchParams } from "next/navigation";
-import { CONTACT_FIELDS, HONEYPOT_FIELD } from "@/constants/constant";
+import { ANALYTICS_EVENTS, CONTACT_FIELDS, HONEYPOT_FIELD } from "@/constants/constant";
+import { track } from "@/lib/analytics";
 import { submitBrief } from "@/lib/formspree";
 import { formValues, validateContactField } from "@/utils/contact";
 import type {
@@ -61,8 +62,11 @@ export default function useContactForm() {
     try {
       await submitBrief(values);
       setStatus("sent");
+      // Only the choices, never the visitor's name, email or message
+      track(ANALYTICS_EVENTS.contactSubmitted, { type: values.type, budget: values.budget });
     } catch {
       setStatus("failed");
+      track(ANALYTICS_EVENTS.contactFailed);
     }
   };
 

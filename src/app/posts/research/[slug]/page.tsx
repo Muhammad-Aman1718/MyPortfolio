@@ -1,36 +1,46 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { COPY, RESEARCH } from "@/constants/constant";
+import { COPY, UI } from "@/constants/constant";
+import { getPaper, getPapers, getRelatedPapers } from "@/lib/content/research";
 import { articleMeta } from "@/lib/seo";
 import { scholarlyArticle } from "@/lib/structuredData";
-import { getPaper } from "@/utils/content";
 import BackLink from "@/components/ui/BackLink";
 import JsonLd from "@/components/ui/JsonLd";
 import MetricGrid from "@/components/ui/MetricGrid";
-import Prose from "@/components/content/Prose";
+import PaperList from "@/components/content/PaperList";
+import MdxContent from "@/components/mdx/MdxContent";
 import CitationSection from "@/components/sections/research/CitationSection";
 import PaperAbstract from "@/components/sections/research/PaperAbstract";
 import PaperHeader from "@/components/sections/research/PaperHeader";
 import PaperSidebar from "@/components/sections/research/PaperSidebar";
 
+/** Only the listed (published) slugs exist; anything else is a 404. */
+export const dynamicParams = false;
+
 export function generateStaticParams() {
-  return RESEARCH.map(({ slug }) => ({ slug }));
+  return getPapers().map(({ slug }) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: PageProps<"/posts/research/[slug]">): Promise<Metadata> {
   const paper = getPaper((await params).slug);
   if (!paper) return {};
   return articleMeta({
-    title: paper.title,
-    description: paper.abstract,
+    title: paper.seoTitle ?? paper.title,
+    description: paper.seoDescription ?? paper.abstract,
     path: `/posts/research/${paper.slug}`,
-    publishedTime: paper.isoDate,
+    publishedTime: paper.publishedAt,
+    authors: paper.authors,
+    tags: paper.tags,
+    image: paper.coverImage,
+    noIndex: paper.status === "draft",
   });
 }
 
 export default async function PaperPage({ params }: PageProps<"/posts/research/[slug]">) {
   const paper = getPaper((await params).slug);
   if (!paper) notFound();
+
+  const related = getRelatedPapers(paper, UI.relatedResearch);
 
   return (
     <>
@@ -45,13 +55,22 @@ export default async function PaperPage({ params }: PageProps<"/posts/research/[
 
           <div className="min-w-0 lg:col-span-9 xl:col-span-8">
             <PaperAbstract paper={paper} />
-            <MetricGrid metrics={paper.findings} />
+            {paper.findings.length > 0 && <MetricGrid metrics={paper.findings} />}
             <div className="mt-14 max-w-[70ch]">
-              <Prose sections={paper.sections} numbered />
+              <MdxContent source={paper.body} numbered />
               <CitationSection paper={paper} />
             </div>
           </div>
         </div>
+
+        {related.length > 0 && (
+          <section aria-labelledby="related-research" className="mt-20 border-t border-line pt-10">
+            <h2 id="related-research" className="font-display text-2xl font-semibold tracking-tight">
+              {COPY.research.related}
+            </h2>
+            <PaperList papers={related} />
+          </section>
+        )}
       </article>
     </>
   );

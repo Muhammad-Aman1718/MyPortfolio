@@ -53,11 +53,42 @@ export function pageMeta({ title, description, path }: PageMetaInput): Metadata 
 }
 
 /** Metadata for an article-style page (posts, papers, case studies). */
-export function articleMeta({ title, description, path, publishedTime }: ArticleMetaInput): Metadata {
+export function articleMeta({
+  title,
+  description,
+  path,
+  publishedTime,
+  modifiedTime,
+  authors = [SITE.name],
+  tags,
+  image,
+  canonical,
+  noIndex = false,
+}: ArticleMetaInput): Metadata {
+  const full = `${title} | ${SITE.name}`;
+  // A page-level openGraph object replaces the layout's, so the shared card is re-attached when there's no cover
+  const images = [
+    image
+      ? { url: image, alt: title }
+      : { url: OG_IMAGE.path, width: OG_IMAGE.width, height: OG_IMAGE.height, alt: SITE_TITLE },
+  ];
   return {
     title,
     description,
-    alternates: { canonical: path },
-    openGraph: { title, description, type: "article", url: path, publishedTime, authors: [SITE.name] },
+    alternates: { canonical: canonical ?? path },
+    openGraph: {
+      type: "article",
+      url: path,
+      siteName: SITE.name,
+      title: full,
+      description,
+      publishedTime,
+      modifiedTime,
+      authors,
+      tags,
+      images,
+    },
+    twitter: { card: "summary_large_image", title: full, description, images: images.map((img) => img.url) },
+    ...(noIndex && { robots: { index: false, follow: false } }),
   };
 }
