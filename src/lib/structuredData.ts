@@ -1,6 +1,7 @@
 /** schema.org JSON-LD builders, rendered through <JsonLd>. */
 import { EXPERIENCE, PERSON_ID, SERVICES, SITE } from "@/constants/constant";
-import type { Paper, Post } from "@/types/types";
+import { absoluteUrl } from "@/utils/content";
+import type { PaperSummary, PostSummary } from "@/types/types";
 
 /** Who and what this site is (sitewide, in the root layout). */
 export const identityGraph = () => ({
@@ -66,21 +67,37 @@ export const serviceList = () => ({
   })),
 });
 
-export const blogPosting = (post: Post) => ({
+export const blogPosting = (post: PostSummary) => ({
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  headline: post.title,
-  description: post.excerpt,
-  datePublished: post.isoDate,
-  author: { "@type": "Person", name: SITE.name, url: SITE.url },
+  headline: post.seoTitle ?? post.title,
+  description: post.seoDescription ?? post.excerpt,
+  datePublished: post.publishedAt,
+  dateModified: post.updatedAt ?? post.publishedAt,
+  url: absoluteUrl(`/posts/${post.slug}`),
+  mainEntityOfPage: absoluteUrl(`/posts/${post.slug}`),
+  author:
+    post.author === SITE.name
+      ? { "@type": "Person", "@id": PERSON_ID, name: SITE.name, url: SITE.url }
+      : { "@type": "Person", name: post.author },
+  publisher: { "@id": PERSON_ID },
+  articleSection: post.category,
+  keywords: post.tags.join(", "),
+  timeRequired: `PT${post.readingMinutes}M`,
+  ...(post.coverImage && { image: absoluteUrl(post.coverImage) }),
+  ...(post.series && { isPartOf: { "@type": "CreativeWorkSeries", name: post.series } }),
 });
 
-export const scholarlyArticle = (paper: Paper) => ({
+export const scholarlyArticle = (paper: PaperSummary) => ({
   "@context": "https://schema.org",
   "@type": "ScholarlyArticle",
-  headline: paper.title,
+  headline: paper.seoTitle ?? paper.title,
   abstract: paper.abstract,
-  datePublished: paper.isoDate,
-  author: { "@type": "Person", name: paper.authors },
+  datePublished: paper.publishedAt,
+  url: absoluteUrl(`/posts/research/${paper.slug}`),
+  author: paper.authors.map((name) => ({ "@type": "Person", name })),
   keywords: paper.tags.join(", "),
+  ...(paper.doi && { identifier: { "@type": "PropertyValue", propertyID: "DOI", value: paper.doi } }),
+  ...((paper.paperUrl || paper.pdfUrl) && { sameAs: paper.paperUrl ?? paper.pdfUrl }),
+  ...(paper.coverImage && { image: absoluteUrl(paper.coverImage) }),
 });

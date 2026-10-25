@@ -1,0 +1,135 @@
+---
+title: "MDX authoring reference"
+excerpt: "Every element an article can use, in one place. A draft: it never appears on the public site."
+publishedAt: "2026-10-25"
+category: "Notes"
+subcategory: "Reference"
+tags:
+  - "MDX"
+  - "Writing"
+status: "published"
+---
+
+{/* Copy this file to start a new post. Set status to "published" when it's ready. Preview drafts locally with SHOW_DRAFTS=true. */}
+
+## Text
+
+A paragraph with **bold**, *italic*, `inline code`, an [internal link](/projects) and an [external link](https://nextjs.org/docs). Footnotes work too.[^1]
+
+### A sub-heading
+
+Every `##` heading becomes a section in the table of contents, with a stable anchor you can link to.
+
+## Lists
+
+- Unordered item
+- Another item, with a nested list:
+  - Nested item
+  - Another nested item
+
+1. First step
+2. Second step
+3. Third step
+
+- [x] Task lists render as checkboxes
+- [ ] Unchecked item
+
+## Images
+
+Local images live in `/public/images/posts/`. Markdown images take an optional caption as the title:
+
+![The author in a red-lit studio portrait](/imgs/muhammad-aman.avif "Caption from the markdown title")
+
+<Figure
+  src="/imgs/muhammad-aman.avif"
+  alt="The author in a red-lit studio portrait"
+  caption="A <Figure> with an explicit caption"
+  width={1254}
+  height={1254}
+/>
+
+## Quotes and callouts
+
+> A plain markdown blockquote.
+
+<Quote cite="Someone worth quoting">
+A pull quote with attribution.
+</Quote>
+
+<Callout title="Note">
+The default callout, for context and asides.
+</Callout>
+
+<Callout type="tip" title="Practical advice">
+Measure on a real device as well as in development.
+</Callout>
+
+<Callout type="warning" title="Careful">
+This changes behaviour in production.
+</Callout>
+
+<Callout type="danger">
+Without a title the type's own label is used for screen readers.
+</Callout>
+
+## Code
+
+```ts title="lib/measure.ts"
+const startedAt = performance.now();
+await loadInitialData();
+console.log(performance.now() - startedAt);
+```
+
+```tsx {2,4-5}
+export function Greeting({ name }: { name: string }) {
+  const message = `Hello, ${name}!`;
+  return (
+    <h1 className="text-2xl">{message}</h1>
+  );
+}
+```
+
+```python showLineNumbers
+def reading_minutes(words: int, wpm: int = 200) -> int:
+    return max(1, round(words / wpm))
+```
+
+```bash
+npm run build && npm start
+```
+
+```json
+{ "status": "published", "featured": true }
+```
+
+```sql
+SELECT slug, title FROM posts WHERE status = 'published' ORDER BY published_at DESC;
+```
+
+```css
+.card { border-radius: 24px; }
+```
+
+```html
+<button type="button" aria-label="Copy code">Copy</button>
+```
+
+```unknownlang
+Unknown languages render as plain text instead of failing the build.
+```
+
+## Tables
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `title` | Yes | Shown in the header and metadata |
+| `excerpt` | Yes | Listing summary and default description |
+| `coverImage` | No | Local path or R2 URL; needs `coverImageAlt` |
+
+---
+
+## Embeds
+
+Use `<YouTube id="VIDEO_ID" title="What the video shows" />` with the 11-character id from the video URL. It loads from youtube-nocookie.com and renders nothing if the id is invalid.
+
+[^1]: Footnotes collect at the end of the article.

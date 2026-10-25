@@ -507,6 +507,123 @@ html.js [data-reveal] {
   }
 }
 
+/* ─── MDX articles (blog posts, research) — one rhythm for every element ─── */
+@layer components {
+  .mdx { font-size: 17px; }
+  .mdx > * + * { margin-top: 1.25rem; }
+  /* `##` opens a section: divider above it, none before the first */
+  .mdx > .mdx-divider { margin-top: 3rem; }
+  .mdx > .mdx-divider:first-child { display: none; }
+  .mdx > .mdx-divider + * { margin-top: 0; }
+
+  .mdx-h2 { @apply font-display text-2xl font-semibold tracking-tight md:text-[28px]; }
+  .mdx-h3 { @apply pt-2 font-display text-xl font-semibold tracking-tight; }
+  /* Research papers number their sections */
+  .mdx-numbered { counter-reset: section; }
+  .mdx-numbered .mdx-h2::before {
+    counter-increment: section;
+    content: counter(section);
+    margin-right: 0.75rem;
+    font-family: var(--font-jetbrains), ui-monospace, monospace;
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: var(--accent);
+  }
+
+  .mdx p, .mdx li { overflow-wrap: break-word; }
+  .mdx p { line-height: 1.75; color: color-mix(in srgb, var(--fg) 80%, transparent); }
+  .mdx strong { font-weight: 600; color: var(--fg); }
+  .mdx em { font-style: italic; }
+  .mdx a:not(.heading-anchor) {
+    color: var(--fg);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--accent) 60%, transparent);
+    text-underline-offset: 4px;
+    transition: text-decoration-color 150ms ease-out;
+  }
+  .mdx a:not(.heading-anchor):hover { text-decoration-color: var(--accent); }
+  .mdx :not(pre) > code {
+    @apply rounded-md border border-line bg-surface px-1.5 py-0.5 font-mono text-[0.88em] text-fg;
+  }
+
+  /* Lists: crimson dots, zero-padded mono numbers */
+  .mdx ul, .mdx ol { @apply flex flex-col gap-2.5 pl-1; color: color-mix(in srgb, var(--fg) 80%, transparent); }
+  .mdx li { position: relative; line-height: 1.7; }
+  .mdx li > ul, .mdx li > ol { margin-top: 0.625rem; }
+  .mdx ul > li { padding-left: 1.25rem; }
+  .mdx ul > li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.72em;
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--accent);
+  }
+  .mdx ol { counter-reset: item; }
+  .mdx ol > li { counter-increment: item; padding-left: 2rem; }
+  .mdx ol > li::before {
+    content: counter(item, decimal-leading-zero);
+    position: absolute;
+    left: 0;
+    top: 0.3em;
+    font-family: var(--font-jetbrains), ui-monospace, monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+  }
+  .mdx li.task-list-item { padding-left: 0; }
+  .mdx li.task-list-item::before { display: none; }
+  .mdx li.task-list-item input { margin-right: 0.5rem; accent-color: var(--primary); }
+
+  .mdx-quote p + p, .callout-body > * + * { margin-top: 0.75rem; }
+  .callout-body p { color: inherit; }
+  .mdx hr { height: 1px; border: 0; background: var(--line); margin-block: 2.5rem; }
+
+  .mdx-figure { margin: 0; }
+  .mdx-caption { @apply mt-3 text-center text-sm text-subtle; }
+
+  .mdx-table { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; }
+  .mdx-table:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+  .mdx-table table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  .mdx-table th { text-align: left; font-weight: 600; color: var(--fg); background: var(--surface); }
+  .mdx-table th, .mdx-table td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .mdx-table td { color: color-mix(in srgb, var(--fg) 80%, transparent); }
+  .mdx-table tr:last-child td { border-bottom: 0; }
+
+  /* GFM footnotes */
+  .mdx .footnotes { @apply mt-12 border-t border-line pt-6 text-sm; }
+  .mdx sup a { text-decoration: none !important; color: var(--accent) !important; }
+
+  /* Highlighted code (Shiki tokens carry their own colours) */
+  .code-pre {
+    overflow-x: auto;
+    padding-block: 1rem;
+    font-family: var(--font-jetbrains), ui-monospace, monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    color: color-mix(in srgb, var(--fg) 85%, transparent);
+  }
+  .code-pre:focus-visible { outline: 2px solid var(--primary); outline-offset: -2px; }
+  .code-pre code { display: block; width: max-content; min-width: 100%; }
+  .code-pre .line { display: inline-block; width: 100%; padding-inline: 1rem; }
+  .code-pre .line.highlighted {
+    background: color-mix(in srgb, var(--primary) 12%, transparent);
+    box-shadow: inset 2px 0 0 var(--primary);
+  }
+  .code-pre[data-line-numbers] code { counter-reset: line; }
+  .code-pre[data-line-numbers] .line::before {
+    counter-increment: line;
+    content: counter(line);
+    display: inline-block;
+    width: 2ch;
+    margin-right: 1.25rem;
+    text-align: right;
+    color: var(--subtle);
+    user-select: none;
+  }
+}
+
 /* ─── Marquee (tool ticker, testimonials loop) ─── */
 @keyframes marquee { to { transform: translateX(-50%); } }
 .marquee {

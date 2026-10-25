@@ -1,0 +1,76 @@
+---
+title: "GSAP ScrollTrigger in Next.js App Router, properly"
+slug: "gsap-scrolltrigger-nextjs-app-router"
+excerpt: "Cleanup, hydration, and reduced-motion — the parts tutorials skip."
+publishedAt: "2026-04-21"
+author: "Muhammad Aman"
+category: "Tutorials"
+subcategory: "Animation"
+tags:
+  - "Next.js"
+  - "GSAP"
+  - "React"
+status: "published"
+---
+{/* Migrated from the old BLOG_POSTS data, which noted: the technical guidance is real; dates, client numbers and voice are placeholder. Review before relying on them. */}
+
+## It only runs on the client
+
+GSAP touches the DOM, so any component that animates needs `"use client"`. Keep those components small — a reveal wrapper, a counter — and let pages stay Server Components that render them.
+
+```tsx title="components/reveal.tsx"
+"use client";
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+gsap.registerPlugin(ScrollTrigger);
+
+export function Reveal({ children }: { children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.from(ref.current, {
+        autoAlpha: 0, y: 24, duration: 0.7,
+        scrollTrigger: { trigger: ref.current, start: "top 88%", once: true },
+      });
+    }, ref);
+    return () => ctx.revert(); // kills tweens AND their ScrollTriggers
+  }, []);
+  return <div ref={ref}>{children}</div>;
+}
+```
+
+## Clean up, or leak on every navigation
+
+Client-side navigation unmounts the old page but doesn't reload the document. A ScrollTrigger you never killed keeps listening to scroll and pinning elements that no longer exist. `gsap.context()` collects everything created inside it, and `ctx.revert()` in the effect cleanup removes all of it — tweens, triggers and inline styles.
+
+If you use the `@gsap/react` package, its `useGSAP()` hook does the same scoping and cleanup for you.
+
+## Avoid the hydration flash
+
+Server-rendered HTML arrives visible. If the animation's “from” state is applied in an effect, users see content appear, vanish, then animate in. Hide reveal targets with CSS before first paint — but only when JavaScript will run, or no-JS visitors see nothing.
+
+```tsx title="app/layout.tsx + globals.css"
+<script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
+
+/* globals.css */
+html.js [data-reveal] { visibility: hidden; }
+```
+
+Then set the wrapper visible in the same effect that applies the “from” state, so there's never a painted frame in between. For content above the fold, prefer plain CSS keyframes: they start before hydration and don't hold back the largest paint.
+
+## Respect reduced motion
+
+Check `prefers-reduced-motion` before creating any tween, and show content in its final state instead. `gsap.matchMedia()` can do this declaratively and reverts automatically when the preference changes.
+
+```ts
+const mm = gsap.matchMedia();
+mm.add("(prefers-reduced-motion: no-preference)", () => {
+  gsap.from(".tile", { autoAlpha: 0, y: 16, stagger: 0.06 });
+});
+// later: mm.revert();
+```
+
+## Refresh when layout settles
+
+ScrollTrigger measures positions when it's created. Fonts swapping in, images loading or a filtered list changing height can shift everything below. Call `ScrollTrigger.refresh()` after those layout changes, or use `once: true` triggers that tolerate small shifts.

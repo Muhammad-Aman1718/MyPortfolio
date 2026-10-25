@@ -16,7 +16,7 @@ export default function PaperCard({ paper, index }: PaperCardProps) {
     >
       <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-subtle">
         <span className="rounded-full bg-primary px-2.5 py-0.5 text-xs font-semibold text-on-primary">
-          {COPY.posts.paper} {pad2(index + 1)}
+          {COPY.posts.paper} {pad2(paper.number)}
         </span>
         {paper.venue} · {paper.year}
       </p>

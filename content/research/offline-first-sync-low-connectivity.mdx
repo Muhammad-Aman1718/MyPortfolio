@@ -1,0 +1,58 @@
+---
+title: "Offline-first data synchronization patterns in low-connectivity regions"
+slug: "offline-first-sync-low-connectivity"
+authors:
+  - "M. Aman"
+publishedAt: "2026-02-01"
+year: "2026"
+venue: "Preprint"
+abstract: "A comparative study of CRDT and operational-transform approaches for mobile applications operating under intermittent connectivity, with benchmarks from a production deployment serving 100k daily active users across South Asia."
+tags:
+  - "distributed systems"
+  - "mobile"
+  - "CRDTs"
+status: "published"
+findings:
+  - value: 100
+    suffix: "k"
+    label: "daily active users in the deployment studied"
+  - value: 2
+    label: "sync strategies compared"
+  - value: 0
+    label: "server round-trips needed to read or write locally"
+bibtex: |
+  @misc{aman2026offline,
+    title  = {Offline-first data synchronization patterns in low-connectivity regions},
+    author = {Aman, M.},
+    year   = {2026},
+    note   = {Preprint}
+  }
+---
+{/* PLACEHOLDER: migrated from the old RESEARCH data, marked "replace sections, findings and citation with the real papers". Do not present these findings as verified results. */}
+
+## Introduction
+
+Mobile applications in many regions cannot assume a stable connection. Requests time out, connections drop mid-transfer, and devices stay offline for hours. Applications that treat the network as always available degrade badly under these conditions; offline-first applications treat local storage as the source of truth and synchronise opportunistically.
+
+This paper compares two families of synchronisation techniques — conflict-free replicated data types (CRDTs) and operational transformation (OT) — for the kind of small, user-owned data typical of consumer apps: bookmarks, notes, preferences and reading progress.
+
+## Background
+
+- **Operational transformation** rewrites concurrent operations against each other so they can be applied in any order. It usually relies on a central server to order operations.
+- **CRDTs** design the data structure so that merges are commutative, associative and idempotent. Any two replicas that have seen the same updates converge, with no coordinator.
+
+## Method
+
+Both strategies were implemented behind the same storage interface in a production reading application. Devices recorded sync attempts, conflicts and convergence time, and the two implementations were compared across connectivity conditions drawn from the deployment's real network logs.
+
+## Results
+
+For small user-owned records, a per-field last-writer-wins register — the simplest CRDT — matched the user-visible behaviour of the OT implementation while removing the need for a server to order operations. OT's advantage appeared only for collaborative editing of shared text, which the application did not need.
+
+<Callout title="Placeholder">
+Replace this section with the paper's measured results — convergence times, conflict rates and bandwidth per sync.
+</Callout>
+
+## Conclusion
+
+For consumer apps operating in low-connectivity regions, field-level CRDT registers offer a simple and robust default. Teams should reach for operational transformation only when users genuinely co-edit the same content in real time.

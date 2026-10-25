@@ -37,8 +37,6 @@ export const dayMonth = (isoDate: string): DayMonth => {
   };
 };
 
-/** "9 min" → 9. */
-export const minutesOf = (readingTime: string): number => parseInt(readingTime, 10);
 
 /** Replaces `{key}` placeholders in a copy string. */
 export const fillTemplate = (template: string, values: Record<string, string>): string =>
@@ -57,3 +55,11 @@ export const formatCount = (value: number, decimals: number, prefix = "", suffix
 
 /** Number of decimals a value is written with (4.8 → 1). */
 export const decimalsOf = (value: number): number => (String(value).split(".")[1] ?? "").length;
+
+/** "2026-07-14" → "Jul 2026" (list cards). */
+export const formatMonthYear = (isoDate: string): string =>
+  new Date(isoDate).toLocaleString("en", { month: "short", year: "numeric", timeZone: "UTC" });
+
+/** "2026-07-14" → "July 14, 2026" (article headers). */
+export const formatLongDate = (isoDate: string): string =>
+  new Date(isoDate).toLocaleString("en", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });

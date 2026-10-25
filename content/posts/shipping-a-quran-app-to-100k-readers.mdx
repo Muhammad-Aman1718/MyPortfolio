@@ -1,0 +1,42 @@
+---
+title: "Shipping a Quran app to 100k daily readers"
+slug: "shipping-a-quran-app-to-100k-readers"
+excerpt: "Offline-first architecture decisions that made it possible."
+publishedAt: "2026-06-09"
+author: "Muhammad Aman"
+category: "Case Study"
+subcategory: "Mobile"
+tags:
+  - "React Native"
+  - "Offline-first"
+  - "SQLite"
+  - "Performance"
+status: "published"
+---
+{/* Migrated from the old BLOG_POSTS data, which noted: the technical guidance is real; dates, client numbers and voice are placeholder. Review before relying on them. */}
+
+## Offline is the product
+
+People open a Quran app on the metro, at the mosque, on a flight, and in places where the signal is a rumour. A spinner in those moments isn't a minor annoyance — it's the app failing at its one job. So the first decision was that the network is an optional extra, never a dependency for reading.
+
+## Ship the database, not an API client
+
+The full text, translations and verse metadata are compiled into a SQLite file at release time and bundled with the app. On first launch it's copied into the app's data directory once; from then on every screen is a local query.
+
+- Search uses an **FTS5** index with diacritic-insensitive tokenising, so readers find verses whether or not they type the marks.
+- Content updates ship as a new database version; the app swaps files atomically on next launch.
+- Audio is the exception — it streams and caches per surah, and the reader works fully without it.
+
+## Sync without conflicts
+
+Bookmarks, last-read position and notes are the only user data. Each record keeps a timestamp per field and a soft-delete flag. When devices sync, the newest value of each field wins — so editing a note on the phone and moving a bookmark on the tablet never collide.
+
+> If the user can't tell whether they're online, the offline design is working.
+
+## Performance on cheap phones
+
+The pages are virtualised lists of pre-measured verse blocks, so scrolling never measures text on the fly. Page turns run on the UI thread with Reanimated, which keeps them smooth even while audio is loading in JavaScript.
+
+## What I'd do differently
+
+I'd build the content pipeline first. Every bug in the text layer came from hand-edited source data; a validated pipeline that produces the database would have caught them before release.

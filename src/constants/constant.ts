@@ -4,7 +4,10 @@
  * hooks and utils read from here; nothing hard-codes content inline.
  */
 import type {
+  AnalyticsEvent,
   CaseStudy,
+  CalloutStyle,
+  CalloutType,
   ChangeFrequency,
   ContactField,
   ExperienceRole,
@@ -16,8 +19,7 @@ import type {
   LegalPageContent,
   NavLink,
   PageMetaInput,
-  Paper,
-  Post,
+  PostQuery,
   PostsTab,
   ProcessStep,
   ProjectSummary,
@@ -199,6 +201,10 @@ export const UI = {
   keepReading: 2,
   /** Research cards: findings shown per paper */
   paperFindings: 3,
+  /** Blog list: posts shown at first and added by "Load more" */
+  postsPageSize: 6,
+  /** Research page: related papers listed under the citation */
+  relatedResearch: 2,
 } as const;
 
 /* ═══════════════════════════ Page metadata ═══════════════════════════ */
@@ -488,14 +494,33 @@ export const COPY = {
     readArticle: "Read article",
     read: "read",
     minutes: "min",
-    empty: "Nothing in this category yet.",
+    empty: "No posts match these filters.",
+    clearFilters: "Clear filters",
     paper: "Paper",
     readPaper: "Read paper",
+    searchLabel: "Search posts",
+    searchPlaceholder: "Search by title, summary or tag…",
+    sortLabel: "Sort posts",
+    sortNewest: "Newest",
+    sortOldest: "Oldest",
+    subcategoryLabel: "Filter by topic",
+    taggedWith: "Tagged",
+    removeTag: "Remove tag filter",
+    loadMore: "Load more",
+    showing: "Showing {shown} of {total}",
+    noPapers: "No research published yet.",
   },
   post: {
     all: "All posts",
     keepReading: "Keep reading",
     read: "read",
+    updated: "Updated",
+    tagsLabel: "Tags",
+    draft: "Draft — not public",
+    series: "Part {index} of {total} in",
+    seriesLabel: "Series",
+    anchorLabel: "Link to section",
+    opensInNewTab: "(opens in a new tab)",
   },
   research: {
     all: "All research",
@@ -508,6 +533,11 @@ export const COPY = {
     citeTitle: "Cite this paper",
     bibtex: "BibTeX",
     copyCitation: "Copy citation",
+    openPaper: "Open paper",
+    downloadPdf: "Download PDF",
+    doi: "DOI",
+    related: "More research",
+    findings: "Key findings",
   },
   notFound: {
     metaTitle: "Page not found",
@@ -575,6 +605,17 @@ export const CONTACT_FORM = {
   back: "Send another message",
   subject: "Project enquiry from",
 } as const;
+
+/* ═══════════════════════════ Analytics ═══════════════════════════ */
+
+/** PostHog's recommended settings bundle (pageviews, autocapture, web vitals) as of this date. */
+export const POSTHOG_DEFAULTS = "2026-08-30";
+
+/** Custom PostHog events, on top of the automatic pageviews and clicks. */
+export const ANALYTICS_EVENTS: Record<"contactSubmitted" | "contactFailed", AnalyticsEvent> = {
+  contactSubmitted: "contact_form_submitted",
+  contactFailed: "contact_form_failed",
+};
 
 /** Formspree form that delivers the project brief to my inbox. */
 export const FORMSPREE_ENDPOINT = "https://formspree.io/f/mwllvejy";
@@ -729,18 +770,142 @@ export const TAB_KEY_STEPS: Record<string, number> = {
 /** First filter of each list shows everything. */
 export const FILTER_ALL = "All";
 
+/* ═══════════════════════════ MDX articles ═══════════════════════════ */
+
+/** Article folders inside /content at the project root. */
+export const CONTENT_DIRS = {
+  posts: "posts",
+  research: "research",
+};
+
+/** Opening/closing line of a fenced code block in markdown. */
+export const MARKDOWN_FENCE_PATTERN = /^\s*(```|~~~)/;
+
+/** A markdown ATX heading: hashes, then the text. */
+export const MARKDOWN_HEADING_PATTERN = /^(#{1,6})\s+(.+?)\s*#*\s*$/;
+
+/** The blog list before any filtering (the tag comes from the URL). */
+export const DEFAULT_POST_QUERY: Omit<PostQuery, "tag"> = {
+  search: "",
+  category: FILTER_ALL,
+  subcategory: FILTER_ALL,
+  sort: "newest",
+};
+
+/** Messages from the content loader ({file}, {problems}… are filled in). */
+export const CONTENT_MESSAGES = {
+  emptyFile: "[content] Skipped {file}: the file is empty.",
+  skippedDraft:
+    "[content] Skipped {file}: it isn't published yet and its frontmatter is incomplete. Fix this before setting status to published.\n{problems}",
+  invalidPublished: "Invalid frontmatter in published article {file}:\n{problems}",
+  slugMismatch: '{file}: slug "{slug}" must match the file name ("{expected}.mdx")',
+  duplicateSlug: 'Duplicate slug "{slug}" in {first} and {file}',
+};
+
+/** Reading speed for the automatic reading time. */
+export const WORDS_PER_MINUTE = 200;
+
+/** Shiki theme for code blocks (its background is replaced by the --code token). */
+export const CODE_THEME = "github-dark-default";
+
+/** Languages highlighted in code blocks; anything else renders as plain text. */
+export const CODE_LANGUAGES = [
+  "ts",
+  "tsx",
+  "js",
+  "jsx",
+  "json",
+  "bash",
+  "python",
+  "sql",
+  "css",
+  "html",
+  "yaml",
+  "diff",
+  "markdown",
+  "swift",
+  "kotlin",
+  "java",
+  "xml",
+  "graphql",
+];
+
+/** Display names for the language label in a code block's header. */
+export const CODE_LANGUAGE_LABELS: Record<string, string> = {
+  ts: "TypeScript",
+  typescript: "TypeScript",
+  tsx: "TSX",
+  js: "JavaScript",
+  javascript: "JavaScript",
+  jsx: "JSX",
+  json: "JSON",
+  bash: "Bash",
+  sh: "Shell",
+  shell: "Shell",
+  zsh: "Shell",
+  python: "Python",
+  py: "Python",
+  sql: "SQL",
+  css: "CSS",
+  html: "HTML",
+  yaml: "YAML",
+  yml: "YAML",
+  diff: "Diff",
+  markdown: "Markdown",
+  md: "Markdown",
+  swift: "Swift",
+  kotlin: "Kotlin",
+  java: "Java",
+  xml: "XML",
+  graphql: "GraphQL",
+  text: "Text",
+};
+
+/** Callout boxes in articles: icon, screen-reader label and colours per type. */
+export const CALLOUT_STYLES: Record<CalloutType, CalloutStyle> = {
+  info: {
+    icon: "info",
+    label: "Note",
+    className: "border-line bg-linear-to-br from-secondary/60 to-surface",
+    accentClassName: "text-accent",
+  },
+  tip: {
+    icon: "lightbulb",
+    label: "Tip",
+    className: "border-emerald-400/25 bg-emerald-400/[0.06]",
+    accentClassName: "text-emerald-300",
+  },
+  warning: {
+    icon: "warning",
+    label: "Warning",
+    className: "border-amber-400/30 bg-amber-400/[0.06]",
+    accentClassName: "text-amber-300",
+  },
+  danger: {
+    icon: "alert",
+    label: "Important",
+    className: "border-error/40 bg-error/[0.07]",
+    accentClassName: "text-error",
+  },
+};
+
+/** A YouTube video id (embeds are only built from a validated id, never a raw URL). */
+export const YOUTUBE_ID_PATTERN = /^[\w-]{11}$/;
+
+/** Privacy-enhanced YouTube player (no cookies until the visitor presses play). */
+export const YOUTUBE_EMBED_URL = "https://www.youtube-nocookie.com/embed/";
+
+/** Default box for article images whose size isn't given; CSS keeps the real aspect ratio. */
+export const ARTICLE_IMAGE = {
+  width: 1600,
+  height: 900,
+  sizes: "(min-width: 1280px) 720px, (min-width: 768px) 80vw, 100vw",
+};
+
 export const POSTS_TABS: PostsTab[] = ["blog", "research"];
 
 /** Anchor of the citation section on a research page. */
 export const PAPER_CITE_ID = "cite";
-
-export const BLOG_FILTERS = [
-  "All",
-  "Technical",
-  "Tutorials",
-  "Case Study",
-  "Notes",
-];
 
 export const PROJECT_FILTERS = [
   "All",
@@ -784,6 +949,10 @@ export const ICONS: Record<IconName, IconDefinition> = {
     path: "M5 5h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zM3 10h18M8 3v4M16 3v4",
   },
   plus: { path: "M12 5v14M5 12h14" },
+  info: { path: "M12 3a9 9 0 1 0 0 18 9 9 0 1 0 0-18M12 11v5M12 7.5h.01" },
+  lightbulb: { path: "M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z" },
+  warning: { path: "M12 4 2.5 20h19zM12 10v4M12 17h.01" },
+  search: { path: "M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4-4" },
   menu: { path: "M4 8h16M4 16h16" },
   close: { path: "M6 6l12 12M18 6 6 18" },
   alert: { path: "M12 3a9 9 0 1 0 0 18 9 9 0 1 0 0-18M12 7.5v5M12 16h.01" },
@@ -2021,562 +2190,3 @@ export const CASE_STUDIES: Record<string, CaseStudy> = {
     ],
   },
 };
-
-/* ═══════════════════════════ Blog posts ═══════════════════════════ */
-
-/** The technical guidance is real; dates, client numbers and voice are placeholder. */
-export const BLOG_POSTS: Post[] = [
-  {
-    slug: "profiling-react-native-cold-starts",
-    category: "Technical",
-    title: "Profiling React Native cold starts: a field guide",
-    excerpt: "Where those two seconds actually go, and how to claw them back.",
-    date: "Jul 2026",
-    isoDate: "2026-07-14",
-    readingTime: "9 min",
-    featured: true,
-    sections: [
-      {
-        id: "measure-first",
-        title: "Measure the right moment",
-        blocks: [
-          {
-            type: "p",
-            text: "“Startup is slow” usually means one of three different moments: the native process starting, the JavaScript bundle finishing its first run, or the first screen the user can actually use. Optimising the wrong one is the most common way to spend a week and change nothing.",
-          },
-          {
-            type: "p",
-            text: "Mark the moment that matters to the user — the first meaningful screen, rendered with data — and measure from process start to that mark on a **release build** on a **low-end device**. Debug builds and flagship phones hide exactly the costs you're looking for.",
-          },
-          {
-            type: "code",
-            lang: "ts",
-            caption: "Mark the first useful render",
-            code: "import performance from 'react-native-performance';\n\nexport function HomeScreen() {\n  const { data } = useHomeData();\n  useEffect(() => {\n    if (data) performance.mark('home:interactive');\n  }, [data]);\n  // …\n}",
-          },
-        ],
-      },
-      {
-        id: "where-time-goes",
-        title: "Where the time actually goes",
-        blocks: [
-          {
-            type: "p",
-            text: "Use the platform tools for the native half: Android Studio's profiler or a Perfetto trace, and Xcode Instruments' **App Launch** template on iOS. They show the gap between process start and the first frame that the JS-side marks can't see.",
-          },
-          {
-            type: "list",
-            items: [
-              "**Native module initialisation** — modules that set themselves up eagerly at launch, even if the first screen never uses them.",
-              "**Bundle evaluation** — every top-level `import` runs at startup, including the ones only a settings screen needs.",
-              "**Synchronous storage reads** — reading a large persisted store before the first render blocks it.",
-              "**The first screen itself** — a heavy list or a large image decoded on mount.",
-            ],
-          },
-        ],
-      },
-      {
-        id: "fixes",
-        title: "The fixes that pay off",
-        blocks: [
-          {
-            type: "h3",
-            text: "1. Make sure Hermes is on",
-          },
-          {
-            type: "p",
-            text: "Hermes compiles your JavaScript to bytecode at build time, so the device skips parsing at launch. It is the default in current React Native versions; check it hasn't been disabled in an old config.",
-          },
-          {
-            type: "h3",
-            text: "2. Turn on inline requires",
-          },
-          {
-            type: "p",
-            text: "With inline requires, Metro defers a module's evaluation until the first time it's used, instead of evaluating everything at startup.",
-          },
-          {
-            type: "code",
-            lang: "js",
-            caption: "metro.config.js",
-            code: "module.exports = {\n  transformer: {\n    getTransformOptions: async () => ({\n      transform: { experimentalImportSupport: false, inlineRequires: true },\n    }),\n  },\n};",
-          },
-          {
-            type: "h3",
-            text: "3. Defer everything the first screen doesn't need",
-          },
-          {
-            type: "p",
-            text: "Analytics, remote config, crash-report breadcrumbs and prefetching can start after the first screen is interactive. Schedule them with `InteractionManager.runAfterInteractions` or a short timeout after your interactive mark.",
-          },
-          {
-            type: "h3",
-            text: "4. Hide the splash screen on content, not on mount",
-          },
-          {
-            type: "p",
-            text: "Hiding the splash when the root component mounts shows the user an empty shell. Hide it when the first screen has its data — the perceived start gets shorter even when the measured one doesn't.",
-          },
-          {
-            type: "callout",
-            title: "Field result",
-            text: "On one client app these four steps cut cold start by about **40%** on a budget Android phone — most of it from deferring two native SDKs and one large JSON import.",
-          },
-        ],
-      },
-      {
-        id: "keep-it-fast",
-        title: "Keep it fast",
-        blocks: [
-          {
-            type: "p",
-            text: "Startup regresses one innocent import at a time. Record the interactive mark in your analytics with the app version, and alert when the median on low-end devices moves. A number on a dashboard does more than a performance guideline in a wiki.",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    slug: "shipping-a-quran-app-to-100k-readers",
-    category: "Case Study",
-    title: "Shipping a Quran app to 100k daily readers",
-    excerpt: "Offline-first architecture decisions that made it possible.",
-    date: "Jun 2026",
-    isoDate: "2026-06-09",
-    readingTime: "12 min",
-    sections: [
-      {
-        id: "offline-is-the-product",
-        title: "Offline is the product",
-        blocks: [
-          {
-            type: "p",
-            text: "People open a Quran app on the metro, at the mosque, on a flight, and in places where the signal is a rumour. A spinner in those moments isn't a minor annoyance — it's the app failing at its one job. So the first decision was that the network is an optional extra, never a dependency for reading.",
-          },
-        ],
-      },
-      {
-        id: "ship-the-database",
-        title: "Ship the database, not an API client",
-        blocks: [
-          {
-            type: "p",
-            text: "The full text, translations and verse metadata are compiled into a SQLite file at release time and bundled with the app. On first launch it's copied into the app's data directory once; from then on every screen is a local query.",
-          },
-          {
-            type: "list",
-            items: [
-              "Search uses an **FTS5** index with diacritic-insensitive tokenising, so readers find verses whether or not they type the marks.",
-              "Content updates ship as a new database version; the app swaps files atomically on next launch.",
-              "Audio is the exception — it streams and caches per surah, and the reader works fully without it.",
-            ],
-          },
-        ],
-      },
-      {
-        id: "sync-without-conflicts",
-        title: "Sync without conflicts",
-        blocks: [
-          {
-            type: "p",
-            text: "Bookmarks, last-read position and notes are the only user data. Each record keeps a timestamp per field and a soft-delete flag. When devices sync, the newest value of each field wins — so editing a note on the phone and moving a bookmark on the tablet never collide.",
-          },
-          {
-            type: "quote",
-            text: "If the user can't tell whether they're online, the offline design is working.",
-          },
-        ],
-      },
-      {
-        id: "performance-on-cheap-phones",
-        title: "Performance on cheap phones",
-        blocks: [
-          {
-            type: "p",
-            text: "The pages are virtualised lists of pre-measured verse blocks, so scrolling never measures text on the fly. Page turns run on the UI thread with Reanimated, which keeps them smooth even while audio is loading in JavaScript.",
-          },
-        ],
-      },
-      {
-        id: "what-i-would-change",
-        title: "What I'd do differently",
-        blocks: [
-          {
-            type: "p",
-            text: "I'd build the content pipeline first. Every bug in the text layer came from hand-edited source data; a validated pipeline that produces the database would have caught them before release.",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    slug: "why-i-stopped-estimating-in-hours",
-    category: "Notes",
-    title: "Why I stopped estimating in hours",
-    excerpt: "Scope-based pricing changed my client relationships entirely.",
-    date: "May 2026",
-    isoDate: "2026-05-12",
-    readingTime: "5 min",
-    sections: [
-      {
-        id: "the-problem-with-hours",
-        title: "The problem with hours",
-        blocks: [
-          {
-            type: "p",
-            text: "Hourly billing puts the client and the engineer on opposite sides of every decision. The client wants fewer hours; I get paid for more. Every question costs them money, so they stop asking — and the questions they don't ask are where projects go wrong.",
-          },
-        ],
-      },
-      {
-        id: "what-i-do-instead",
-        title: "What I do instead",
-        blocks: [
-          {
-            type: "list",
-            ordered: true,
-            items: [
-              "A paid discovery call that ends with a written scope: what's in, what's out, and what “done” means.",
-              "A fixed price for that scope, with the risk priced in — by me, not discovered later by the client.",
-              "Changes are welcome and handled as small, separately priced additions, never as silent scope creep.",
-            ],
-          },
-        ],
-      },
-      {
-        id: "what-changed",
-        title: "What changed",
-        blocks: [
-          {
-            type: "p",
-            text: "Clients ask more questions now, because asking is free. Meetings got shorter, because nobody is watching a meter. And I got faster, because finishing early is finally rewarded instead of penalised.",
-          },
-          {
-            type: "callout",
-            title: "When hours still make sense",
-            text: "Open-ended work — audits that turn into investigations, or ongoing support — still runs weekly. The rule is simple: fixed price when the outcome can be described, time-based when it can't.",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    slug: "gsap-scrolltrigger-nextjs-app-router",
-    category: "Tutorials",
-    title: "GSAP ScrollTrigger in Next.js App Router, properly",
-    excerpt:
-      "Cleanup, hydration, and reduced-motion — the parts tutorials skip.",
-    date: "Apr 2026",
-    isoDate: "2026-04-21",
-    readingTime: "11 min",
-    sections: [
-      {
-        id: "client-only",
-        title: "It only runs on the client",
-        blocks: [
-          {
-            type: "p",
-            text: 'GSAP touches the DOM, so any component that animates needs `"use client"`. Keep those components small — a reveal wrapper, a counter — and let pages stay Server Components that render them.',
-          },
-          {
-            type: "code",
-            lang: "tsx",
-            caption: "components/reveal.tsx",
-            code: '"use client";\nimport { useEffect, useRef } from "react";\nimport gsap from "gsap";\nimport { ScrollTrigger } from "gsap/ScrollTrigger";\ngsap.registerPlugin(ScrollTrigger);\n\nexport function Reveal({ children }: { children: React.ReactNode }) {\n  const ref = useRef<HTMLDivElement>(null);\n  useEffect(() => {\n    const ctx = gsap.context(() => {\n      gsap.from(ref.current, {\n        autoAlpha: 0, y: 24, duration: 0.7,\n        scrollTrigger: { trigger: ref.current, start: "top 88%", once: true },\n      });\n    }, ref);\n    return () => ctx.revert(); // kills tweens AND their ScrollTriggers\n  }, []);\n  return <div ref={ref}>{children}</div>;\n}',
-          },
-        ],
-      },
-      {
-        id: "cleanup",
-        title: "Clean up, or leak on every navigation",
-        blocks: [
-          {
-            type: "p",
-            text: "Client-side navigation unmounts the old page but doesn't reload the document. A ScrollTrigger you never killed keeps listening to scroll and pinning elements that no longer exist. `gsap.context()` collects everything created inside it, and `ctx.revert()` in the effect cleanup removes all of it — tweens, triggers and inline styles.",
-          },
-          {
-            type: "p",
-            text: "If you use the `@gsap/react` package, its `useGSAP()` hook does the same scoping and cleanup for you.",
-          },
-        ],
-      },
-      {
-        id: "hydration-flash",
-        title: "Avoid the hydration flash",
-        blocks: [
-          {
-            type: "p",
-            text: "Server-rendered HTML arrives visible. If the animation's “from” state is applied in an effect, users see content appear, vanish, then animate in. Hide reveal targets with CSS before first paint — but only when JavaScript will run, or no-JS visitors see nothing.",
-          },
-          {
-            type: "code",
-            lang: "tsx",
-            caption: "app/layout.tsx + globals.css",
-            code: "<script dangerouslySetInnerHTML={{ __html: \"document.documentElement.classList.add('js')\" }} />\n\n/* globals.css */\nhtml.js [data-reveal] { visibility: hidden; }",
-          },
-          {
-            type: "p",
-            text: "Then set the wrapper visible in the same effect that applies the “from” state, so there's never a painted frame in between. For content above the fold, prefer plain CSS keyframes: they start before hydration and don't hold back the largest paint.",
-          },
-        ],
-      },
-      {
-        id: "reduced-motion",
-        title: "Respect reduced motion",
-        blocks: [
-          {
-            type: "p",
-            text: "Check `prefers-reduced-motion` before creating any tween, and show content in its final state instead. `gsap.matchMedia()` can do this declaratively and reverts automatically when the preference changes.",
-          },
-          {
-            type: "code",
-            lang: "ts",
-            code: 'const mm = gsap.matchMedia();\nmm.add("(prefers-reduced-motion: no-preference)", () => {\n  gsap.from(".tile", { autoAlpha: 0, y: 16, stagger: 0.06 });\n});\n// later: mm.revert();',
-          },
-        ],
-      },
-      {
-        id: "refresh",
-        title: "Refresh when layout settles",
-        blocks: [
-          {
-            type: "p",
-            text: "ScrollTrigger measures positions when it's created. Fonts swapping in, images loading or a filtered list changing height can shift everything below. Call `ScrollTrigger.refresh()` after those layout changes, or use `once: true` triggers that tolerate small shifts.",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    slug: "sqlite-in-production-mobile-apps",
-    category: "Technical",
-    title: "SQLite in production mobile apps",
-    excerpt: "Migrations, sync, and the WAL settings nobody documents.",
-    date: "Mar 2026",
-    isoDate: "2026-03-17",
-    readingTime: "8 min",
-    sections: [
-      {
-        id: "pragmas",
-        title: "Set the pragmas on every open",
-        blocks: [
-          {
-            type: "p",
-            text: "SQLite's defaults favour compatibility, not mobile apps. Set these each time you open the connection; most of them are per-connection, not stored in the file.",
-          },
-          {
-            type: "code",
-            lang: "sql",
-            code: "PRAGMA journal_mode = WAL;     -- readers don't block the writer\nPRAGMA synchronous = NORMAL;   -- safe with WAL, far fewer fsyncs\nPRAGMA foreign_keys = ON;      -- off by default!\nPRAGMA busy_timeout = 3000;    -- wait instead of failing on a lock",
-          },
-          {
-            type: "callout",
-            title: "Why WAL matters on mobile",
-            text: "In WAL mode a background sync can write while the UI reads. With the default rollback journal, a long write blocks every read and the screen freezes on a query that normally takes a millisecond.",
-          },
-        ],
-      },
-      {
-        id: "migrations",
-        title: "Migrations with user_version",
-        blocks: [
-          {
-            type: "p",
-            text: "SQLite has a built-in integer for schema versions: `PRAGMA user_version`. Keep migrations as an ordered list and run every one newer than the stored version, each inside its own transaction.",
-          },
-          {
-            type: "code",
-            lang: "ts",
-            code: 'const migrations = [\n  `CREATE TABLE notes (id INTEGER PRIMARY KEY, body TEXT NOT NULL)`,\n  `ALTER TABLE notes ADD COLUMN updated_at INTEGER`,\n];\n\nconst [{ user_version }] = await db.getAllAsync("PRAGMA user_version");\nfor (let v = user_version; v < migrations.length; v++) {\n  await db.withTransactionAsync(async () => {\n    await db.execAsync(migrations[v]);\n    await db.execAsync(`PRAGMA user_version = ${v + 1}`);\n  });\n}',
-          },
-          {
-            type: "p",
-            text: "Never edit a migration that has shipped. A user on an old version will run the new text against an old schema, and you'll be debugging a state no test ever produced.",
-          },
-        ],
-      },
-      {
-        id: "write-in-batches",
-        title: "Write in transactions",
-        blocks: [
-          {
-            type: "p",
-            text: "Each statement outside a transaction is its own transaction, with its own disk sync. Inserting a thousand synced rows one by one can take seconds; the same inserts inside one transaction take milliseconds.",
-          },
-        ],
-      },
-      {
-        id: "off-the-ui-thread",
-        title: "Keep queries off the UI thread",
-        blocks: [
-          {
-            type: "p",
-            text: "Use the async API of your SQLite library so queries never run on the thread that draws frames, add indexes for every column you filter or sort on, and run `PRAGMA optimize` occasionally — for example when the app goes to the background.",
-          },
-        ],
-      },
-    ],
-  },
-];
-
-/* ═══════════════════════════ Research ═══════════════════════════ */
-
-/** PLACEHOLDER COPY — replace sections, findings and citation with the real papers. */
-export const RESEARCH: Paper[] = [
-  {
-    slug: "offline-first-sync-low-connectivity",
-    title:
-      "Offline-first data synchronization patterns in low-connectivity regions",
-    authors: "M. Aman",
-    year: "2026",
-    isoDate: "2026-02-01",
-    venue: "Preprint",
-    abstract:
-      "A comparative study of CRDT and operational-transform approaches for mobile applications operating under intermittent connectivity, with benchmarks from a production deployment serving 100k daily active users across South Asia.",
-    tags: ["distributed systems", "mobile", "CRDTs"],
-    findings: [
-      {
-        value: 100,
-        suffix: "k",
-        label: "daily active users in the deployment studied",
-      },
-      { value: 2, label: "sync strategies compared" },
-      { value: 0, label: "server round-trips needed to read or write locally" },
-    ],
-    sections: [
-      {
-        id: "introduction",
-        title: "Introduction",
-        blocks: [
-          {
-            type: "p",
-            text: "Mobile applications in many regions cannot assume a stable connection. Requests time out, connections drop mid-transfer, and devices stay offline for hours. Applications that treat the network as always available degrade badly under these conditions; offline-first applications treat local storage as the source of truth and synchronise opportunistically.",
-          },
-          {
-            type: "p",
-            text: "This paper compares two families of synchronisation techniques — conflict-free replicated data types (CRDTs) and operational transformation (OT) — for the kind of small, user-owned data typical of consumer apps: bookmarks, notes, preferences and reading progress.",
-          },
-        ],
-      },
-      {
-        id: "background",
-        title: "Background",
-        blocks: [
-          {
-            type: "list",
-            items: [
-              "**Operational transformation** rewrites concurrent operations against each other so they can be applied in any order. It usually relies on a central server to order operations.",
-              "**CRDTs** design the data structure so that merges are commutative, associative and idempotent. Any two replicas that have seen the same updates converge, with no coordinator.",
-            ],
-          },
-        ],
-      },
-      {
-        id: "method",
-        title: "Method",
-        blocks: [
-          {
-            type: "p",
-            text: "Both strategies were implemented behind the same storage interface in a production reading application. Devices recorded sync attempts, conflicts and convergence time, and the two implementations were compared across connectivity conditions drawn from the deployment's real network logs.",
-          },
-        ],
-      },
-      {
-        id: "results",
-        title: "Results",
-        blocks: [
-          {
-            type: "p",
-            text: "For small user-owned records, a per-field last-writer-wins register — the simplest CRDT — matched the user-visible behaviour of the OT implementation while removing the need for a server to order operations. OT's advantage appeared only for collaborative editing of shared text, which the application did not need.",
-          },
-          {
-            type: "callout",
-            title: "Placeholder",
-            text: "Replace this section with the paper's measured results — convergence times, conflict rates and bandwidth per sync.",
-          },
-        ],
-      },
-      {
-        id: "conclusion",
-        title: "Conclusion",
-        blocks: [
-          {
-            type: "p",
-            text: "For consumer apps operating in low-connectivity regions, field-level CRDT registers offer a simple and robust default. Teams should reach for operational transformation only when users genuinely co-edit the same content in real time.",
-          },
-        ],
-      },
-    ],
-    bibtex:
-      "@misc{aman2026offline,\n  title  = {Offline-first data synchronization patterns in low-connectivity regions},\n  author = {Aman, M.},\n  year   = {2026},\n  note   = {Preprint}\n}",
-  },
-  {
-    slug: "perceived-performance-mobile-onboarding",
-    title: "Perceived performance budgets for mobile onboarding flows",
-    authors: "M. Aman",
-    year: "2025",
-    isoDate: "2025-09-01",
-    venue: "Preprint",
-    abstract:
-      "User-study data on abandonment thresholds during first-launch experiences, proposing a 1.8-second perceived-readiness budget derived from 4,000 session recordings.",
-    tags: ["UX research", "performance"],
-    findings: [
-      { value: 4000, label: "session recordings analysed" },
-      { value: 1.8, suffix: "s", label: "proposed perceived-readiness budget" },
-      { value: 1, label: "budget for the whole first-launch flow" },
-    ],
-    sections: [
-      {
-        id: "introduction",
-        title: "Introduction",
-        blocks: [
-          {
-            type: "p",
-            text: "The first launch is the moment an app is most likely to be abandoned. Performance work usually targets measured load time, but users react to perceived readiness — the moment the screen looks usable — which can differ from technical completion by a wide margin.",
-          },
-        ],
-      },
-      {
-        id: "method",
-        title: "Method",
-        blocks: [
-          {
-            type: "p",
-            text: "4,000 recorded first-launch sessions were annotated with the moment each screen became visually ready and the moment the user acted or left. Sessions were grouped by perceived wait to find where abandonment rises sharply.",
-          },
-        ],
-      },
-      {
-        id: "results",
-        title: "Results",
-        blocks: [
-          {
-            type: "p",
-            text: "Abandonment stayed roughly flat for short perceived waits and rose steeply beyond about 1.8 seconds. Skeleton screens and immediate visual feedback moved sessions below the threshold even when the underlying load time didn't change.",
-          },
-          {
-            type: "callout",
-            title: "Placeholder",
-            text: "Replace with the paper's figures: abandonment by perceived wait, confidence intervals and per-device breakdowns.",
-          },
-        ],
-      },
-      {
-        id: "recommendations",
-        title: "Recommendations",
-        blocks: [
-          {
-            type: "list",
-            items: [
-              "Budget **perceived readiness**, not only total load time: aim for a usable-looking first screen within 1.8 seconds.",
-              "Show layout immediately with skeletons; fill content as it arrives.",
-              "Defer permission prompts and account creation until after the first moment of value.",
-            ],
-          },
-        ],
-      },
-    ],
-    bibtex:
-      "@misc{aman2025perceived,\n  title  = {Perceived performance budgets for mobile onboarding flows},\n  author = {Aman, M.},\n  year   = {2025},\n  note   = {Preprint}\n}",
-  },
-];

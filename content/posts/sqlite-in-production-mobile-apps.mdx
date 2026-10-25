@@ -1,0 +1,59 @@
+---
+title: "SQLite in production mobile apps"
+slug: "sqlite-in-production-mobile-apps"
+excerpt: "Migrations, sync, and the WAL settings nobody documents."
+publishedAt: "2026-03-17"
+author: "Muhammad Aman"
+category: "Technical"
+subcategory: "Data"
+tags:
+  - "SQLite"
+  - "React Native"
+  - "Offline-first"
+status: "published"
+---
+{/* Migrated from the old BLOG_POSTS data, which noted: the technical guidance is real; dates, client numbers and voice are placeholder. Review before relying on them. */}
+
+## Set the pragmas on every open
+
+SQLite's defaults favour compatibility, not mobile apps. Set these each time you open the connection; most of them are per-connection, not stored in the file.
+
+```sql
+PRAGMA journal_mode = WAL;     -- readers don't block the writer
+PRAGMA synchronous = NORMAL;   -- safe with WAL, far fewer fsyncs
+PRAGMA foreign_keys = ON;      -- off by default!
+PRAGMA busy_timeout = 3000;    -- wait instead of failing on a lock
+```
+
+<Callout title="Why WAL matters on mobile">
+In WAL mode a background sync can write while the UI reads. With the default rollback journal, a long write blocks every read and the screen freezes on a query that normally takes a millisecond.
+</Callout>
+
+## Migrations with user_version
+
+SQLite has a built-in integer for schema versions: `PRAGMA user_version`. Keep migrations as an ordered list and run every one newer than the stored version, each inside its own transaction.
+
+```ts
+const migrations = [
+  `CREATE TABLE notes (id INTEGER PRIMARY KEY, body TEXT NOT NULL)`,
+  `ALTER TABLE notes ADD COLUMN updated_at INTEGER`,
+];
+
+const [{ user_version }] = await db.getAllAsync("PRAGMA user_version");
+for (let v = user_version; v < migrations.length; v++) {
+  await db.withTransactionAsync(async () => {
+    await db.execAsync(migrations[v]);
+    await db.execAsync(`PRAGMA user_version = ${v + 1}`);
+  });
+}
+```
+
+Never edit a migration that has shipped. A user on an old version will run the new text against an old schema, and you'll be debugging a state no test ever produced.
+
+## Write in transactions
+
+Each statement outside a transaction is its own transaction, with its own disk sync. Inserting a thousand synced rows one by one can take seconds; the same inserts inside one transaction take milliseconds.
+
+## Keep queries off the UI thread
+
+Use the async API of your SQLite library so queries never run on the thread that draws frames, add indexes for every column you filter or sort on, and run `PRAGMA optimize` occasionally — for example when the app goes to the background.

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { COPY, TRANSITION_FORWARD } from "@/constants/constant";
+import { formatMonthYear } from "@/utils/format";
 import Icon from "@/components/ui/Icon";
 import type { PostCardProps } from "@/types/types";
 
@@ -20,7 +21,7 @@ export default function PostCard({ post }: PostCardProps) {
       <span className="mt-4 font-display text-xl font-medium leading-snug">{post.title}</span>
       <span className="mt-2 text-sm text-muted">{post.excerpt}</span>
       <span className="mt-auto pt-5 font-mono text-xs text-muted">
-        {post.date} · {post.readingTime} {COPY.post.read}
+        {formatMonthYear(post.publishedAt)} · {post.readingMinutes} {COPY.posts.minutes} {COPY.post.read}
       </span>
     </Link>
   );

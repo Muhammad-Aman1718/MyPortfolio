@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { COPY, TRANSITION_FORWARD } from "@/constants/constant";
-import { minutesOf } from "@/utils/format";
+import { formatMonthYear } from "@/utils/format";
 import { staggerStyle } from "@/utils/style";
 import Icon from "@/components/ui/Icon";
 import type { FeaturedPostProps } from "@/types/types";
@@ -21,11 +21,11 @@ export default function FeaturedPost({ post }: FeaturedPostProps) {
         </span>
         <span>
           <span className="block font-display text-[48px] font-bold leading-none tracking-tight md:text-[56px]">
-            {minutesOf(post.readingTime)}
+            {post.readingMinutes}
             <span className="ml-1 text-xl md:text-2xl">{COPY.posts.minutes}</span>
           </span>
           <span className="mt-2 block text-sm">
-            {COPY.posts.read} · {post.date}
+            {COPY.posts.read} · {formatMonthYear(post.publishedAt)}
           </span>
         </span>
       </div>

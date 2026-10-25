@@ -1,0 +1,80 @@
+---
+title: "Profiling React Native cold starts: a field guide"
+slug: "profiling-react-native-cold-starts"
+excerpt: "Where those two seconds actually go, and how to claw them back."
+publishedAt: "2026-07-14"
+author: "Muhammad Aman"
+category: "Technical"
+subcategory: "Performance"
+tags:
+  - "React Native"
+  - "Performance"
+  - "Hermes"
+featured: true
+featuredOrder: 1
+status: "published"
+---
+{/* Migrated from the old BLOG_POSTS data, which noted: the technical guidance is real; dates, client numbers and voice are placeholder. Review before relying on them. */}
+
+## Measure the right moment
+
+“Startup is slow” usually means one of three different moments: the native process starting, the JavaScript bundle finishing its first run, or the first screen the user can actually use. Optimising the wrong one is the most common way to spend a week and change nothing.
+
+Mark the moment that matters to the user — the first meaningful screen, rendered with data — and measure from process start to that mark on a **release build** on a **low-end device**. Debug builds and flagship phones hide exactly the costs you're looking for.
+
+```ts title="Mark the first useful render"
+import performance from 'react-native-performance';
+
+export function HomeScreen() {
+  const { data } = useHomeData();
+  useEffect(() => {
+    if (data) performance.mark('home:interactive');
+  }, [data]);
+  // …
+}
+```
+
+## Where the time actually goes
+
+Use the platform tools for the native half: Android Studio's profiler or a Perfetto trace, and Xcode Instruments' **App Launch** template on iOS. They show the gap between process start and the first frame that the JS-side marks can't see.
+
+- **Native module initialisation** — modules that set themselves up eagerly at launch, even if the first screen never uses them.
+- **Bundle evaluation** — every top-level `import` runs at startup, including the ones only a settings screen needs.
+- **Synchronous storage reads** — reading a large persisted store before the first render blocks it.
+- **The first screen itself** — a heavy list or a large image decoded on mount.
+
+## The fixes that pay off
+
+### 1. Make sure Hermes is on
+
+Hermes compiles your JavaScript to bytecode at build time, so the device skips parsing at launch. It is the default in current React Native versions; check it hasn't been disabled in an old config.
+
+### 2. Turn on inline requires
+
+With inline requires, Metro defers a module's evaluation until the first time it's used, instead of evaluating everything at startup.
+
+```js title="metro.config.js"
+module.exports = {
+  transformer: {
+    getTransformOptions: async () => ({
+      transform: { experimentalImportSupport: false, inlineRequires: true },
+    }),
+  },
+};
+```
+
+### 3. Defer everything the first screen doesn't need
+
+Analytics, remote config, crash-report breadcrumbs and prefetching can start after the first screen is interactive. Schedule them with `InteractionManager.runAfterInteractions` or a short timeout after your interactive mark.
+
+### 4. Hide the splash screen on content, not on mount
+
+Hiding the splash when the root component mounts shows the user an empty shell. Hide it when the first screen has its data — the perceived start gets shorter even when the measured one doesn't.
+
+<Callout title="Field result">
+On one client app these four steps cut cold start by about **40%** on a budget Android phone — most of it from deferring two native SDKs and one large JSON import.
+</Callout>
+
+## Keep it fast
+
+Startup regresses one innocent import at a time. Record the interactive mark in your analytics with the app version, and alert when the median on low-end devices moves. A number on a dashboard does more than a performance guideline in a wiki.
