@@ -675,7 +675,10 @@ export const CONTACT_FORM = {
 /** PostHog's recommended settings bundle (pageviews, autocapture, web vitals) as of this date. */
 export const POSTHOG_DEFAULTS = "2026-08-30";
 
-/** Custom PostHog events, on top of the automatic pageviews and clicks. */
+/** Google tag script; the measurement ID comes from NEXT_PUBLIC_GA_MEASUREMENT_ID. */
+export const GA_SCRIPT_URL = "https://www.googletagmanager.com/gtag/js";
+
+/** Custom analytics events (PostHog and Google Analytics), on top of the automatic pageviews and clicks. */
 export const ANALYTICS_EVENTS: Record<
   "contactSubmitted" | "contactFailed",
   AnalyticsEvent
@@ -1210,7 +1213,7 @@ export const LEGAL_PAGES: Record<
               "Website hosting — the provider that serves this site",
               "Contact form — Formspree, which delivers your message to my inbox",
               "Call scheduling — Cal.com",
-              "Analytics — PostHog",
+              "Analytics — PostHog and Google Analytics",
               `Payments — ${PAYMENT_TERMS.methods}`,
             ],
           },
@@ -1246,7 +1249,7 @@ export const LEGAL_PAGES: Record<
         blocks: [
           {
             type: "p",
-            // TODO: PostHog sets analytics cookies — add a cookie consent banner for EU/UK visitors before going live there.
+            // TODO: PostHog and Google Analytics set analytics cookies — add a cookie consent banner for EU/UK visitors before going live there.
             text: "The site uses cookies and similar technologies for core functionality, remembering preferences and analytics. You can block or delete cookies in your browser settings; the site will still work. Third-party analytics providers have their own privacy policies and opt-out options.",
           },
         ],
