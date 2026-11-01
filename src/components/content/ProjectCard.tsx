@@ -4,11 +4,11 @@ import { pad2 } from "@/utils/format";
 import { cn } from "@/utils/style";
 import Icon from "@/components/ui/Icon";
 import SharedPreview from "@/components/ui/SharedPreview";
-import ProjectPreview from "./ProjectPreview";
+import ProjectCover from "./ProjectCover";
 import type { ProjectCardProps } from "@/types/types";
 
 /** Gallery card: a big product preview with the details underneath; `wide` spans both columns. */
-export default function ProjectCard({ project, index, wide }: ProjectCardProps) {
+export default function ProjectCard({ project, index, wide, priority = false }: ProjectCardProps) {
   return (
     <Link
       href={`/projects/${project.slug}`}
@@ -21,10 +21,20 @@ export default function ProjectCard({ project, index, wide }: ProjectCardProps) 
           <div
             className={cn(
               "relative overflow-hidden rounded-3xl bg-surface transition-transform duration-500 ease-smooth group-hover:-translate-y-1",
-              wide ? "aspect-4/3 sm:aspect-video lg:aspect-21/9" : "aspect-4/3",
+              wide
+                ? project.images?.length
+                  ? "aspect-16/10"
+                  : "aspect-4/3 sm:aspect-video lg:aspect-21/9"
+                : project.images?.length
+                  ? "aspect-16/10"
+                  : "aspect-4/3",
             )}
           >
-            <ProjectPreview name={project.name} type={project.type} className="absolute inset-0" />
+            <ProjectCover
+              project={project}
+              sizes={wide ? "(min-width: 1200px) 1120px, 92vw" : "(min-width: 768px) 560px, 92vw"}
+              priority={priority}
+            />
           </div>
         </SharedPreview>
         <div className="pointer-events-none absolute inset-x-4 top-4 flex items-start justify-between gap-3">

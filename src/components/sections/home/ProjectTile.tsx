@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { COPY, TRANSITION_FORWARD } from "@/constants/constant";
+import { cn } from "@/utils/style";
 import Icon from "@/components/ui/Icon";
 import SharedPreview from "@/components/ui/SharedPreview";
-import ProjectPreview from "@/components/content/ProjectPreview";
+import ProjectCover from "@/components/content/ProjectCover";
 import type { ProjectTileProps } from "@/types/types";
 
 /** Compact project card for the home carousel. */
@@ -14,8 +15,13 @@ export default function ProjectTile({ project }: ProjectTileProps) {
       className="group flex w-[85%] shrink-0 snap-start flex-col gap-4 sm:w-[60%] lg:w-auto"
     >
       <SharedPreview slug={project.slug}>
-        <div className="relative aspect-4/3 overflow-hidden rounded-3xl bg-surface">
-          <ProjectPreview name={project.name} type={project.type} className="absolute inset-0" />
+        <div
+          className={cn(
+            "relative overflow-hidden rounded-3xl bg-surface",
+            project.images?.length ? "aspect-16/10" : "aspect-4/3",
+          )}
+        >
+          <ProjectCover project={project} sizes="(min-width: 1024px) 380px, (min-width: 640px) 60vw, 85vw" />
         </div>
       </SharedPreview>
       <div className="flex items-start justify-between gap-4 px-1">

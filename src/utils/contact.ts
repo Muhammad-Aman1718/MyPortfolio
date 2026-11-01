@@ -4,6 +4,7 @@ import {
   CONTACT_NOTES,
   EMAIL_PATTERN,
   MESSAGE_MIN_LENGTH,
+  SERVICE_BUDGETS,
   SITE,
 } from "@/constants/constant";
 import { displayUrl } from "./format";
@@ -47,8 +48,16 @@ export const contactChannels = (): ContactChannel[] => [
   })),
 ];
 
-/** Contact page link that pre-selects a service in the brief. */
-export const serviceContactHref = (service: string): string => `/contact?service=${encodeURIComponent(service)}`;
+/** Contact page link that pre-selects a service, and its budget, in the brief. */
+export const serviceContactHref = (service: string): string => {
+  const params = new URLSearchParams({ service });
+  if (SERVICE_BUDGETS[service]) params.set("budget", SERVICE_BUDGETS[service]);
+  return `/contact?${params}`;
+};
+
+/** A query-string value, kept only when it is one of the select's options. */
+export const pickOption = (options: readonly string[], value: string | null): string =>
+  value && options.includes(value) ? value : "";
 
 /** Social profiles plus WhatsApp, for the footer. */
 export const elsewhereLinks = (): SocialLink[] => [...SITE.socials, { label: "WhatsApp", href: SITE.whatsapp.href }];

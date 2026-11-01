@@ -1,12 +1,12 @@
 import Link from "next/link";
-import { COPY, SITE } from "@/constants/constant";
+import { BOOKING_URL, COPY, SITE } from "@/constants/constant";
 import Icon from "./Icon";
 import Magnetic from "./Magnetic";
 import Reveal from "./Reveal";
 import type { CtaPanelProps } from "@/types/types";
 
 /** Closing call-to-action: a solid primary panel that wipes open, with a magnetic button. */
-export default function CtaPanel({ title = COPY.cta.title, description, email = true }: CtaPanelProps) {
+export default function CtaPanel({ title = COPY.cta.title, description, email = true, booking = false }: CtaPanelProps) {
   return (
     <section className="container-site section">
       <Reveal variant="clip-up" className="relative overflow-hidden rounded-3xl bg-primary text-on-primary">
@@ -20,6 +20,16 @@ export default function CtaPanel({ title = COPY.cta.title, description, email = 
                 {COPY.cta.button} <Icon name="arrowRight" />
               </Link>
             </Magnetic>
+            {booking && (
+              <a
+                href={BOOKING_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="link-underline inline-flex items-center gap-1.5 text-sm font-medium"
+              >
+                <Icon name="calendar" /> {COPY.cta.booking}
+              </a>
+            )}
             {email && (
               <a href={`mailto:${SITE.email}`} className="link-underline text-sm font-medium">
                 {SITE.email}

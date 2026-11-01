@@ -17,7 +17,10 @@ const loadPapers = cache((): PaperDocument[] => {
   return papers
     .filter((paper) => paper.status === "published" || showDrafts())
     .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))
-    .map((paper, i) => ({ ...paper, number: i + 1 }));
+    .map((paper, _i, list) => ({
+      ...paper,
+      number: paper.status === "published" ? list.filter((p) => p.status === "published").indexOf(paper) + 1 : 0,
+    }));
 });
 
 const toSummary = ({ body, toc, ...summary }: PaperDocument): PaperSummary => summary;
@@ -30,7 +33,7 @@ export const getPaper = (slug: string): PaperDocument | undefined => loadPapers(
 
 /** Hand-picked `relatedResearch` first, then other papers sharing the most tags. */
 export function getRelatedPapers(paper: PaperSummary, count: number): PaperSummary[] {
-  const others = getPapers().filter((other) => other.slug !== paper.slug);
+  const others = getPapers().filter((other) => other.slug !== paper.slug && other.status === "published");
   const picked = paper.relatedResearch.flatMap((slug) => others.filter((other) => other.slug === slug));
   const shared = (other: PaperSummary) => other.tags.filter((tag) => paper.tags.includes(tag)).length;
   const rest = others.filter((other) => !picked.includes(other)).sort((a, b) => shared(b) - shared(a));

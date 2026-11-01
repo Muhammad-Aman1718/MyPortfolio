@@ -42,9 +42,6 @@ export const dayMonth = (isoDate: string): DayMonth => {
 export const fillTemplate = (template: string, values: Record<string, string>): string =>
   template.replace(/\{(\w+)\}/g, (_, key: string) => values[key] ?? "");
 
-/** "from $8k" → "$8k". */
-export const priceOf = (from: string): string => from.replace("from ", "");
-
 /** Keeps a value's own precision (0.3 stays 0.3) and groups thousands. */
 export const formatNumber = (value: number, decimals: number): string =>
   value.toLocaleString("en-US", { minimumFractionDigits: decimals, maximumFractionDigits: decimals });

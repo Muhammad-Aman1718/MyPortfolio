@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { COPY, LEGAL_LINKS, NAV_LINKS, SITE } from "@/constants/constant";
+import { BOOKING_URL, COPY, LEGAL_LINKS, NAV_LINKS, SITE } from "@/constants/constant";
 import { elsewhereLinks } from "@/utils/contact";
 import Icon from "@/components/ui/Icon";
 import RotatingWord from "@/components/ui/RotatingWord";
@@ -9,7 +9,7 @@ export default function Footer() {
   return (
     <footer
       id="site-footer"
-      className="relative overflow-hidden bg-background pb-4 pt-20 md:pt-28"
+      className="relative overflow-hidden bg-background pb-4 pt-8 md:pt-12"
     >
       <div className="container-site">
         <div className="grid gap-12 md:grid-cols-12 md:items-end">
@@ -30,9 +30,9 @@ export default function Footer() {
               </a>
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              <Link href="/contact" className="btn-primary">
+              <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" className="btn-primary">
                 {COPY.footer.cta}
-              </Link>
+              </a>
             </div>
           </div>
         </div>

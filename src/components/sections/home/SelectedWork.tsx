@@ -19,7 +19,8 @@ export default function SelectedWork() {
         highlight={work.highlight}
         action={
           <Link href="/projects" className="arrow-link text-sm">
-            {fillTemplate(work.all, { count: String(PROJECTS.length) })} <Icon name="arrowUpRight" />
+            {fillTemplate(work.all, { count: String(PROJECTS.length) })}{" "}
+            <Icon name="arrowUpRight" />
           </Link>
         }
       />
@@ -27,6 +28,7 @@ export default function SelectedWork() {
         <Carousel label={work.carouselLabel} desktopCols="lg:grid-cols-3">
           {PROJECTS.slice(0, UI.homeProjects).map((project) => (
             <ProjectTile key={project.slug} project={project} />
+            // <div></div>
           ))}
         </Carousel>
       </Reveal>

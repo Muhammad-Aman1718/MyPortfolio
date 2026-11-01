@@ -1,6 +1,7 @@
 import { COPY } from "@/constants/constant";
 import { pad2 } from "@/utils/format";
 import { enter } from "@/utils/style";
+import DraftBadge from "@/components/ui/DraftBadge";
 import SplitText from "@/components/ui/SplitText";
 import TagList from "@/components/ui/TagList";
 import type { PaperProps } from "@/types/types";
@@ -11,8 +12,10 @@ export default function PaperHeader({ paper }: PaperProps) {
 
   return (
     <header className="mt-8 max-w-225">
+      {paper.status === "draft" && <DraftBadge label={COPY.post.draft} className="mb-4" />}
       <p {...enter("wipe")} className="font-mono text-xs text-accent">
-        {research.paper} {pad2(paper.number)} · {paper.venue} · {paper.year}
+        {paper.status === "draft" ? research.paper : `${research.paper} ${pad2(paper.number)}`} · {paper.venue} ·{" "}
+        {paper.year}
       </p>
       <h1 className="h-display mt-4 text-[34px] md:text-[52px]">
         <SplitText text={paper.title} enter="mask" step={40} delay={120} />

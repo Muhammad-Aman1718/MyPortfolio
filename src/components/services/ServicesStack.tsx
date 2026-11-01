@@ -31,7 +31,9 @@ export default function ServicesStack({ services }: ServicesStackProps) {
           >
             <div className="flex items-start justify-between gap-6">
               <span className={cn("text-sm font-medium transition-colors duration-500", soft)}>{pad2(i + 1)}</span>
-              <span className={cn("text-sm transition-colors duration-500", soft)}>{service.from}</span>
+              <span className={cn("text-sm transition-colors duration-500", soft)}>
+                <span className="whitespace-nowrap">{service.from}</span> {service.priceLabel}
+              </span>
             </div>
             <div className="mt-10">
               <h3 className="font-display text-[28px] font-bold leading-tight tracking-tight md:text-[34px]">

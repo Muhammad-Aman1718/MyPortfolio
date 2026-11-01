@@ -2,6 +2,7 @@ import Link from "next/link";
 import { COPY, TRANSITION_FORWARD } from "@/constants/constant";
 import { formatMonthYear } from "@/utils/format";
 import { staggerStyle } from "@/utils/style";
+import DraftBadge from "@/components/ui/DraftBadge";
 import Icon from "@/components/ui/Icon";
 import type { FeaturedPostProps } from "@/types/types";
 
@@ -30,6 +31,7 @@ export default function FeaturedPost({ post }: FeaturedPostProps) {
         </span>
       </div>
       <div className="flex flex-col justify-center p-6 md:col-span-9 md:p-8">
+        {post.status === "draft" && <DraftBadge className="mb-3 self-start" />}
         <h2 className="font-display text-[24px] font-bold leading-tight tracking-tight transition-colors duration-200 group-hover:text-primary md:text-[30px]">
           {post.title}
         </h2>

@@ -1,6 +1,6 @@
-import { Suspense } from "react";
 import { COPY, PAGE_META } from "@/constants/constant";
 import { getPosts } from "@/lib/content/posts";
+import { showDrafts } from "@/lib/content/files";
 import { getPapers } from "@/lib/content/research";
 import { pageMeta } from "@/lib/seo";
 import { enter } from "@/utils/style";
@@ -25,11 +25,9 @@ export default function Posts() {
         </p>
       </header>
 
-      <div {...enter("rise", 500)}>
-        {/* The browser reads ?tab= and ?tag= to restore its state */}
-        <Suspense>
-          <PostsBrowser posts={getPosts()} papers={getPapers()} />
-        </Suspense>
+      <div {...enter("lift", 500)}>
+        {/* Rendered in full on the server; in the browser ?tab= and ?tag= then restore its state */}
+        <PostsBrowser posts={getPosts()} papers={getPapers()} draftPreview={showDrafts()} />
       </div>
     </div>
   );

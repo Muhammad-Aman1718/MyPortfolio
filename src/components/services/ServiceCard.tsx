@@ -1,7 +1,6 @@
 import Link from "next/link";
-import { COPY } from "@/constants/constant";
+import { BOOKING_URL, COPY } from "@/constants/constant";
 import { serviceContactHref } from "@/utils/contact";
-import { priceOf } from "@/utils/format";
 import { cn, onPrimary } from "@/utils/style";
 import Icon from "@/components/ui/Icon";
 import type { ServiceCardProps } from "@/types/types";
@@ -10,20 +9,20 @@ import type { ServiceCardProps } from "@/types/types";
 export default function ServiceCard({ service }: ServiceCardProps) {
   const on = service.featured;
   const { services } = COPY;
+  const soft = onPrimary(on, "text-white", "text-subtle");
 
   return (
     <article className={cn("flex flex-col rounded-3xl p-7 md:p-8", onPrimary(on, "bg-primary text-on-primary", "bg-surface"))}>
       <div className="flex items-center justify-between gap-3">
-        <span className={cn("text-sm font-medium", onPrimary(on, "text-white", "text-subtle"))}>{service.engagement}</span>
-        {on && <span className="rounded-full bg-black/20 px-2.5 py-0.5 text-xs font-medium">{services.featuredBadge}</span>}
+        <span className={cn("text-sm font-medium", soft)}>{service.engagement}</span>
+        {on && <span className="shrink-0 rounded-full bg-black/20 px-2.5 py-0.5 text-xs font-medium">{services.featuredBadge}</span>}
       </div>
       <h2 className="mt-6 font-display text-[26px] font-bold leading-tight tracking-tight">{service.name}</h2>
       <p className={cn("mt-3 leading-relaxed", onPrimary(on, "text-white", "text-muted"))}>{service.description}</p>
-      <p className="mt-6 font-display text-4xl font-bold tracking-tight">
-        {priceOf(service.from)}
-        <span className={cn("ml-2 align-middle text-sm font-medium tracking-normal", onPrimary(on, "text-white", "text-subtle"))}>
-          {services.starting}
-        </span>
+      {/* The price never breaks; its label drops below it when the card is narrow */}
+      <p className="mt-6 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+        <span className="whitespace-nowrap font-display text-4xl font-bold tracking-tight">{service.from}</span>
+        {service.priceLabel && <span className={cn("text-sm font-medium", soft)}>{service.priceLabel}</span>}
       </p>
       <ul className="mt-6 flex flex-col gap-3">
         {service.items.map((item) => (
@@ -35,13 +34,22 @@ export default function ServiceCard({ service }: ServiceCardProps) {
           </li>
         ))}
       </ul>
-      <div className="mt-auto pt-8">
+      {service.note && <p className={cn("mt-5 text-sm leading-relaxed", soft)}>{service.note}</p>}
+      <div className="mt-auto flex flex-col items-center gap-3 pt-8">
         <Link
           href={serviceContactHref(service.name)}
           className={onPrimary(on, "btn-inverse w-full justify-center", "btn-secondary w-full")}
         >
           {services.discuss} <Icon name="arrowRight" />
         </Link>
+        <a
+          href={BOOKING_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={cn("text-sm font-medium underline-offset-4 hover:underline", soft)}
+        >
+          {services.bookCall}
+        </a>
       </div>
     </article>
   );

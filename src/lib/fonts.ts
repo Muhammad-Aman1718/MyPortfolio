@@ -11,12 +11,16 @@ export const space = Space_Grotesk({
   display: "swap",
 });
 
-/** Code and meta text (`font-mono`). */
+/**
+ * Code and meta text (`font-mono`). Not preloaded: it's small print and code
+ * blocks, so it shouldn't compete with each page's main image and fonts.
+ */
 export const jetbrains = JetBrains_Mono({
   variable: "--font-jetbrains",
   subsets: ["latin"],
   weight: ["400", "500"],
   display: "swap",
+  preload: false,
 });
 
 export const fontVariables = `${inter.variable} ${space.variable} ${jetbrains.variable}`;

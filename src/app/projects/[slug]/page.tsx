@@ -10,8 +10,9 @@ import MetricGrid from "@/components/ui/MetricGrid";
 import SharedPreview from "@/components/ui/SharedPreview";
 import Toc from "@/components/ui/Toc";
 import Prose from "@/components/content/Prose";
-import ProjectPreview from "@/components/content/ProjectPreview";
+import ProjectCover from "@/components/content/ProjectCover";
 import PrevNext from "@/components/sections/project/PrevNext";
+import ProjectCarousel from "@/components/sections/project/ProjectCarousel";
 import ProjectHeader from "@/components/sections/project/ProjectHeader";
 import ProjectQuote from "@/components/sections/project/ProjectQuote";
 import StackList from "@/components/sections/project/StackList";
@@ -44,14 +45,18 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
 
         <ProjectHeader project={project} />
 
-        {/* Hero — the same preview the card showed, morphed into place on forward navigation */}
+        {/* Hero — the card's visual morphs into place on forward navigation: the screens carousel, or the mock-up */}
         <SharedPreview slug={project.slug}>
-          <div className="relative mt-10 aspect-4/3 overflow-hidden rounded-[20px] border border-line sm:aspect-video lg:aspect-21/9">
-            <ProjectPreview name={project.name} type={project.type} className="absolute inset-0" />
-          </div>
+          {project.images?.length ? (
+            <ProjectCarousel images={project.images} name={project.name} />
+          ) : (
+            <div className="relative mt-10 aspect-4/3 overflow-hidden rounded-[20px] border border-line sm:aspect-video lg:aspect-21/9">
+              <ProjectCover project={project} sizes="(min-width: 1200px) 1120px, 92vw" priority />
+            </div>
+          )}
         </SharedPreview>
 
-        <MetricGrid metrics={project.metrics} size="lg" />
+        {project.metrics.length > 0 && <MetricGrid metrics={project.metrics} size="lg" />}
 
         <div className="mt-14 grid gap-10 lg:grid-cols-12 lg:gap-12">
           <aside className="hidden lg:col-span-3 lg:block">

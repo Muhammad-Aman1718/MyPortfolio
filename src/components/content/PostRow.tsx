@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { COPY, TRANSITION_FORWARD } from "@/constants/constant";
 import { dayMonth } from "@/utils/format";
+import DraftBadge from "@/components/ui/DraftBadge";
 import Icon from "@/components/ui/Icon";
 import type { PostRowProps } from "@/types/types";
 
@@ -20,6 +21,7 @@ export default function PostRow({ post }: PostRowProps) {
       </span>
       <span className="min-w-0">
         <span className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-subtle">
+          {post.status === "draft" && <DraftBadge />}
           <span className="font-medium text-primary">{post.category}</span>
           <span aria-hidden="true">·</span>
           {post.readingMinutes} {COPY.posts.minutes} {COPY.posts.read}
