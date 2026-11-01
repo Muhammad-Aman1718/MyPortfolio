@@ -1,13 +1,24 @@
-import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
+import localFont from "next/font/local";
 
-/** Body text. next/font needs literal options at module scope, so the fonts live here. */
-export const inter = Inter({ variable: "--font-inter", subsets: ["latin"], display: "swap" });
+/*
+ * Self-hosted (latin, variable) so the build never downloads from Google Fonts —
+ * a failed download there breaks the whole build. next/font/local needs literal
+ * options at module scope, so the fonts live here.
+ */
+
+/** Body text. */
+export const inter = localFont({
+  src: "../fonts/inter-latin.woff2",
+  variable: "--font-inter",
+  weight: "100 900",
+  display: "swap",
+});
 
 /** Display headings (`font-display`). */
-export const space = Space_Grotesk({
+export const space = localFont({
+  src: "../fonts/space-grotesk-latin.woff2",
   variable: "--font-space",
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  weight: "500 700",
   display: "swap",
 });
 
@@ -15,10 +26,10 @@ export const space = Space_Grotesk({
  * Code and meta text (`font-mono`). Not preloaded: it's small print and code
  * blocks, so it shouldn't compete with each page's main image and fonts.
  */
-export const jetbrains = JetBrains_Mono({
+export const jetbrains = localFont({
+  src: "../fonts/jetbrains-mono-latin.woff2",
   variable: "--font-jetbrains",
-  subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: "400 500",
   display: "swap",
   preload: false,
 });
