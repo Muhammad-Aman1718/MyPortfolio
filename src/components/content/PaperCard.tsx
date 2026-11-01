@@ -2,6 +2,7 @@ import Link from "next/link";
 import { COPY, TRANSITION_FORWARD, UI } from "@/constants/constant";
 import { pad2 } from "@/utils/format";
 import { staggerStyle } from "@/utils/style";
+import DraftBadge from "@/components/ui/DraftBadge";
 import Icon from "@/components/ui/Icon";
 import type { PaperCardProps } from "@/types/types";
 
@@ -15,9 +16,13 @@ export default function PaperCard({ paper, index }: PaperCardProps) {
       className="group flex flex-col rounded-3xl bg-surface p-7 transition-colors duration-300 hover:bg-surface-hi md:p-9"
     >
       <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-subtle">
-        <span className="rounded-full bg-primary px-2.5 py-0.5 text-xs font-semibold text-on-primary">
-          {COPY.posts.paper} {pad2(paper.number)}
-        </span>
+        {paper.status === "draft" ? (
+          <DraftBadge />
+        ) : (
+          <span className="rounded-full bg-primary px-2.5 py-0.5 text-xs font-semibold text-on-primary">
+            {COPY.posts.paper} {pad2(paper.number)}
+          </span>
+        )}
         {paper.venue} · {paper.year}
       </p>
       <h2 className="mt-5 font-display text-2xl font-bold leading-tight tracking-tight transition-colors duration-200 group-hover:text-primary md:text-[28px]">

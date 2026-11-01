@@ -74,5 +74,11 @@ export function loadMdxFiles<T extends z.ZodType>(folder: string, schema: T): Va
   return files;
 }
 
-/** Drafts are hidden unless SHOW_DRAFTS=true (local preview only). */
-export const showDrafts = (): boolean => process.env.SHOW_DRAFTS === "true";
+/**
+ * Whether drafts are loaded at all: always while running `npm run dev` on your
+ * computer (the /posts page then offers a "Show drafts" toggle), or with
+ * SHOW_DRAFTS=true for a local production preview. A normal production build
+ * never contains them — no page, no listing, no sitemap entry.
+ */
+export const showDrafts = (): boolean =>
+  process.env.NODE_ENV === "development" || process.env.SHOW_DRAFTS === "true";

@@ -3,10 +3,16 @@
 import { useState } from "react";
 import type { ChangeEvent, FocusEvent, FormEvent } from "react";
 import { useSearchParams } from "next/navigation";
-import { ANALYTICS_EVENTS, CONTACT_FIELDS, HONEYPOT_FIELD } from "@/constants/constant";
+import {
+  ANALYTICS_EVENTS,
+  BUDGET_OPTIONS,
+  CONTACT_FIELDS,
+  HONEYPOT_FIELD,
+  PROJECT_TYPE_OPTIONS,
+} from "@/constants/constant";
 import { track } from "@/lib/analytics";
 import { submitBrief } from "@/lib/formspree";
-import { formValues, validateContactField } from "@/utils/contact";
+import { formValues, pickOption, validateContactField } from "@/utils/contact";
 import type {
   ContactField,
   ContactFieldA11y,
@@ -78,6 +84,8 @@ export default function useContactForm() {
     errors,
     fieldProps,
     onSubmit,
-    defaultType: params.get("service") ?? "",
+    // "Discuss this" on a plan links here with ?service= and ?budget=
+    defaultType: pickOption(PROJECT_TYPE_OPTIONS, params.get("service")),
+    defaultBudget: pickOption(BUDGET_OPTIONS, params.get("budget")),
   };
 }

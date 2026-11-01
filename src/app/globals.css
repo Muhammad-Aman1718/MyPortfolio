@@ -344,6 +344,8 @@ body {
 
 /* ─── Above-the-fold entrances (pure CSS: run before hydration, no flash) ─── */
 @keyframes enter-rise { from { opacity: 0; transform: translateY(18px); } }
+/* Movement only, no fade: for blocks that hold the page's largest paint, which an opacity fade would hold back */
+@keyframes enter-lift { from { transform: translateY(18px); } }
 @keyframes enter-fade { from { opacity: 0; } }
 @keyframes enter-mask { from { transform: translateY(108%); } }
 @keyframes enter-skew { from { opacity: 0; transform: translateY(40%) skewY(5deg); } }
@@ -365,6 +367,7 @@ body {
   animation-delay: calc(var(--d, 0) * 1ms);
 }
 [data-enter="rise"] { animation-name: enter-rise; }
+[data-enter="lift"] { animation-name: enter-lift; }
 [data-enter="fade"] { animation-name: enter-fade; animation-duration: 1.2s; }
 [data-enter="mask"] { animation-name: enter-mask; animation-duration: 1.1s; }
 [data-enter="skew"] { animation-name: enter-skew; animation-duration: 1s; }
@@ -445,11 +448,14 @@ body {
 ::view-transition-new(.morph) { width: 100%; height: 100%; object-fit: contain; }
 
 /* ─── Scroll reveals ─── */
-/* JS hides [data-reveal] until GSAP owns it; failsafe un-hides if scripts never run */
-@keyframes reveal-failsafe { to { visibility: visible; } }
-html.js [data-reveal] {
-  visibility: hidden;
-  animation: reveal-failsafe 0s 2s forwards;
+/* Reveals are server-rendered visible, so what's on screen at load paints at
+   once (it's often the page's largest paint) and simply fades up. Ones below
+   the fold are hidden by JS out of sight and animated by GSAP on scroll-in. */
+/* Transform only: an opacity fade would hold back the largest-paint timing until it ends */
+@keyframes reveal-in { from { transform: translateY(16px); } }
+html.js [data-reveal] { animation: reveal-in 0.7s var(--ease-out) backwards; }
+@media (prefers-reduced-motion: reduce) {
+  html.js [data-reveal] { animation: none; }
 }
 
 /* Re-triggerable stagger used when filtered lists change (posts) */
@@ -578,7 +584,9 @@ html.js [data-reveal] {
 
   .mdx-quote p + p, .callout-body > * + * { margin-top: 0.75rem; }
   .callout-body p { color: inherit; }
-  .mdx hr { height: 1px; border: 0; background: var(--line); margin-block: 2.5rem; }
+  /* `---` in an article: the dotted section divider, with room above and below */
+  .mdx > .mdx-hr { margin-block: 2.5rem; }
+  .mdx > .mdx-hr + * { margin-top: 0; }
 
   .mdx-figure { margin: 0; }
   .mdx-caption { @apply mt-3 text-center text-sm text-subtle; }

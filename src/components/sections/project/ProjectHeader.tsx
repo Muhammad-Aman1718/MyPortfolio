@@ -24,7 +24,7 @@ export default function ProjectHeader({ project }: ProjectProps) {
           {project.summary}
         </p>
       </div>
-      <dl {...enter("rise", 500)} className="card grid grid-cols-2 gap-px overflow-hidden bg-line lg:col-span-5">
+      <dl {...enter("rise", 500)} className="card grid grid-cols-2 gap-px overflow-hidden bg-line lg:col-span-5 [&>*:last-child:nth-child(odd)]:col-span-2">
         {projectFacts(project).map((fact) => (
           <div key={fact.label} className="bg-surface p-4">
             <dt className="font-mono text-xs text-muted">{fact.label}</dt>

@@ -12,7 +12,8 @@ export default function Portrait({ className, sizes = "(min-width: 1024px) 40vw,
         alt={`${SITE.name}, ${SITE.role}`}
         fill
         sizes={sizes}
-        priority={priority}
+        loading={priority ? "eager" : undefined}
+        fetchPriority={priority ? "high" : undefined}
         className="object-cover object-top"
       />
     </div>

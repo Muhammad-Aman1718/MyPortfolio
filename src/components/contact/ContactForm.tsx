@@ -24,6 +24,7 @@ export default function ContactForm() {
     fieldProps,
     onSubmit,
     defaultType,
+    defaultBudget,
   } = useContactForm();
 
   if (sent) return <ContactSent onBack={reset} />;
@@ -106,6 +107,7 @@ export default function ContactForm() {
             labelledBy="budget-label"
             options={BUDGET_OPTIONS}
             placeholder={CONTACT_FORM.budget.placeholder}
+            defaultValue={defaultBudget}
           />
         </FormField>
       </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { gsap } from "@/lib/gsap";
+import { gsap } from "@/lib/scrollTrigger";
 
 /** Scrubs a bar's scaleX from 0 → 1 as `target` scrolls through the viewport. */
 export default function useReadingProgress(target: string) {

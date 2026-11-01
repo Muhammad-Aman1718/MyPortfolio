@@ -39,7 +39,7 @@ export const getPost = (slug: string): PostDocument | undefined =>
  * shared tags, subcategory and category (newer wins ties).
  */
 export function getRelatedPosts(post: PostSummary, count: number): PostSummary[] {
-  const others = getPosts().filter((other) => other.slug !== post.slug);
+  const others = getPosts().filter((other) => other.slug !== post.slug && other.status === "published");
   const picked = post.relatedPosts.flatMap((slug) => others.filter((other) => other.slug === slug));
   const score = (other: PostSummary) =>
     other.tags.filter((tag) => post.tags.includes(tag)).length * 2 +

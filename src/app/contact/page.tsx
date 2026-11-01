@@ -1,9 +1,10 @@
 import { Suspense } from "react";
-import { CONTACT_FAQS, COPY, PAGE_META } from "@/constants/constant";
+import { BOOKING_URL, CONTACT_FAQS, COPY, PAGE_META } from "@/constants/constant";
 import { pageMeta } from "@/lib/seo";
 import { contactChannels } from "@/utils/contact";
 import { enter } from "@/utils/style";
 import FaqSplit from "@/components/ui/FaqSplit";
+import Icon from "@/components/ui/Icon";
 import PageHero from "@/components/ui/PageHero";
 import ChannelCard from "@/components/contact/ChannelCard";
 import ContactForm from "@/components/contact/ContactForm";
@@ -11,11 +12,15 @@ import ContactForm from "@/components/contact/ContactForm";
 export const metadata = pageMeta(PAGE_META.contact);
 
 export default function Contact() {
-  const { hero, basedIn, faq } = COPY.contact;
+  const { hero, basedIn, faq, booking } = COPY.contact;
 
   return (
     <>
-      <PageHero {...hero} />
+      <PageHero {...hero}>
+        <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" className="btn-secondary">
+          <Icon name="calendar" /> {booking}
+        </a>
+      </PageHero>
 
       <div className="container-site grid grid-cols-1 gap-6 pb-6 lg:grid-cols-12">
         <div className="flex flex-col gap-3 lg:col-span-5">

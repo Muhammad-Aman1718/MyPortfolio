@@ -243,6 +243,12 @@ export interface CodeMeta {
 
 export type ProjectType = "Mobile" | "Web" | "Backend" | "Client work";
 
+/** A showcase image under /public/imgs/projects/<slug>/ (1600×1000, screens on a brand background). */
+export interface ProjectImage {
+  src: string;
+  alt: string;
+}
+
 export interface ProjectSummary {
   slug: string;
   name: string;
@@ -252,6 +258,8 @@ export interface ProjectSummary {
   tagline: string;
   tags: string[];
   flagship?: boolean;
+  /** Up to 5 showcase images; the first is the cover. Projects without images show a mock-up. */
+  images?: ProjectImage[];
 }
 
 export interface ProjectQuote {
@@ -335,8 +343,28 @@ export interface Service {
   description: string;
   items: string[];
   engagement: string;
+  /** The price as shown, e.g. "$900" or "$4k – $6k" */
   from: string;
+  /** Small text beside the price: "starting", "per month"… */
+  priceLabel?: string;
+  /** Muted line under the included items */
+  note?: string;
   featured?: boolean;
+}
+
+/** A client project on the services page; a "TODO" title marks a placeholder. */
+export interface ClientCaseStudy {
+  title: string;
+  clientType: string;
+  problem: string;
+  built: string;
+  role: string;
+  stack: string[];
+  /** A measurable outcome, if there is one */
+  result: string;
+  screenshots?: ProjectImage[];
+  appStoreUrl?: string;
+  playStoreUrl?: string;
 }
 
 export interface Faq {
@@ -400,6 +428,7 @@ export interface RevealPreset {
 /** CSS on-load entrances defined in globals.css (`[data-enter="…"]`). */
 export type EnterAnimation =
   | "rise"
+  | "lift"
   | "fade"
   | "mask"
   | "skew"
@@ -432,6 +461,7 @@ export type IconName =
   | "chevronRight"
   | "chevronDown"
   | "check"
+  | "download"
   | "copy"
   | "link"
   | "mail"
@@ -508,7 +538,7 @@ export interface RevealProps {
   grid?: boolean;
   delay?: number;
   duration?: number;
-  /** ScrollTrigger start position */
+  /** Where the reveal starts, e.g. "top 88%": the element top crossing 88% of the viewport */
   start?: string;
   as?: "div" | "section" | "ul" | "ol" | "span";
   id?: string;
@@ -674,6 +704,8 @@ export interface CtaPanelProps {
   title?: string;
   description?: string;
   email?: boolean;
+  /** Adds a "Book a 20-min call" link beside the button */
+  booking?: boolean;
 }
 
 export interface FaqListProps {
@@ -727,6 +759,8 @@ export interface ProjectCardProps {
   project: ProjectSummary;
   index: number;
   wide: boolean;
+  /** Load the cover first: cards on screen at load */
+  priority?: boolean;
 }
 
 export interface SharedPreviewProps {
@@ -736,6 +770,36 @@ export interface SharedPreviewProps {
 
 export interface ProjectTileProps {
   project: ProjectSummary;
+}
+
+export interface ProjectCoverProps {
+  project: ProjectSummary;
+  sizes: string;
+  priority?: boolean;
+}
+
+export interface ProjectSlideshowProps {
+  images: ProjectImage[];
+  sizes: string;
+  priority?: boolean;
+}
+
+export interface SlideDotsProps {
+  count: number;
+  index: number;
+  /** Most dots shown at once; the row slides when there are more */
+  max: number;
+  /** Width of one dot's slot (px) */
+  slot?: number;
+  /** Makes the dots buttons that jump to a slide */
+  onSelect?: (index: number) => void;
+  labelFor?: (index: number) => string;
+  className?: string;
+}
+
+export interface ProjectCarouselProps {
+  images: ProjectImage[];
+  name: string;
 }
 
 export interface PostRowProps {
@@ -770,6 +834,10 @@ export interface ServicesStackProps {
 
 export interface ServiceCardProps {
   service: Service;
+}
+
+export interface ClientCaseStudyCardProps {
+  study: ClientCaseStudy;
 }
 
 export interface TestimonialCardProps {
@@ -901,6 +969,23 @@ export interface PostHeaderProps {
 export interface PostsBrowserProps {
   posts: PostSummary[];
   papers: PaperSummary[];
+  /** True when drafts were loaded (local dev): enables the "Show drafts" toggle */
+  draftPreview: boolean;
+}
+
+export interface SectionDividerProps {
+  className?: string;
+}
+
+export interface DraftBadgeProps {
+  label?: string;
+  className?: string;
+}
+
+export interface DraftToggleProps {
+  count: number;
+  on: boolean;
+  onToggle: () => void;
 }
 
 export interface SeriesNavProps {

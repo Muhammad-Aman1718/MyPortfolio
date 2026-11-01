@@ -72,11 +72,16 @@ export default function SelectField({ name, options, placeholder, labelledBy, de
                 className={cn(
                   "flex cursor-pointer items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors duration-100",
                   i === active ? "bg-fg/8 text-fg" : "text-muted",
-                  selected && "text-primary",
+                  selected && "font-medium text-fg",
                 )}
               >
                 {option}
-                {selected && <Icon name="check" className="h-4 w-4 shrink-0" strokeWidth={2} />}
+                {/* White check on a crimson dot: reads on the hover tint too */}
+                {selected && (
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary text-on-primary">
+                    <Icon name="check" className="h-3 w-3" strokeWidth={3} />
+                  </span>
+                )}
               </li>
             );
           })}

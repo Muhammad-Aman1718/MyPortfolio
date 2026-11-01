@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { COPY } from "@/constants/constant";
+import { BOOKING_URL, COPY } from "@/constants/constant";
 import Icon from "@/components/ui/Icon";
 import Reveal from "@/components/ui/Reveal";
 
@@ -17,9 +16,9 @@ export default function BookingCard() {
         <h3 className="h-display text-[38px] font-bold md:text-[46px]">{booking.title}</h3>
         <p className="mt-3 text-lg leading-relaxed">{booking.text}</p>
       </div>
-      <Link href="/contact" className="btn-inverse justify-center self-start">
+      <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" className="btn-inverse justify-center self-start">
         {booking.cta} <Icon name="arrowRight" />
-      </Link>
+      </a>
     </Reveal>
   );
 }

@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useSearchParams } from "next/navigation";
 import { COPY, DEFAULT_POST_QUERY, FILTER_ALL, UI } from "@/constants/constant";
 import { isFiltered, pickFeatured, postCategories, postSubcategories, queryPosts } from "@/utils/posts";
 import useIndicator from "./useIndicator";
-import type { PostQuery, PostSort, PostSummary, PostsTab } from "@/types/types";
+import useLocationSearch from "./useLocationSearch";
+import type { PaperSummary, PostQuery, PostSort, PostSummary, PostsTab } from "@/types/types";
 
 /**
  * Blog / research browser state. The tab and tag live in the URL
@@ -13,17 +13,28 @@ import type { PostQuery, PostSort, PostSummary, PostsTab } from "@/types/types";
  * tags link here. Search, category, topic and sort narrow the blog list,
  * which shows a page at a time.
  */
-export default function usePostsBrowser(posts: PostSummary[]) {
-  const params = useSearchParams();
-  const [tab, setTabState] = useState<PostsTab>(params.get("tab") === "research" ? "research" : "blog");
-  const [query, setQuery] = useState<PostQuery>({ ...DEFAULT_POST_QUERY, tag: params.get("tag") ?? "" });
+export default function usePostsBrowser(allPosts: PostSummary[], allPapers: PaperSummary[]) {
+  // The URL sets the starting view; once the visitor picks something, their choice wins (null = not chosen yet)
+  const params = new URLSearchParams(useLocationSearch());
+  // Drafts only exist in the data during local dev; they stay hidden until toggled on
+  const [draftsChoice, setDrafts] = useState<boolean | null>(null);
+  const drafts = draftsChoice ?? params.get("drafts") === "1";
+  const isPublished = (item: { status: string }) => item.status === "published";
+  const draftCount = [...allPosts, ...allPapers].filter((item) => !isPublished(item)).length;
+  const posts = drafts ? allPosts : allPosts.filter(isPublished);
+  const papers = drafts ? allPapers : allPapers.filter(isPublished);
+  const [tabChoice, setTabState] = useState<PostsTab | null>(null);
+  const tab = tabChoice ?? (params.get("tab") === "research" ? "research" : "blog");
+  const [queryChoice, setQuery] = useState<PostQuery | null>(null);
+  const query = queryChoice ?? { ...DEFAULT_POST_QUERY, tag: params.get("tag") ?? "" };
   const [limit, setLimit] = useState<number>(UI.postsPageSize);
   const { ref: tabsRef } = useIndicator<HTMLDivElement>(tab);
 
-  const syncUrl = (nextTab: PostsTab, tag: string) => {
+  const syncUrl = (nextTab: PostsTab, tag: string, withDrafts = drafts) => {
     const search = new URLSearchParams();
     if (nextTab === "research") search.set("tab", "research");
     if (tag) search.set("tag", tag);
+    if (withDrafts) search.set("drafts", "1");
     const qs = search.toString();
     window.history.replaceState(null, "", qs ? `?${qs}` : window.location.pathname);
   };
@@ -65,5 +76,14 @@ export default function usePostsBrowser(posts: PostSummary[]) {
     total: results.length,
     canLoadMore: rest.length > limit,
     loadMore: () => setLimit((current) => current + UI.postsPageSize),
+    posts,
+    papers,
+    drafts,
+    draftCount,
+    toggleDrafts: () => {
+      setDrafts(!drafts);
+      setLimit(UI.postsPageSize);
+      syncUrl(tab, query.tag, !drafts);
+    },
   };
 }

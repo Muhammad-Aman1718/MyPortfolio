@@ -2,6 +2,7 @@ import { compileMdx } from "@/lib/mdx/compile";
 import { cn } from "@/utils/style";
 import Callout from "./Callout";
 import Figure from "./Figure";
+import MdxDivider from "./MdxDivider";
 import MdxHeading from "./MdxHeading";
 import MdxImage from "./MdxImage";
 import MdxLink from "./MdxLink";
@@ -29,6 +30,7 @@ export default async function MdxContent({ source, numbered = false }: MdxConten
           img: MdxImage,
           pre: MdxPre,
           table: MdxTable,
+          hr: MdxDivider,
           blockquote: Quote,
           Callout,
           Quote,

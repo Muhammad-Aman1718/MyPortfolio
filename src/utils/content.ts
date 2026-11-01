@@ -1,5 +1,6 @@
 import {
   CASE_STUDIES,
+  CLIENT_CASE_STUDIES,
   COMPANY_PERIODS,
   COPY,
   EXPERIENCE,
@@ -14,6 +15,7 @@ import {
   UI,
 } from "@/constants/constant";
 import type {
+  ClientCaseStudy,
   CompanyHistory,
   Fact,
   Neighbours,
@@ -62,7 +64,7 @@ export const projectFacts = (project: Project): Fact[] => {
     { label: facts.timeline, value: project.timeline },
     { label: facts.team, value: project.team },
     { label: facts.platform, value: project.platform },
-  ];
+  ].filter((fact) => fact.value); // an unknown detail is left out rather than shown as a dash
 };
 
 /** Table-of-contents entries for a list of long-form sections. */
@@ -138,3 +140,7 @@ export const orderedTestimonials = (): Testimonial[] => [
   ...TESTIMONIALS.filter((t) => t.featured),
   ...TESTIMONIALS.filter((t) => !t.featured),
 ];
+
+/** Client case studies ready to show: placeholders (a "TODO" title) never render. */
+export const publishedClientStudies = (): ClientCaseStudy[] =>
+  CLIENT_CASE_STUDIES.filter((study) => !study.title.trim().startsWith("TODO"));

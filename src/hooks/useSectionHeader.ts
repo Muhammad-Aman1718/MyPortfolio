@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { gsap } from "@/lib/gsap";
-import { prefersReducedMotion } from "@/utils/motion";
+import { loadGsap, type Gsap } from "@/lib/gsap";
+import { onceInView, prefersReducedMotion } from "@/utils/motion";
 import type { HeaderMotion, ScopedSelector } from "@/types/types";
 
 /** How each header motion brings the title in (after the eyebrow slides). */
@@ -29,27 +29,46 @@ export default function useSectionHeader(motion: HeaderMotion) {
 
   useEffect(() => {
     const el = ref.current;
-    if (!el) return;
-    if (prefersReducedMotion()) {
-      gsap.set(el, { visibility: "visible" });
-      return;
-    }
-    const q = gsap.utils.selector(el);
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        defaults: { ease: "power3.out" },
-        scrollTrigger: { trigger: el, start: "top 88%", once: true },
-      });
-      tl.fromTo(q("[data-h-eyebrow]"), { autoAlpha: 0, x: -14 }, { autoAlpha: 1, x: 0, duration: 0.6 });
-      titleTween(tl, q, motion);
-      const rest = q("[data-h-rest]");
-      if (rest.length) tl.fromTo(rest, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.6, stagger: 0.08 }, "-=0.55");
-      tl.set(q("[data-h-title], [data-h-eyebrow], [data-h-rest], .mask-line > span"), {
-        clearProps: "transform,filter,clipPath",
-      });
-      gsap.set(el, { visibility: "visible" });
-    }, el);
-    return () => ctx.revert();
+    if (!el || prefersReducedMotion()) return;
+    let alive = true;
+    let entered = false;
+    let tl: gsap.core.Timeline | undefined;
+    let ctx: gsap.Context | undefined;
+    const build = (gsap: Gsap) => {
+      const q = gsap.utils.selector(el);
+      el.style.animation = "none";
+      ctx = gsap.context(() => {
+        // Scrolled in while GSAP was still loading: play straight away
+        tl = gsap.timeline({ defaults: { ease: "power3.out" }, paused: !entered });
+        tl.fromTo(q("[data-h-eyebrow]"), { autoAlpha: 0, x: -14 }, { autoAlpha: 1, x: 0, duration: 0.6 });
+        titleTween(tl, q, motion);
+        const rest = q("[data-h-rest]");
+        if (rest.length) tl.fromTo(rest, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.6, stagger: 0.08 }, "-=0.55");
+        tl.set(q("[data-h-title], [data-h-eyebrow], [data-h-rest], .mask-line > span"), {
+          clearProps: "transform,filter,clipPath",
+        });
+      }, el);
+    };
+    const stop = onceInView(
+      el,
+      "top 88%",
+      () => {
+        entered = true;
+        tl?.play();
+      },
+      (seenAtLoad) => {
+        // On screen at load it's already painted (CSS fade); only headers below the fold get the timeline
+        if (seenAtLoad) return;
+        void loadGsap().then(({ gsap }) => {
+          if (alive) build(gsap);
+        });
+      },
+    );
+    return () => {
+      alive = false;
+      stop();
+      ctx?.revert();
+    };
   }, [motion]);
 
   return ref;

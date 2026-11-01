@@ -1,7 +1,6 @@
 "use client";
 
-import Link from "next/link";
-import { COPY, SITE } from "@/constants/constant";
+import { BOOKING_URL, COPY, SITE } from "@/constants/constant";
 import useContactDock from "@/hooks/useContactDock";
 import { cn } from "@/utils/style";
 import Icon from "@/components/ui/Icon";
@@ -29,10 +28,10 @@ export default function ContactDock() {
         >
           <Icon name="mail" className="h-4.5 w-4.5" />
         </a>
-        <Link href="/contact" className="btn-primary h-10! px-4! text-sm">
+        <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" className="btn-primary h-10! px-4! text-sm">
           <Icon name="calendar" />
           {COPY.dock.cta}
-        </Link>
+        </a>
       </div>
     </div>
   );

@@ -9,6 +9,8 @@ const nextConfig: NextConfig = {
   // Without it Next blocks the chunks: nothing hydrates (dead menu, content hidden until the 4s failsafe).
   allowedDevOrigins: ["192.168.100.71", "192.168.*.*"],
   images: {
+    // 90 is used for the project showcase mock-ups (already compressed once at export)
+    qualities: [75, 90],
     remotePatterns: imageHost ? [{ protocol: "https", hostname: imageHost, pathname: "/**" }] : [],
   },
 };

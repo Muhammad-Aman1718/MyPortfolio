@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { gsap } from "@/lib/gsap";
+import { loadGsap } from "@/lib/gsap";
 import { decimalsOf, formatCount } from "@/utils/format";
-import { prefersReducedMotion } from "@/utils/motion";
+import { onceInView, prefersReducedMotion } from "@/utils/motion";
 import type { CountUpProps } from "@/types/types";
 
 /**
@@ -19,26 +19,42 @@ export default function useCountUp({ value, prefix = "", suffix = "" }: CountUpP
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    // Matches the trigger line below: anything already past it would flash to 0
-    const onScreen = el.getBoundingClientRect().top < window.innerHeight * 0.9;
-    if (prefersReducedMotion() || onScreen) {
-      el.textContent = formatCount(value, decimals, prefix, suffix);
-      return;
-    }
-    el.textContent = formatCount(0, decimals, prefix, suffix);
-    const counter = { n: 0 };
-    const tween = gsap.to(counter, {
-      n: value,
-      duration: 0.6,
-      ease: "power2.out",
-      scrollTrigger: { trigger: el, start: "top 90%", once: true },
-      onUpdate: () => {
-        el.textContent = formatCount(counter.n, decimals, prefix, suffix);
+    if (prefersReducedMotion()) return;
+    let alive = true;
+    let skip = false;
+    let tween: gsap.core.Tween | undefined;
+    const stop = onceInView(
+      el,
+      "top 90%",
+      () => {
+        if (skip) return;
+        void loadGsap().then(({ gsap }) => {
+          if (!alive) return;
+          const counter = { n: 0 };
+          tween = gsap.to(counter, {
+            n: value,
+            duration: 0.6,
+            ease: "power2.out",
+            onUpdate: () => {
+              el.textContent = formatCount(counter.n, decimals, prefix, suffix);
+            },
+          });
+        });
       },
-    });
+      (seenAtLoad) => {
+        // Already on screen at load: keep the real value instead of flashing to 0.
+        // Off screen: drop to 0 out of sight, ready to count up (and fetch GSAP meanwhile).
+        if (seenAtLoad) skip = true;
+        else {
+          el.textContent = formatCount(0, decimals, prefix, suffix);
+          void loadGsap();
+        }
+      },
+    );
     return () => {
-      tween.scrollTrigger?.kill();
-      tween.kill();
+      alive = false;
+      stop();
+      tween?.kill();
     };
   }, [value, prefix, suffix, decimals]);
 

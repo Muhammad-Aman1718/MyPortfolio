@@ -47,7 +47,8 @@ export default function ArticleImage({
       width={width}
       height={height}
       sizes={sizes}
-      priority={priority}
+      loading={priority ? "eager" : undefined}
+      fetchPriority={priority ? "high" : undefined}
       unoptimized={!canOptimizeImage(src)}
       onError={onError}
       className={cn("h-auto w-full rounded-[14px] bg-surface", className)}

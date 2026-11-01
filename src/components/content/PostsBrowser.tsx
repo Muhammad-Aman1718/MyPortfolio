@@ -7,6 +7,7 @@ import { cn, staggerStyle } from "@/utils/style";
 import FilterPills from "@/components/ui/FilterPills";
 import Icon from "@/components/ui/Icon";
 import SearchField from "@/components/ui/SearchField";
+import DraftToggle from "./DraftToggle";
 import FeaturedPost from "./FeaturedPost";
 import PaperList from "./PaperList";
 import PostRow from "./PostRow";
@@ -17,7 +18,7 @@ import type { PostsBrowserProps } from "@/types/types";
  * category and topic filters, a sort toggle and "load more"; research is a
  * two-up grid of paper cards. Lists re-stagger in CSS when they change.
  */
-export default function PostsBrowser({ posts, papers }: PostsBrowserProps) {
+export default function PostsBrowser({ posts: allPosts, papers: allPapers, draftPreview }: PostsBrowserProps) {
   const {
     tab,
     setTab,
@@ -39,11 +40,18 @@ export default function PostsBrowser({ posts, papers }: PostsBrowserProps) {
     total,
     canLoadMore,
     loadMore,
-  } = usePostsBrowser(posts);
+    posts,
+    papers,
+    drafts,
+    draftCount,
+    toggleDrafts,
+  } = usePostsBrowser(allPosts, allPapers);
   const counts = { blog: posts.length, research: papers.length };
 
   return (
     <>
+      {draftPreview && draftCount > 0 && <DraftToggle count={draftCount} on={drafts} onToggle={toggleDrafts} />}
+
       <div
         ref={tabsRef}
         role="tablist"

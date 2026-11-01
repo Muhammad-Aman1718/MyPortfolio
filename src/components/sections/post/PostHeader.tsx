@@ -3,6 +3,7 @@ import { COPY, SITE } from "@/constants/constant";
 import { formatLongDate } from "@/utils/format";
 import { enter } from "@/utils/style";
 import Avatar from "@/components/ui/Avatar";
+import DraftBadge from "@/components/ui/DraftBadge";
 import BackLink from "@/components/ui/BackLink";
 import Initials from "@/components/ui/Initials";
 import ShareButton from "@/components/ui/ShareButton";
@@ -18,7 +19,7 @@ export default function PostHeader({ post }: PostHeaderProps) {
     <header className="xl:col-start-1 xl:row-start-1">
       <BackLink href="/posts" label={copy.all} />
       {post.status === "draft" && (
-        <p className="mt-6 inline-flex rounded-full bg-error/15 px-3 py-1 text-xs font-medium text-error">{copy.draft}</p>
+        <DraftBadge label={copy.draft} className="mt-6" />
       )}
       <p {...enter("rise")} className="mt-8 flex flex-wrap items-center gap-3 font-mono text-xs text-muted">
         <span className="pill">{post.subcategory ? `${post.category} · ${post.subcategory}` : post.category}</span>
