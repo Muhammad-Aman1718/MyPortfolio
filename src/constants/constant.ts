@@ -688,7 +688,7 @@ export const ANALYTICS_EVENTS: Record<
 };
 
 /** Formspree form that delivers the project brief to my inbox. */
-export const FORMSPREE_ENDPOINT = "https://formspree.io/f/mwllvejy";
+export const FORMSPREE_ENDPOINT = "https://formspree.io/f/meeqgpyp";
 
 /** Hidden field bots fill in; Formspree drops any submission that has it. */
 export const HONEYPOT_FIELD = "_gotcha";
